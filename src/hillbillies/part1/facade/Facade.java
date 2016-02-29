@@ -7,7 +7,9 @@ import ogp.framework.util.ModelException;
  * @author 
  *
  */
-public class facade implements IFacade {
+public class Facade implements IFacade {
+	
+	public Facade() {};
 
 	@Override
 	public Unit createUnit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
