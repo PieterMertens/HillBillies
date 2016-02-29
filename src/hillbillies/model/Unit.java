@@ -1,4 +1,4 @@
-package hillbillies.model.unit;
+package hillbillies.model;
 
 public class Unit {
 	
