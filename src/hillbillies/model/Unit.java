@@ -1,5 +1,7 @@
 package hillbillies.model;
 
+import be.kuleuven.cs.som.annotate.*;
+
 public class Unit {
 	
 	/** TO BE ADDED TO CLASS HEADING
@@ -18,7 +20,7 @@ public class Unit {
  *         the given position.
  *       | this.setPosition(position)
  */
-public Unit(Position position)
+public Unit(double[] position)
 		throws IllegalArgumentException {
 	this.setPosition(position);
 }
@@ -28,7 +30,7 @@ public Unit(Position position)
  * Return the position of this unit.
  */
 @Basic @Raw
-public Position getPosition() {
+public double[] getPosition() {
 	return this.position;
 }
 
@@ -41,7 +43,20 @@ public Position getPosition() {
  * @return 
  *       | result == 
 */
-public static boolean isValidPosition(Position position) {
+public static boolean isValidPosition(double[] position) {
+	
+	Double lowerlimit = 0d;
+	Double upperlimit = 50d;
+
+	if (position.length==3) {
+
+		for(int k = 0; k < position.length; k++){
+			if (position[k] < upperlimit && position[k] >= lowerlimit)
+				return false;
+		}
+		return true;
+	}
+
 	return false;
 }
 
@@ -59,7 +74,7 @@ public static boolean isValidPosition(Position position) {
  *       | ! isValidPosition(getPosition())
  */
 @Raw
-public void setPosition(Position position) 
+public void setPosition(double[] position) 
 		throws IllegalArgumentException {
 	if (! isValidPosition(position))
 		throw new IllegalArgumentException();
@@ -69,7 +84,7 @@ public void setPosition(Position position)
 /**
  * Variable registering the position of this unit.
  */
-private Position position;
+private double[] position;
 
 
 
@@ -115,6 +130,10 @@ public String getName() {
  *       | result == 
 */
 public static boolean isValidName(String name) {
+	
+	if (name.matches("[A-Za-z.\\s\'\"]")&&name.matches("^[A-Z]")&&name.length()>1)
+		return true;
+	
 	return false;
 }
 
@@ -143,6 +162,77 @@ public void setName(String name)
  * Variable registering the name of this unit.
  */
 private String name;
+
+
+/**
+ * @invar  The weight of each unit must be a valid weight for any
+ *         unit.
+ *       | isValidWeight(getWeight())
+ */
+
+/**
+ * Initialize this new unit with given weight.
+ * 
+ * @param  weight
+ *         The weight for this new unit.
+ * @post   If the given weight is a valid weight for any unit,
+ *         the weight of this new unit is equal to the given
+ *         weight. Otherwise, the weight of this new unit is equal
+ *         to defaultWeight.
+ *       | if (isValidWeight(weight))
+ *       |   then new.getWeight() == weight
+ *       |   else new.getWeight() == defaultWeight
+ */
+public Unit(Unit weight) {
+	int defaultWeight = (strength + agility)/2 //FIXME na de kluut
+	if (! isValidWeight(weight))
+		weight = defaultWeight;
+	setWeight(weight);
+}
+
+/**
+ * Return the weight of this unit.
+ */
+@Basic @Raw
+public Unit getWeight() {
+	return this.weight;
+}
+
+/**
+ * Check whether the given weight is a valid weight for
+ * any unit.
+ *  
+ * @param  weight
+ *         The weight to check.
+ * @return 
+ *       | result == //TODO
+*/
+public static boolean isValidWeight(Unit weight) {
+	return false;
+}
+
+/**
+ * Set the weight of this unit to the given weight.
+ * 
+ * @param  weight
+ *         The new weight for this unit.
+ * @post   If the given weight is a valid weight for any unit,
+ *         the weight of this new unit is equal to the given
+ *         weight.
+ *       | if (isValidWeight(weight))
+ *       |   then new.getWeight() == weight
+ */
+@Raw
+public void setWeight(Unit weight) {
+	if (isValidWeight(weight))
+		this.weight = weight;
+}
+
+/**
+ * Variable registering the weight of this unit.
+ */
+private Unit weight;
+
 
 
 }

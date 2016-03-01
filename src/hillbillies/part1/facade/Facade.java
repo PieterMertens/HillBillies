@@ -21,30 +21,44 @@ public class Facade implements IFacade {
 	@Override
 	public double[] getPosition(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		return unit.getPosition();
 	}
 
 	@Override
 	public int[] getCubeCoordinate(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		double[] position = unit.getPosition();
+		int[] result = new int[3];
+		
+		for(int k = 0; k < position.length; k++){
+			result[k] = (int) position[k];
+		}
+		
+		return result;
 	}
 
 	@Override
 	public String getName(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		return unit.getName();
+		
 	}
 
 	@Override
 	public void setName(Unit unit, String newName) throws ModelException {
-		// TODO Auto-generated method stub
+
+		unit.setName(newName);
 		
 	}
 
 	@Override
 	public int getWeight(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
+		
+		
 		return 0;
 	}
 
