@@ -307,6 +307,145 @@ public void setStrength(int strength) {
  */
 private int strength;
 
+/**
+ * @invar  The agility of each unit must be a valid agility for any
+ *         unit.
+ *       | isValidAgility(getAgility())
+ */
+
+/**
+ * Initialize this new unit with given agility.
+ * 
+ * @param  agility
+ *         The agility for this new unit.
+ * @post   If the given agility is a valid agility for any unit,
+ *         the agility of this new unit is equal to the given
+ *         agility. Otherwise, the agility of this new unit is equal
+ *         to default_value_Java.
+ *       | if (isValidAgility(agility))
+ *       |   then new.getAgility() == agility
+ *       |   else new.getAgility() == default_value_Java
+ */
+public Unit(int agility) {
+	if (! isValidAgility(agility))
+		agility = 25 + (int)(Math.random() * (76));
+	setAgility(agility);
+}
+
+/**
+ * Return the agility of this unit.
+ */
+@Basic @Raw
+public int getAgility() {
+	return this.agility;
+}
+
+/**
+ * Check whether the given agility is a valid agility for
+ * any unit.
+ *  
+ * @param  agility
+ *         The agility to check.
+ * @return 
+ *       | result == 
+*/
+public static boolean isValidAgility(int agility) {
+	if (agility >= 1 && agility <= 200)
+		return true;
+	return false;
+}
+
+/**
+ * Set the agility of this unit to the given agility.
+ * 
+ * @param  agility
+ *         The new agility for this unit.
+ * @post   If the given agility is a valid agility for any unit,
+ *         the agility of this new unit is equal to the given
+ *         agility.
+ *       | if (isValidAgility(agility))
+ *       |   then new.getAgility() == agility
+ */
+@Raw
+public void setAgility(int agility) {
+	if (isValidAgility(agility))
+		this.agility = agility;
+}
+
+/**
+ * Variable registering the agility of this unit.
+ */
+private int agility;
+
+/**
+ * @invar  The toughness of each unit must be a valid toughness for any
+ *         unit.
+ *       | isValidToughness(getToughness())
+ */
+
+/**
+ * Initialize this new unit with given toughness.
+ * 
+ * @param  toughness
+ *         The toughness for this new unit.
+ * @post   If the given toughness is a valid toughness for any unit,
+ *         the toughness of this new unit is equal to the given
+ *         toughness. Otherwise, the toughness of this new unit is equal
+ *         to 25 + (int)(Math.random() * (76)).
+ *       | if (isValidToughness(toughness))
+ *       |   then new.getToughness() == toughness
+ *       |   else new.getToughness() == 25 + (int)(Math.random() * (76))
+ */
+public Unit(int toughness) {
+	if (! isValidToughness(toughness))
+		toughness = 25 + (int)(Math.random() * (76));
+	setToughness(toughness);
+}
+
+/**
+ * Return the toughness of this unit.
+ */
+@Basic @Raw
+public int getToughness() {
+	return this.toughness;
+}
+
+/**
+ * Check whether the given toughness is a valid toughness for
+ * any unit.
+ *  
+ * @param  toughness
+ *         The toughness to check.
+ * @return 
+ *       | result == 
+*/
+public static boolean isValidToughness(int toughness) {
+	if (toughness >= 1 && toughness <= 200)
+		return true;
+	return false;
+}
+
+/**
+ * Set the toughness of this unit to the given toughness.
+ * 
+ * @param  toughness
+ *         The new toughness for this unit.
+ * @post   If the given toughness is a valid toughness for any unit,
+ *         the toughness of this new unit is equal to the given
+ *         toughness.
+ *       | if (isValidToughness(toughness))
+ *       |   then new.getToughness() == toughness
+ */
+@Raw
+public void setToughness(int toughness) {
+	if (isValidToughness(toughness))
+		this.toughness = toughness;
+}
+
+/**
+ * Variable registering the toughness of this unit.
+ */
+private int toughness;
 
 
 }
