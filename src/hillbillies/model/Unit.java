@@ -186,7 +186,7 @@ private String name;
  *       |   else new.getWeight() == defaultWeight
  */
 public Unit(int weight) {
-	int defaultWeight = (strength + agility)/2 //FIXME na de kluut
+	int defaultWeight = 25 + (int)(Math.random() * (76)); //(strength + agility)/2 //FIXME na de kluut
 	if (! isValidWeight(weight))
 		weight = defaultWeight;
 	setWeight(weight);
@@ -210,6 +210,8 @@ public int getWeight() {
  *       | result == //TODO
 */
 public static boolean isValidWeight(int weight) {
+	if (weight >= 1 && weight <= 200 && weight >= (this.getStrength + this.getAgility)/2)
+		return true;
 	return false;
 }
 
@@ -234,6 +236,76 @@ public void setWeight(int weight) {
  * Variable registering the weight of this unit.
  */
 private int weight;
+
+/**
+ * @invar  The strength of each unit must be a valid strength for any
+ *         unit.
+ *       | isValidStrength(getStrength())
+ */
+
+/**
+ * Initialize this new unit with given strength.
+ * 
+ * @param  strength
+ *         The strength for this new unit.
+ * @post   If the given strength is a valid strength for any unit,
+ *         the strength of this new unit is equal to the given
+ *         strength. Otherwise, the strength of this new unit is equal
+ *         to 25 + (int)(Math.random() * (76)).
+ *       | if (isValidStrength(strength))
+ *       |   then new.getStrength() == strength
+ *       |   else new.getStrength() == 25 + (int)(Math.random() * (76))
+ */
+public Unit(int strength) {
+	if (! isValidStrength(strength))
+		strength = 25 + (int)(Math.random() * (76));
+	setStrength(strength);
+}
+
+/**
+ * Return the strength of this unit.
+ */
+@Basic @Raw
+public int getStrength() {
+	return this.strength;
+}
+
+/**
+ * Check whether the given strength is a valid strength for
+ * any unit.
+ *  
+ * @param  strength
+ *         The strength to check.
+ * @return 
+ *       | result == 
+*/
+public static boolean isValidStrength(int strength) {
+	if (strength >= 1 && strength <= 200)
+		return true;
+	return false;
+}
+
+/**
+ * Set the strength of this unit to the given strength.
+ * 
+ * @param  strength
+ *         The new strength for this unit.
+ * @post   If the given strength is a valid strength for any unit,
+ *         the strength of this new unit is equal to the given
+ *         strength.
+ *       | if (isValidStrength(strength))
+ *       |   then new.getStrength() == strength
+ */
+@Raw
+public void setStrength(int strength) {
+	if (isValidStrength(strength))
+		this.strength = strength;
+}
+
+/**
+ * Variable registering the strength of this unit.
+ */
+private int strength;
 
 
 
