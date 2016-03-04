@@ -51,7 +51,7 @@ public static boolean isValidPosition(double[] position) {
 	if (position.length==3) {
 
 		for(int k = 0; k < position.length; k++){
-			if (position[k] < upperlimit && position[k] >= lowerlimit)
+			if (position[k] > upperlimit && position[k] <= lowerlimit)
 				return false;
 		}
 		return true;
@@ -164,6 +164,8 @@ public void setName(String name)
 private String name;
 
 
+
+
 /**
  * @invar  The weight of each unit must be a valid weight for any
  *         unit.
@@ -183,7 +185,7 @@ private String name;
  *       |   then new.getWeight() == weight
  *       |   else new.getWeight() == defaultWeight
  */
-public Unit(Unit weight) {
+public Unit(int weight) {
 	int defaultWeight = (strength + agility)/2 //FIXME na de kluut
 	if (! isValidWeight(weight))
 		weight = defaultWeight;
@@ -194,7 +196,7 @@ public Unit(Unit weight) {
  * Return the weight of this unit.
  */
 @Basic @Raw
-public Unit getWeight() {
+public int getWeight() {
 	return this.weight;
 }
 
@@ -207,7 +209,7 @@ public Unit getWeight() {
  * @return 
  *       | result == //TODO
 */
-public static boolean isValidWeight(Unit weight) {
+public static boolean isValidWeight(int weight) {
 	return false;
 }
 
@@ -223,7 +225,7 @@ public static boolean isValidWeight(Unit weight) {
  *       |   then new.getWeight() == weight
  */
 @Raw
-public void setWeight(Unit weight) {
+public void setWeight(int weight) {
 	if (isValidWeight(weight))
 		this.weight = weight;
 }
@@ -231,7 +233,7 @@ public void setWeight(Unit weight) {
 /**
  * Variable registering the weight of this unit.
  */
-private Unit weight;
+private int weight;
 
 
 

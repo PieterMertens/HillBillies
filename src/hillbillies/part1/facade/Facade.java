@@ -58,25 +58,31 @@ public class Facade implements IFacade {
 	public int getWeight(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
 		
-		
-		return 0;
+		return unit.getWeight();
 	}
 
 	@Override
 	public void setWeight(Unit unit, int newValue) throws ModelException {
 		// TODO Auto-generated method stub
 		
+		unit.setWeight(newValue)
+		;
+		
 	}
 
 	@Override
 	public int getStrength(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		return unit.getStrength();
+		
 	}
 
 	@Override
 	public void setStrength(Unit unit, int newValue) throws ModelException {
 		// TODO Auto-generated method stub
+		
+		unit.setStrength(newValue);
 		
 	}
 
