@@ -181,23 +181,49 @@ private String name;
  */
 
 /**
- * Initialize this new unit with given weight.
+ * Initialize this new unit with given weight, strength, agility and toughness.
  * 
  * @param  weight
  *         The weight for this new unit.
- * @post   If the given weight is a valid weight for any unit,
- *         the weight of this new unit is equal to the given
- *         weight. Otherwise, the weight of this new unit is equal
- *         to defaultWeight.
+ * @param  strength
+ *         The strength for this new unit.
+ * @param  agility
+ *         The agility for this new unit.
+ * @param  toughness
+ *         The toughness for this new unit.
+ * @post   If the given weight, strength, agility and toughness are valid values for any unit,
+ *         the attributes of this new unit are equal to the given
+ *         attributes. Otherwise, the attribute of this new unit is equal
+ *         to its default value.
  *       | if (isValidWeight(weight))
  *       |   then new.getWeight() == weight
  *       |   else new.getWeight() == defaultWeight
+ *       | if (isValidStrength(strength))
+ *       |   then new.getStrength() == strength
+ *       |   else new.getStrength() == defaultStrength
+ *       | if (isValidAgility(agility))
+ *       |   then new.getAgility() == agility
+ *       |   else new.getAgility() == defaultAgility
+ *       | if (isValidToughness(toughness))
+ *       |   then new.getToughness() == toughness
+ *       |   else new.getToughness() == defaultToughness
  */
-public Unit(int weight) {
-	int defaultWeight = 25 + (int)(Math.random() * (76)); //(strength + agility)/2
+public Unit(int weight, int strength, int agility, int toughness) { 
 	if (! isValidWeight(weight))
-		weight = defaultWeight;
+		weight = 25 + (int)(Math.random() * (76)); //(strength + agility)/2 //TODO zien dat het klopt met str+agil/2;
 	setWeight(weight);
+	
+	if (! isValidStrength(strength))
+		strength = 25 + (int)(Math.random() * (76));
+	setStrength(strength);
+	
+	if (! isValidAgility(agility))
+		agility = 25 + (int)(Math.random() * (76));
+	setAgility(agility);
+	
+	if (! isValidToughness(toughness))
+		toughness = 25 + (int)(Math.random() * (76)); //TODO kan hier nu geen 101 uitkomen???
+	setToughness(toughness);
 }
 
 /**
@@ -245,34 +271,14 @@ public void setWeight(int weight) {
  */
 private int weight;
 
-
-
-
-
 /**
  * @invar  The strength of each unit must be a valid strength for any
  *         unit.
  *       | isValidStrength(getStrength())
  */
 
-/**
- * Initialize this new unit with given strength.
- * 
- * @param  strength
- *         The strength for this new unit.
- * @post   If the given strength is a valid strength for any unit,
- *         the strength of this new unit is equal to the given
- *         strength. Otherwise, the strength of this new unit is equal
- *         to 25 + (int)(Math.random() * (76)).
- *       | if (isValidStrength(strength))
- *       |   then new.getStrength() == strength
- *       |   else new.getStrength() == 25 + (int)(Math.random() * (76))
- */
-public Unit(int strength) {
-	if (! isValidStrength(strength))
-		strength = 25 + (int)(Math.random() * (76));
-	setStrength(strength);
-}
+
+
 
 /**
  * Return the strength of this unit.
@@ -330,24 +336,6 @@ private int strength;
  *       | isValidAgility(getAgility())
  */
 
-/**
- * Initialize this new unit with given agility.
- * 
- * @param  agility
- *         The agility for this new unit.
- * @post   If the given agility is a valid agility for any unit,
- *         the agility of this new unit is equal to the given
- *         agility. Otherwise, the agility of this new unit is equal
- *         to default_value_Java.
- *       | if (isValidAgility(agility))
- *       |   then new.getAgility() == agility
- *       |   else new.getAgility() == default_value_Java
- */
-public Unit(int agility) {
-	if (! isValidAgility(agility))
-		agility = 25 + (int)(Math.random() * (76));
-	setAgility(agility);
-}
 
 /**
  * Return the agility of this unit.
@@ -404,24 +392,7 @@ private int agility;
  *       | isValidToughness(getToughness())
  */
 
-/**
- * Initialize this new unit with given toughness.
- * 
- * @param  toughness
- *         The toughness for this new unit.
- * @post   If the given toughness is a valid toughness for any unit,
- *         the toughness of this new unit is equal to the given
- *         toughness. Otherwise, the toughness of this new unit is equal
- *         to 25 + (int)(Math.random() * (76)).
- *       | if (isValidToughness(toughness))
- *       |   then new.getToughness() == toughness
- *       |   else new.getToughness() == 25 + (int)(Math.random() * (76))
- */
-public Unit(int toughness) {
-	if (! isValidToughness(toughness))
-		toughness = 25 + (int)(Math.random() * (76)); //TODO kan hier nu geen 101 uitkomen???
-	setToughness(toughness);
-}
+
 
 /**
  * Return the toughness of this unit.
@@ -482,14 +453,22 @@ private int toughness;
  * 
  * @param  hitpoints
  *         The hitpoints for this new unit.
- * @pre    The given hitpoints must be a valid hitpoints for any unit.
+ * @param  staminapoints
+ *         The staminapoints for this new unit.
+ * @pre    The given hitpoints must be a valid value for any unit.
  *       | isValidHitpoints(hitpoints)
- * @post   The hitpoints of this new unit is equal to the given
+ * @pre    The given staminapoints must be a valid value for any unit.
+ *       | isValidStaminapoints(staminapoints)
+ * @post   The hitpoints of this new unit are equal to the given
  *         hitpoints.
  *       | new.getHitpoints() == hitpoints
+ * @post   The staminapoints of this new unit are equal to the given
+ *         staminapoints.
+ *       | new.getStaminapoints() == staminapoints
  */
-public Unit(int hitpoints) {
+public Unit(int hitpoints, int staminapoints) {
 	this.setHitpoints(hitpoints);
+	this.setStaminapoints(staminapoints);
 }
 
 /**
@@ -509,7 +488,9 @@ public int getHitpoints() {
  * @return 
  *       | result == //TODO
 */
-public static boolean isValidHitpoints(int hitpoints) {
+public static boolean isValidHitpoints(int hitpoints, int weight,int toughness) {
+	if (hitpoints <= (200 * (weight/100) * (toughness/100)))
+		return true;
 	return false;
 }
 
@@ -527,7 +508,7 @@ public static boolean isValidHitpoints(int hitpoints) {
  */
 @Raw
 public void setHitpoints(int hitpoints) {
-	assert isValidHitpoints(hitpoints);
+	assert isValidHitpoints(hitpoints, this.getWeight(), this.getToughness());
 	this.hitpoints = hitpoints;
 }
 
@@ -544,21 +525,6 @@ private int hitpoints;
  *         unit.
  *       | isValidStaminapoints(getStaminapoints())
  */
-
-/**
- * Initialize this new unit with given staminapoints.
- * 
- * @param  staminapoints
- *         The staminapoints for this new unit.
- * @pre    The given staminapoints must be a valid staminapoints for any unit.
- *       | isValidStaminapoints(staminapoints)
- * @post   The staminapoints of this new unit is equal to the given
- *         staminapoints.
- *       | new.getStaminapoints() == staminapoints
- */
-public Unit(int staminapoints) {
-	this.setStaminapoints(staminapoints);
-}
 
 /**
  * Return the staminapoints of this unit.
@@ -603,11 +569,5 @@ public void setStaminapoints(int staminapoints) {
  * Variable registering the staminapoints of this unit.
  */
 private int staminapoints;
-
-
-
-
-
-
 
 }
