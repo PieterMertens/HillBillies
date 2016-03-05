@@ -4,6 +4,10 @@ import be.kuleuven.cs.som.annotate.*;
 
 public class Unit {
 	
+	
+	
+	
+	
 	/** TO BE ADDED TO CLASS HEADING
 	 * @invar  The position of each unit must be a valid position for any
 	 *         unit.
@@ -85,6 +89,10 @@ public void setPosition(double[] position)
  * Variable registering the position of this unit.
  */
 private double[] position;
+
+
+
+
 
 
 
@@ -186,7 +194,7 @@ private String name;
  *       |   else new.getWeight() == defaultWeight
  */
 public Unit(int weight) {
-	int defaultWeight = 25 + (int)(Math.random() * (76)); //(strength + agility)/2 //FIXME na de kluut
+	int defaultWeight = 25 + (int)(Math.random() * (76)); //(strength + agility)/2
 	if (! isValidWeight(weight))
 		weight = defaultWeight;
 	setWeight(weight);
@@ -210,7 +218,7 @@ public int getWeight() {
  *       | result == //TODO
 */
 public static boolean isValidWeight(int weight) {
-	if (weight >= 1 && weight <= 200 && weight >= (this.getStrength + this.getAgility)/2)
+	if (weight >= 1 && weight <= 200 && weight >= (this.getStrength() + this.getAgility())/2)
 		return true;
 	return false;
 }
@@ -236,6 +244,10 @@ public void setWeight(int weight) {
  * Variable registering the weight of this unit.
  */
 private int weight;
+
+
+
+
 
 /**
  * @invar  The strength of each unit must be a valid strength for any
@@ -307,6 +319,11 @@ public void setStrength(int strength) {
  */
 private int strength;
 
+
+
+
+
+
 /**
  * @invar  The agility of each unit must be a valid agility for any
  *         unit.
@@ -377,6 +394,10 @@ public void setAgility(int agility) {
  */
 private int agility;
 
+
+
+
+
 /**
  * @invar  The toughness of each unit must be a valid toughness for any
  *         unit.
@@ -398,7 +419,7 @@ private int agility;
  */
 public Unit(int toughness) {
 	if (! isValidToughness(toughness))
-		toughness = 25 + (int)(Math.random() * (76));
+		toughness = 25 + (int)(Math.random() * (76)); //TODO kan hier nu geen 101 uitkomen???
 	setToughness(toughness);
 }
 
@@ -446,6 +467,147 @@ public void setToughness(int toughness) {
  * Variable registering the toughness of this unit.
  */
 private int toughness;
+
+
+
+
+/**
+ * @invar  The hitpoints of each unit must be a valid hitpoints for any
+ *         unit.
+ *       | isValidHitpoints(getHitpoints())
+ */
+
+/**
+ * Initialize this new unit with given hitpoints.
+ * 
+ * @param  hitpoints
+ *         The hitpoints for this new unit.
+ * @pre    The given hitpoints must be a valid hitpoints for any unit.
+ *       | isValidHitpoints(hitpoints)
+ * @post   The hitpoints of this new unit is equal to the given
+ *         hitpoints.
+ *       | new.getHitpoints() == hitpoints
+ */
+public Unit(int hitpoints) {
+	this.setHitpoints(hitpoints);
+}
+
+/**
+ * Return the hitpoints of this unit.
+ */
+@Basic @Raw
+public int getHitpoints() {
+	return this.hitpoints;
+}
+
+/**
+ * Check whether the given hitpoints is a valid hitpoints for
+ * any unit.
+ *  
+ * @param  hitpoints
+ *         The hitpoints to check.
+ * @return 
+ *       | result == //TODO
+*/
+public static boolean isValidHitpoints(int hitpoints) {
+	return false;
+}
+
+/**
+ * Set the hitpoints of this unit to the given hitpoints.
+ * 
+ * @param  hitpoints
+ *         The new hitpoints for this unit.
+ * @pre    The given hitpoints must be a valid hitpoints for any
+ *         unit.
+ *       | isValidHitpoints(hitpoints)
+ * @post   The hitpoints of this unit is equal to the given
+ *         hitpoints.
+ *       | new.getHitpoints() == hitpoints
+ */
+@Raw
+public void setHitpoints(int hitpoints) {
+	assert isValidHitpoints(hitpoints);
+	this.hitpoints = hitpoints;
+}
+
+/**
+ * Variable registering the hitpoints of this unit.
+ */
+private int hitpoints;
+
+
+
+
+/**
+ * @invar  The staminapoints of each unit must be a valid staminapoints for any
+ *         unit.
+ *       | isValidStaminapoints(getStaminapoints())
+ */
+
+/**
+ * Initialize this new unit with given staminapoints.
+ * 
+ * @param  staminapoints
+ *         The staminapoints for this new unit.
+ * @pre    The given staminapoints must be a valid staminapoints for any unit.
+ *       | isValidStaminapoints(staminapoints)
+ * @post   The staminapoints of this new unit is equal to the given
+ *         staminapoints.
+ *       | new.getStaminapoints() == staminapoints
+ */
+public Unit(int staminapoints) {
+	this.setStaminapoints(staminapoints);
+}
+
+/**
+ * Return the staminapoints of this unit.
+ */
+@Basic @Raw
+public int getStaminapoints() {
+	return this.staminapoints;
+}
+
+/**
+ * Check whether the given staminapoints is a valid staminapoints for
+ * any unit.
+ *  
+ * @param  staminapoints
+ *         The staminapoints to check.
+ * @return 
+ *       | result == //TODO ...
+*/
+public static boolean isValidStaminapoints(int staminapoints) {
+	return false;
+}
+
+/**
+ * Set the staminapoints of this unit to the given staminapoints.
+ * 
+ * @param  staminapoints
+ *         The new staminapoints for this unit.
+ * @pre    The given staminapoints must be a valid staminapoints for any
+ *         unit.
+ *       | isValidStaminapoints(staminapoints)
+ * @post   The staminapoints of this unit is equal to the given
+ *         staminapoints.
+ *       | new.getStaminapoints() == staminapoints
+ */
+@Raw
+public void setStaminapoints(int staminapoints) {
+	assert isValidStaminapoints(staminapoints);
+	this.staminapoints = staminapoints;
+}
+
+/**
+ * Variable registering the staminapoints of this unit.
+ */
+private int staminapoints;
+
+
+
+
+
 
 
 }
