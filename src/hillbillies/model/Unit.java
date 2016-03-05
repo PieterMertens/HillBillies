@@ -209,9 +209,6 @@ private String name;
  *       |   else new.getToughness() == defaultToughness
  */
 public Unit(int weight, int strength, int agility, int toughness) { 
-	if (! isValidWeight(weight))
-		weight = 25 + (int)(Math.random() * (76)); //(strength + agility)/2 //TODO zien dat het klopt met str+agil/2;
-	setWeight(weight);
 	
 	if (! isValidStrength(strength))
 		strength = 25 + (int)(Math.random() * (76));
@@ -220,6 +217,10 @@ public Unit(int weight, int strength, int agility, int toughness) {
 	if (! isValidAgility(agility))
 		agility = 25 + (int)(Math.random() * (76));
 	setAgility(agility);
+	
+	if (! isValidWeight(weight,this.getStrength(),this.getAgility()))
+		weight = (strength + agility)/2 + (int)(Math.random() * (100-((strength+agility)/2))); //(strength + agility)/2 //TODO zien dat het klopt met str+agil/2;
+	setWeight(weight);
 	
 	if (! isValidToughness(toughness))
 		toughness = 25 + (int)(Math.random() * (76)); //TODO kan hier nu geen 101 uitkomen???
@@ -243,8 +244,8 @@ public int getWeight() {
  * @return 
  *       | result == //TODO
 */
-public static boolean isValidWeight(int weight) {
-	if (weight >= 1 && weight <= 200 && weight >= (this.getStrength() + this.getAgility())/2)
+public static boolean isValidWeight(int weight, int strength, int agility) { 
+	if (weight >= 1 && weight <= 200 && weight >= (strength + agility)/2)
 		return true;
 	return false;
 }
@@ -262,7 +263,7 @@ public static boolean isValidWeight(int weight) {
  */
 @Raw
 public void setWeight(int weight) {
-	if (isValidWeight(weight))
+	if (isValidWeight(weight,this.getStrength(),this.getAgility()))
 		this.weight = weight;
 }
 
@@ -543,7 +544,9 @@ public int getStaminapoints() {
  * @return 
  *       | result == //TODO ...
 */
-public static boolean isValidStaminapoints(int staminapoints) {
+public static boolean isValidStaminapoints(int staminapoints,int weight,int toughness) {
+	if (staminapoints <= (200 * (weight/100) * (toughness/100)))
+		return true;
 	return false;
 }
 
@@ -561,7 +564,7 @@ public static boolean isValidStaminapoints(int staminapoints) {
  */
 @Raw
 public void setStaminapoints(int staminapoints) {
-	assert isValidStaminapoints(staminapoints);
+	assert isValidStaminapoints(staminapoints,this.getWeight(), this.getToughness());
 	this.staminapoints = staminapoints;
 }
 
