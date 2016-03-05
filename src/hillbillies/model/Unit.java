@@ -573,4 +573,74 @@ public void setStaminapoints(int staminapoints) {
  */
 private int staminapoints;
 
+/**
+ * @invar  The orientation of each unit must be a valid orientation for any
+ *         unit.
+ *       | isValidOrientation(getOrientation())
+ */
+
+/**
+ * Initialize this new unit with given orientation.
+ * 
+ * @param  orientation
+ *         The orientation for this new unit.
+ * @post   If the given orientation is a valid orientation for any unit,
+ *         the orientation of this new unit is equal to the given
+ *         orientation. Otherwise, the orientation of this new unit is equal
+ *         to PI/2.
+ *       | if (isValidOrientation(orientation))
+ *       |   then new.getOrientation() == orientation
+ *       |   else new.getOrientation() == PI/2
+ */
+public Unit(float orientation) {
+	if (! isValidOrientation(orientation))
+		orientation = (float) (Math.PI/2);
+	setOrientation(orientation);
+}
+
+/**
+ * Return the orientation of this unit.
+ */
+@Basic @Raw
+public float getOrientation() {
+	return this.orientation;
+}
+
+/**
+ * Check whether the given orientation is a valid orientation for
+ * any unit.
+ *  
+ * @param  orientation
+ *         The orientation to check.
+ * @return 
+ *       | result == 
+*/
+public static boolean isValidOrientation(float orientation) {
+	if (orientation >= 0 && orientation <= Math.PI/2)
+		return true;
+	return false;
+}
+
+/**
+ * Set the orientation of this unit to the given orientation.
+ * 
+ * @param  orientation
+ *         The new orientation for this unit.
+ * @post   If the given orientation is a valid orientation for any unit,
+ *         the orientation of this new unit is equal to the given
+ *         orientation.
+ *       | if (isValidOrientation(orientation))
+ *       |   then new.getOrientation() == orientation
+ */
+@Raw
+public void setOrientation(float orientation) {
+	if (isValidOrientation(orientation))
+		this.orientation = orientation;
+}
+
+/**
+ * Variable registering the orientation of this unit.
+ */
+private float orientation;
+
 }
