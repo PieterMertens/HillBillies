@@ -15,7 +15,11 @@ public class Facade implements IFacade {
 	public Unit createUnit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
 			boolean enableDefaultBehavior) throws ModelException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Unit newUnit = new Unit(name);
+		
+		
+		return newUnit;
 	}
 
 	@Override
@@ -89,49 +93,65 @@ public class Facade implements IFacade {
 	@Override
 	public int getAgility(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		return unit.getAgility();
+		
 	}
 
 	@Override
 	public void setAgility(Unit unit, int newValue) throws ModelException {
 		// TODO Auto-generated method stub
 		
+		unit.setAgility(newValue);
+		
 	}
 
 	@Override
 	public int getToughness(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		return unit.getToughness();
+	
 	}
 
 	@Override
 	public void setToughness(Unit unit, int newValue) throws ModelException {
 		// TODO Auto-generated method stub
 		
+		unit.setToughness(newValue);
+		
 	}
 
 	@Override
 	public int getMaxHitPoints(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		return getMaxPoints(unit);
+		
 	}
 
 	@Override
 	public int getCurrentHitPoints(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		return unit.getHitpoints();
+	
 	}
 
 	@Override
 	public int getMaxStaminaPoints(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		return getMaxPoints(unit);
+		
 	}
 
 	@Override
 	public int getCurrentStaminaPoints(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		return unit.getStaminapoints();
+		
 	}
 
 	@Override
@@ -236,6 +256,19 @@ public class Facade implements IFacade {
 		return false;
 	}
 	
+	
+	
+	
+	
+	public int getMaxPoints(Unit unit) throws ModelException {
+		// TODO comenttaar
+		
+		int weight = getWeight(unit);
+		int toughness = getToughness(unit);
+						
+		return 200*(weight/100)*(toughness/100);
+		
+	}
 	
 
 }
