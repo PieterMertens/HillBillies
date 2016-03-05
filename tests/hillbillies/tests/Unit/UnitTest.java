@@ -11,5 +11,23 @@ public class UnitTest {
 		Unit unit = new Unit("Homer");
 		Assert.assertEquals("Homer", unit.getName());
 	}
+	
+	@Test
+	public void testUnitName() throws IllegalArgumentException {
+		Unit unit = new Unit("Homer");
+		Assert.assertEquals("Homer", unit.getName());
+	}
+	
+	@Test
+	public void testUnitName() throws IllegalArgumentException {
+		Unit unit = new Unit("Homer");
+		Assert.assertEquals("Homer", unit.getName());
+	}
+	
+	@Test
+	public void testUnitName() throws IllegalArgumentException {
+		Unit unit = new Unit("Homer");
+		Assert.assertEquals("Homer", unit.getName());
+	}
 
 }
