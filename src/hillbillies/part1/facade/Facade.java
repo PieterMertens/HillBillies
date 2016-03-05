@@ -24,7 +24,7 @@ public class Facade implements IFacade {
 		newUnit.setStrength(strength);
 		newUnit.setToughness(toughness);
 				
-		
+		System.out.println("nieuwe unit aangemaakt: " + newUnit.getName());
 		return newUnit;
 	}
 

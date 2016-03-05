@@ -1,5 +1,7 @@
 package hillbillies.model;
 
+import java.util.regex.Pattern;
+
 import be.kuleuven.cs.som.annotate.*;
 
 public class Unit {
@@ -139,7 +141,7 @@ public String getName() {
 */
 public static boolean isValidName(String name) {
 	
-	if (name.matches("[A-Za-z.\\s\'\"]")&&name.matches("^[A-Z]")&&name.length()>1)
+	if (Pattern.matches("[a-zA-Z.\\s\\'\\\"]*",name)&&Character.isUpperCase(name.codePointAt(0))&&name.length()>1)
 		return true;
 	
 	return false;
@@ -612,11 +614,11 @@ public float getOrientation() {
  *  
  * @param  orientation
  *         The orientation to check.
- * @return 
- *       | result == 
+ * @return If the given orientation is between 0 and 2*PI, the method returns true.
+ *       | result == true if (orientation >= 0 && orientation <= Math.PI * 2)
 */
 public static boolean isValidOrientation(float orientation) {
-	if (orientation >= 0 && orientation <= Math.PI/2)
+	if (orientation >= 0 && orientation <= Math.PI * 2)
 		return true;
 	return false;
 }
@@ -643,4 +645,9 @@ public void setOrientation(float orientation) {
  */
 private float orientation;
 
+public void advanceTime(int time) throws IllegalArgumentException{
+	gametime += time;
+}
+
+private int gametime;
 }
