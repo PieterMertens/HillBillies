@@ -8,7 +8,7 @@ import hillbillies.helper.Helper;
  * 
  * @invar The position of each unit must be a valid position for any unit. |
  *        isValidPosition(getPosition())
- *        
+ * 
  * @author Pieter and Matthias
  *
  */
@@ -44,12 +44,12 @@ public class Unit {
 	public static boolean isValidPosition(double[] position) {
 
 		Double lowerlimit = 0d;
-		Double upperlimit = 50d;
+		Double upperlimit = 49d;
 
 		if (position.length == 3) {
 
 			for (int k = 0; k < position.length; k++) {
-				if (position[k] > upperlimit && position[k] <= lowerlimit)
+				if (position[k] > upperlimit || position[k] < lowerlimit)
 					return false;
 			}
 			return true;
@@ -63,20 +63,22 @@ public class Unit {
 	 * 
 	 * @param position
 	 *            The new position for this unit.
-	 * @post The position of this new unit is equal to the given position. 
-	 * 			| new.getPosition() == position
+	 * @post The position of this new unit is equal to the given position. |
+	 *       new.getPosition() == position
 	 * @throws IllegalArgumentException
-	 *             The given position is not a valid position for any unit. 
-	 *             | !isValidPosition(getPosition())
+	 *             The given position is not a valid position for any unit. |
+	 *             !isValidPosition(getPosition())
 	 */
 	@Raw
 	public void setPosition(double[] position) throws IllegalArgumentException {
 		if (!isValidPosition(position))
 			throw new IllegalArgumentException();
-		for (int i = 0; i < position.length; ++i) {
-		    position[i] += .5;
+		else {
+			for (int i = 0; i < position.length; ++i) {
+				position[i] += .5;
+			}
+			this.position = position;
 		}
-		this.position = position;
 	}
 
 	/**
@@ -191,12 +193,13 @@ public class Unit {
 			agility = 25 + (int) (Math.random() * (76));
 		setAgility(agility);
 
-		if (weight < 25 || weight > 100 || weight < (strength + agility)/2)
-			weight = (strength + agility) / 2 + (int) (Math.random() * (100 - ((strength + agility) / 2)));																							
+		if (weight < 25 || weight > 100 || weight < (strength + agility) / 2)
+			weight = (strength + agility) / 2 + (int) (Math.random() * (100 - ((strength + agility) / 2)));
 		setWeight(weight);
 
 		if (!isValidToughness(toughness))
-			toughness = 25 + (int) (Math.random() * (76)); // TODO kan hier nu geen 101
+			toughness = 25 + (int) (Math.random() * (76)); // TODO kan hier nu
+															// geen 101
 															// uitkomen???
 		setToughness(toughness);
 	}
@@ -521,7 +524,7 @@ public class Unit {
 	 */
 	public Unit(float orientation) {
 		if (!isValidOrientation(orientation))
-			orientation = (float) (Math.PI / 2);
+			orientation = (float) (Math.PI/2);
 		setOrientation(orientation);
 	}
 
@@ -879,28 +882,28 @@ public class Unit {
 	 */
 	private boolean isResting;
 
-	//TODO dit fixen
-	public void rest(){
+	// TODO dit fixen
+	public void rest() {
 		while (staminapoints != this.getMaxPoints())
-			advanceTime(40/toughness);
-			if (hitpoints != getMaxPoints())
-				hitpoints += 1;
-			else 
-				staminapoints += 2;			
+			advanceTime(40 / toughness);
+		if (hitpoints != getMaxPoints())
+			hitpoints += 1;
+		else
+			staminapoints += 2;
 	}
-	
-	public int getMaxPoints() {	
-		return 200*(this.getWeight()/100)*(this.getToughness()/100);
+
+	public int getMaxPoints() {
+		return 200 * (this.getWeight() / 100) * (this.getToughness() / 100);
 	}
-	
+
 	public void moveToAdjecent(int dx, int dy, int dz) throws IllegalArgumentException {
-		
+
 		double[] oldPosition = this.getPosition();
 		double[] newPosition = new double[3];
 		for (int k = 0; k < oldPosition.length; k++) {
 			newPosition[k] = Math.floor(oldPosition[k]);
 		}
-		
+
 		newPosition[0] += dx;
 		newPosition[1] += dy;
 		newPosition[2] += dz;
@@ -914,8 +917,8 @@ public class Unit {
 		int y;
 		int z;
 
-		while (Helper.doubleArrayToIntArray(this.getPosition()).equals(targetPosition)){
-			
+		while (Helper.doubleArrayToIntArray(this.getPosition()).equals(targetPosition)) {
+
 			int x1 = Helper.doubleArrayToIntArray(this.getPosition())[0];
 			int y1 = Helper.doubleArrayToIntArray(this.getPosition())[1];
 			int z1 = Helper.doubleArrayToIntArray(this.getPosition())[2];

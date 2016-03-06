@@ -17,14 +17,16 @@ public class Facade implements IFacade {
 	public Unit createUnit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
 			boolean enableDefaultBehavior) throws ModelException {
 		// TODO Auto-generated method stub
-		
-		try{
-		Unit newUnit = new Unit(weight,strength,agility,toughness);
-		newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));
-		newUnit.setName(name);
 
-		return newUnit;}
-		catch(IllegalArgumentException e){throw new ModelException();}
+		try {
+			Unit newUnit = new Unit(weight, strength, agility, toughness);
+			newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));
+			newUnit.setName(name);
+
+			return newUnit;
+		} catch (IllegalArgumentException e) {
+			throw new ModelException();
+		}
 	}
 
 	@Override
@@ -52,10 +54,12 @@ public class Facade implements IFacade {
 
 	@Override
 	public void setName(Unit unit, String newName) throws ModelException {
-		try{unit.setName(newName);}
-		catch(IllegalArgumentException e){throw new ModelException();}
-		
-		
+		try {
+			unit.setName(newName);
+		} catch (IllegalArgumentException e) {
+			throw new ModelException();
+		}
+
 	}
 
 	@Override
@@ -215,9 +219,9 @@ public class Facade implements IFacade {
 	@Override
 	public double getOrientation(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		
+
 		return unit.getOrientation();
-		
+
 	}
 
 	@Override
@@ -235,9 +239,9 @@ public class Facade implements IFacade {
 	@Override
 	public boolean isWorking(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		
+
 		return unit.getIsWorking();
-		
+
 	}
 
 	@Override
@@ -249,9 +253,9 @@ public class Facade implements IFacade {
 	@Override
 	public boolean isAttacking(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		
+
 		return unit.getIsAttacking();
-		
+
 	}
 
 	@Override
@@ -263,9 +267,9 @@ public class Facade implements IFacade {
 	@Override
 	public boolean isResting(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		
+
 		return unit.getIsResting();
-		
+
 	}
 
 	@Override
@@ -279,6 +283,5 @@ public class Facade implements IFacade {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 
 }
