@@ -17,15 +17,14 @@ public class Facade implements IFacade {
 	public Unit createUnit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
 			boolean enableDefaultBehavior) throws ModelException {
 		// TODO Auto-generated method stub
-
-		Unit newUnit = new Unit(name);
+		
+		try{
+		Unit newUnit = new Unit(weight,strength,agility,toughness);
 		newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));
-		newUnit.setWeight(weight);
-		newUnit.setAgility(agility);
-		newUnit.setStrength(strength);
-		newUnit.setToughness(toughness);
+		newUnit.setName(name);
 
-		return newUnit;
+		return newUnit;}
+		catch(IllegalArgumentException e){throw new ModelException();}
 	}
 
 	@Override
@@ -53,9 +52,10 @@ public class Facade implements IFacade {
 
 	@Override
 	public void setName(Unit unit, String newName) throws ModelException {
-
-		unit.setName(newName);
-
+		try{unit.setName(newName);}
+		catch(IllegalArgumentException e){throw new ModelException();}
+		
+		
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class Facade implements IFacade {
 	@Override
 	public void moveToAdjacent(Unit unit, int dx, int dy, int dz) throws ModelException {
 		// TODO Auto-generated method stub
-
+		unit.moveToAdjecent(dx, dy, dz);
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public class Facade implements IFacade {
 	@Override
 	public void moveTo(Unit unit, int[] cube) throws ModelException {
 		// TODO Auto-generated method stub
-
+		unit.moveTo(cube);
 	}
 
 	@Override
