@@ -1,8 +1,8 @@
-package hillbillies.util;
+package hillbillies.helper;
 
 public class Helper {
 	
-	public int[] doubleArrayToIntArray(double[] array) {
+	public static int[] doubleArrayToIntArray(double[] array) {
 		//TODO commentaar
 
 		int[] result = new int[array.length];
@@ -15,7 +15,7 @@ public class Helper {
 
 	}
 	
-	public double[] intArrayToDoubleArray(int[] array) {
+	public static double[] intArrayToDoubleArray(int[] array) {
 		//TODO commentaar
 
 		double[] result = new double[array.length];

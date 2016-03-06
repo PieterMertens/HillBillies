@@ -2,7 +2,7 @@ package hillbillies.part1.facade;
 
 import hillbillies.model.Unit;
 import ogp.framework.util.ModelException;
-import hillbillies.util.Helper;
+import hillbillies.helper.Helper;
 
 /**
  * @author
@@ -19,7 +19,7 @@ public class Facade implements IFacade {
 		// TODO Auto-generated method stub
 		
 		Unit newUnit = new Unit(name);
-		newUnit.setPosition(intArrayToDoubleArray(initialPosition));
+		newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));
 		newUnit.setWeight(weight);
 		newUnit.setAgility(agility);
 		newUnit.setStrength(strength);
@@ -40,7 +40,7 @@ public class Facade implements IFacade {
 		// TODO Auto-generated method stub
 
 		double[] position = unit.getPosition();
-		return doubleArrayToIntArray(position);
+		return Helper.doubleArrayToIntArray(position);
 	}
 
 	@Override
