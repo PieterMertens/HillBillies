@@ -595,8 +595,8 @@ public class Unit {
 	 * @effect The movementSpeed of this new unit is set to the given
 	 *         movementSpeed. | this.setMovementSpeed(movementSpeed)
 	 */
-	public Unit(double movementSpeed) throws IllegalArgumentException {
-		this.setMovementSpeed(movementSpeed);
+	public Unit() throws IllegalArgumentException {
+		this.setMovementSpeed();
 	}
 
 	/**
@@ -609,24 +609,8 @@ public class Unit {
 	}
 
 	/**
-	 * Check whether the given movementSpeed is a valid movementSpeed for any
-	 * unit.
-	 * 
-	 * @param movementSpeed
-	 *            The movementSpeed to check.
-	 * @return | result == //TODO
-	 */
-	public static boolean isValidMovementSpeed(double movementSpeed, int strength, int agility, int weight) {
-		if (movementSpeed == (1.5 * (strength + agility) / (200 * (weight / 100))))
-			return true;
-		return false;
-	}
-
-	/**
 	 * Set the movementSpeed of this unit to the given movementSpeed.
 	 * 
-	 * @param movementSpeed
-	 *            The new movementSpeed for this unit.
 	 * @post The movementSpeed of this new unit is equal to the given
 	 *       movementSpeed. | new.getMovementSpeed() == movementSpeed
 	 * @throws IllegalArgumentException
@@ -634,9 +618,8 @@ public class Unit {
 	 *             unit. | ! isValidMovementSpeed(getMovementSpeed())
 	 */
 	@Raw
-	public void setMovementSpeed(double movementSpeed) throws IllegalArgumentException {
-		if (!isValidMovementSpeed(movementSpeed, this.strength, this.agility, this.weight))
-			throw new IllegalArgumentException();
+	public void setMovementSpeed() throws IllegalArgumentException {
+		movementSpeed = (1.5 * (this.getStrength() + this.getAgility()) / (200 * (this.getWeight() / 100)));
 		this.movementSpeed = movementSpeed;
 	}
 
@@ -898,16 +881,17 @@ public class Unit {
 
 	//TODO dit fixen
 	public void rest(){
-		while (staminapoints != maxstaminapoints)
+		while (staminapoints != this.getMaxPoints())
 			advanceTime(40/toughness);
-			if (hitpoints != maxhitpoints)
+			if (hitpoints != getMaxPoints())
 				hitpoints += 1;
 			else 
 				staminapoints += 2;			
 	}
-
-	private int maxhitpoints = (int) 200*(weight/100)*(toughness/100);
-	private int maxstaminapoints = maxhitpoints;
+	
+	public int getMaxPoints() {	
+		return 200*(this.getWeight()/100)*(this.getToughness()/100);
+	}
 	
 	public void moveToAdjecent(int dx, int dy, int dz) throws IllegalArgumentException {
 		
@@ -930,8 +914,8 @@ public class Unit {
 		int y;
 		int z;
 
-		while (Helper.doubleArrayToIntArray(this.getPosition()) != targetPosition) {
-
+		while (Helper.doubleArrayToIntArray(this.getPosition()).equals(targetPosition)){
+			
 			int x1 = Helper.doubleArrayToIntArray(this.getPosition())[0];
 			int y1 = Helper.doubleArrayToIntArray(this.getPosition())[1];
 			int z1 = Helper.doubleArrayToIntArray(this.getPosition())[2];

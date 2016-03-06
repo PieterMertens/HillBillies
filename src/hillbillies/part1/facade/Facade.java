@@ -125,7 +125,7 @@ public class Facade implements IFacade {
 	public int getMaxHitPoints(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
 
-		return getMaxPoints(unit);
+		return unit.getMaxPoints();
 
 	}
 
@@ -141,7 +141,7 @@ public class Facade implements IFacade {
 	public int getMaxStaminaPoints(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
 
-		return getMaxPoints(unit);
+		return unit.getMaxPoints();
 
 	}
 
@@ -178,7 +178,7 @@ public class Facade implements IFacade {
 				return unit.getMovementSpeed();
 		}
 
-		return 0d;
+		return 5d;
 	}
 
 	@Override
@@ -280,14 +280,5 @@ public class Facade implements IFacade {
 		return false;
 	}
 
-	public int getMaxPoints(Unit unit) throws ModelException {
-		// TODO comenttaar
-
-		int weight = getWeight(unit);
-		int toughness = getToughness(unit);
-
-		return 200 * (weight / 100) * (toughness / 100);
-
-	}
 
 }
