@@ -8,6 +8,24 @@ import hillbillies.helper.Helper;
  * 
  * @invar The position of each unit must be a valid position for any unit. |
  *        isValidPosition(getPosition())
+ * @invar The hitpoints of each unit must be a valid hitpoints for any unit.
+ *        | isValidHitpoints(getHitpoints())
+ * @invar The name of each unit must be a valid name for any unit. |
+ *        isValidName(getName())
+ * @invar The weight of each unit must be a valid weight for any unit. |
+ *        isValidWeight(getWeight())
+ * @invar The strength of each unit must be a valid strength for any unit. |
+ *        isValidStrength(getStrength())
+ * @invar The agility of each unit must be a valid agility for any unit. |
+ *        isValidAgility(getAgility())
+ * @invar The toughness of each unit must be a valid toughness for any unit.
+ *        | isValidToughness(getToughness())
+ * @invar The staminapoints of each unit must be a valid staminapoints for
+ *        any unit. | isValidStaminapoints(getStaminapoints())
+ * @invar The orientation of each unit must be a valid orientation for any
+ *        unit. | isValidOrientation(getOrientation())
+ * @invar The isMoving of each unit must be a valid isMoving for any unit. |
+ *        isValidIsMoving(getIsMoving())
  * 
  * @author Pieter and Matthias
  *
@@ -39,7 +57,7 @@ public class Unit {
 	 * 
 	 * @param position
 	 *            The position to check.
-	 * @return | result ==
+	 * @return | result == true if the 3 coordinates are between the given limits.
 	 */
 	public static boolean isValidPosition(double[] position) {
 
@@ -87,13 +105,6 @@ public class Unit {
 	private double[] position;
 
 	/**
-	 * TO BE ADDED TO CLASS HEADING
-	 * 
-	 * @invar The name of each unit must be a valid name for any unit. |
-	 *        isValidName(getName())
-	 */
-
-	/**
 	 * Initialize this new unit with given name.
 	 *
 	 * @param name
@@ -120,7 +131,7 @@ public class Unit {
 	 * 
 	 * @param name
 	 *            The name to check.
-	 * @return | result ==
+	 * @return | result == true if first letter is uppercase and no symbols except ' and " are used.
 	 */
 	public static boolean isValidName(String name) {
 
@@ -155,11 +166,6 @@ public class Unit {
 	private String name;
 
 	/**
-	 * @invar The weight of each unit must be a valid weight for any unit. |
-	 *        isValidWeight(getWeight())
-	 */
-
-	/**
 	 * Initialize this new unit with given weight, strength, agility and
 	 * toughness.
 	 * 
@@ -186,21 +192,19 @@ public class Unit {
 	public Unit(int weight, int strength, int agility, int toughness) {
 
 		if (strength < 25 || strength > 100)
-			strength = 25 + (int) (Math.random() * (76));
+			strength = 25 + (int) (Math.random() * (75));
 		setStrength(strength);
 
 		if (agility < 25 || agility > 100)
-			agility = 25 + (int) (Math.random() * (76));
+			agility = 25 + (int) (Math.random() * (75));
 		setAgility(agility);
 
 		if (weight < 25 || weight > 100 || weight < (strength + agility) / 2)
 			weight = (strength + agility) / 2 + (int) (Math.random() * (100 - ((strength + agility) / 2)));
 		setWeight(weight);
 
-		if (!isValidToughness(toughness))
-			toughness = 25 + (int) (Math.random() * (76)); // TODO kan hier nu
-															// geen 101
-															// uitkomen???
+		if (toughness < 25 || toughness > 100)
+			toughness = 25 + (int) (Math.random() * (75)); 
 		setToughness(toughness);
 	}
 
@@ -218,7 +222,7 @@ public class Unit {
 	 * 
 	 * @param weight
 	 *            The weight to check.
-	 * @return | result == //TODO
+	 * @return | result == true if weight >= 1 and weight <= 200 && weight >= (strength + agility) / 2
 	 */
 	public static boolean isValidWeight(int weight, int strength, int agility) {
 		if (weight >= 1 && weight <= 200 && weight >= (strength + agility) / 2)
@@ -247,11 +251,6 @@ public class Unit {
 	private int weight;
 
 	/**
-	 * @invar The strength of each unit must be a valid strength for any unit. |
-	 *        isValidStrength(getStrength())
-	 */
-
-	/**
 	 * Return the strength of this unit.
 	 */
 	@Basic
@@ -265,7 +264,7 @@ public class Unit {
 	 * 
 	 * @param strength
 	 *            The strength to check.
-	 * @return | result ==
+	 * @return | result == true if strength >= 1 and strength <= 200
 	 */
 	public static boolean isValidStrength(int strength) {
 		if (strength >= 1 && strength <= 200)
@@ -294,11 +293,6 @@ public class Unit {
 	private int strength;
 
 	/**
-	 * @invar The agility of each unit must be a valid agility for any unit. |
-	 *        isValidAgility(getAgility())
-	 */
-
-	/**
 	 * Return the agility of this unit.
 	 */
 	@Basic
@@ -312,7 +306,7 @@ public class Unit {
 	 * 
 	 * @param agility
 	 *            The agility to check.
-	 * @return | result ==
+	 * @return | result == true if agility >= 1 and agility <= 200
 	 */
 	public static boolean isValidAgility(int agility) {
 		if (agility >= 1 && agility <= 200)
@@ -341,11 +335,6 @@ public class Unit {
 	private int agility;
 
 	/**
-	 * @invar The toughness of each unit must be a valid toughness for any unit.
-	 *        | isValidToughness(getToughness())
-	 */
-
-	/**
 	 * Return the toughness of this unit.
 	 */
 	@Basic
@@ -359,7 +348,7 @@ public class Unit {
 	 * 
 	 * @param toughness
 	 *            The toughness to check.
-	 * @return | result ==
+	 * @return | result == if toughness >= 1 and toughness <= 200
 	 */
 	public static boolean isValidToughness(int toughness) {
 		if (toughness >= 1 && toughness <= 200)
@@ -387,11 +376,6 @@ public class Unit {
 	 * Variable registering the toughness of this unit.
 	 */
 	private int toughness;
-
-	/**
-	 * @invar The hitpoints of each unit must be a valid hitpoints for any unit.
-	 *        | isValidHitpoints(getHitpoints())
-	 */
 
 	/**
 	 * Initialize this new unit with given hitpoints.
@@ -428,7 +412,7 @@ public class Unit {
 	 * 
 	 * @param hitpoints
 	 *            The hitpoints to check.
-	 * @return | result == //TODO
+	 * @return | result == hitpoints <= (200 * (weight / 100) * (toughness / 100))
 	 */
 	public static boolean isValidHitpoints(int hitpoints, int weight, int toughness) {
 		if (hitpoints <= (200 * (weight / 100) * (toughness / 100)))
@@ -458,11 +442,6 @@ public class Unit {
 	private int hitpoints;
 
 	/**
-	 * @invar The staminapoints of each unit must be a valid staminapoints for
-	 *        any unit. | isValidStaminapoints(getStaminapoints())
-	 */
-
-	/**
 	 * Return the staminapoints of this unit.
 	 */
 	@Basic
@@ -477,10 +456,10 @@ public class Unit {
 	 * 
 	 * @param staminapoints
 	 *            The staminapoints to check.
-	 * @return | result == //TODO ...
+	 * @return | result == true if staminapoints <= (200 * (weight / 100) * (toughness / 100)) && staminapoints >= 0)
 	 */
 	public static boolean isValidStaminapoints(int staminapoints, int weight, int toughness) {
-		if (staminapoints <= (200 * (weight / 100) * (toughness / 100)))
+		if (staminapoints <= (200 * (weight / 100) * (toughness / 100)) && staminapoints >= 0)
 			return true;
 		return false;
 	}
@@ -507,11 +486,6 @@ public class Unit {
 	private int staminapoints;
 
 	/**
-	 * @invar The orientation of each unit must be a valid orientation for any
-	 *        unit. | isValidOrientation(getOrientation())
-	 */
-
-	/**
 	 * Initialize this new unit with given orientation.
 	 * 
 	 * @param orientation
@@ -524,7 +498,7 @@ public class Unit {
 	 */
 	public Unit(float orientation) {
 		if (!isValidOrientation(orientation))
-			orientation = (float) (Math.PI/2);
+			orientation = (float) (Math.PI / 2);
 		setOrientation(orientation);
 	}
 
@@ -547,7 +521,7 @@ public class Unit {
 	 *         orientation <= Math.PI * 2)
 	 */
 	public static boolean isValidOrientation(float orientation) {
-		if (orientation >= 0 && orientation <= Math.PI * 2)
+		if (orientation >= (float) -Math.PI && orientation <= (float) Math.PI)
 			return true;
 		return false;
 	}
@@ -566,82 +540,66 @@ public class Unit {
 	public void setOrientation(float orientation) {
 		if (isValidOrientation(orientation))
 			this.orientation = orientation;
+		else
+			this.orientation = (float) (Math.PI/2);
 	}
 
 	/**
 	 * Variable registering the orientation of this unit.
 	 */
-	private float orientation;
+	private float orientation = (float) Math.PI / 2;
+	private double timenotresting;
 
-	public void advanceTime(int time) throws IllegalArgumentException {
-		gametime += time;
-		// TODO update pos
-		// check if is moving -> calculate speed and update pos
-		// TODO update activities
-		// check if is working/attacking -> update
+	public void advanceTime(double dt) throws IllegalArgumentException {
+		if (this.getIsResting()) {
+			timenotresting = 0;
+		} else {
+			timenotresting += dt;
+			if (timenotresting >= 180) {
+				rest();
+			}
+			if (this.getIsMoving()) {
+				if (this.getIsSprinting()) {
+					int newStaminaPoints = (int) (this.getStaminapoints() - 0.1 * dt);
+					if (newStaminaPoints >= 0)
+						this.setStaminapoints(newStaminaPoints);
+					else
+						this.setIsSprinting(false);
+				}
+			}
+		}
+
 	}
 
-	private int gametime; // FIXME overbodig?
+	private int zDirection;
+
+	public double getCurrentSpeed() {
+
+		double currentSpeed;
+		double baseSpeed = 1.5 * (this.getStrength() + this.getAgility()) / (200 * this.getWeight() / 100);
+		if (this.getIsSprinting())
+			baseSpeed *= 2;
+
+		if (zDirection == 1) {
+			currentSpeed = baseSpeed * 0.5;
+		} else if (zDirection == -1) {
+			currentSpeed = baseSpeed * 1.2;
+		} else {
+			currentSpeed = baseSpeed;
+		}
+
+		return currentSpeed;
+
+	}
 
 	/**
 	 * TO BE ADDED TO CLASS HEADING
 	 * 
-	 * @invar The movementSpeed of each unit must be a valid movementSpeed for
-	 *        any unit. | isValidMovementSpeed(getMovementSpeed())
-	 */
-
-	/**
-	 * Initialize this new unit with given movementSpeed.
-	 *
-	 * @param movementSpeed
-	 *            The movementSpeed for this new unit.
-	 * @effect The movementSpeed of this new unit is set to the given
-	 *         movementSpeed. | this.setMovementSpeed(movementSpeed)
-	 */
-	public Unit() throws IllegalArgumentException {
-		this.setMovementSpeed();
-	}
-
-	/**
-	 * Return the movementSpeed of this unit.
-	 */
-	@Basic
-	@Raw
-	public double getMovementSpeed() {
-		return this.movementSpeed;
-	}
-
-	/**
-	 * Set the movementSpeed of this unit to the given movementSpeed.
-	 * 
-	 * @post The movementSpeed of this new unit is equal to the given
-	 *       movementSpeed. | new.getMovementSpeed() == movementSpeed
-	 * @throws IllegalArgumentException
-	 *             The given movementSpeed is not a valid movementSpeed for any
-	 *             unit. | ! isValidMovementSpeed(getMovementSpeed())
-	 */
-	@Raw
-	public void setMovementSpeed() throws IllegalArgumentException {
-		movementSpeed = (1.5 * (this.getStrength() + this.getAgility()) / (200 * (this.getWeight() / 100)));
-		this.movementSpeed = movementSpeed;
-	}
-
-	/**
-	 * Variable registering the movementSpeed of this unit.
-	 */
-	private double movementSpeed;
-
-	/**
-	 * TO BE ADDED TO CLASS HEADING
-	 * 
-	 * @invar The isMoving of each unit must be a valid isMoving for any unit. |
-	 *        isValidIsMoving(getIsMoving())
+	 
 	 */
 
 	/**
 	 * Initialize this new unit with given isMoving.
-	 * 
-	 * TODO aanvullen voor elke is...
 	 * 
 	 * @param isMoving
 	 *            The isMoving for this new unit.
@@ -671,7 +629,7 @@ public class Unit {
 	 * 
 	 * @param isMoving
 	 *            The isMoving to check.
-	 * @return | result ==
+	 * @return | result == true if given value is boolean
 	 */
 	public static boolean isValidIsMoving(boolean isMoving) {
 		if (isMoving || isMoving == false)
@@ -695,6 +653,11 @@ public class Unit {
 		if (!isValidIsMoving(isMoving))
 			throw new IllegalArgumentException();
 		this.isMoving = isMoving;
+		if (isMoving) {
+			this.setIsWorking(false);
+			this.setIsResting(false);
+			this.setIsAttacking(false);
+		}
 	}
 
 	/**
@@ -716,7 +679,7 @@ public class Unit {
 	 * 
 	 * @param isSprinting
 	 *            The isSprinting to check.
-	 * @return | result ==
+	 * @return | result == true if given value is boolean
 	 */
 	public static boolean isValidIsSprinting(boolean isSprinting) {
 		if (isSprinting || isSprinting == false)
@@ -731,6 +694,8 @@ public class Unit {
 	 *            The new isSprinting for this unit.
 	 * @post The isSprinting of this new unit is equal to the given isSprinting.
 	 *       | new.getIsSprinting() == isSprinting
+	 * @post If unit was resting, working or attacking, that activity stopped.
+	 * @post If he wasn't already, the unit started moving.
 	 * @throws IllegalArgumentException
 	 *             The given isSprinting is not a valid isSprinting for any
 	 *             unit. | ! isValidIsSprinting(getIsSprinting())
@@ -740,6 +705,12 @@ public class Unit {
 		if (!isValidIsSprinting(isSprinting))
 			throw new IllegalArgumentException();
 		this.isSprinting = isSprinting;
+		if (isSprinting) {
+			this.setIsResting(false);
+			this.setIsWorking(false);
+			this.setIsAttacking(false);
+			this.setIsMoving(true);
+		}
 	}
 
 	/**
@@ -761,7 +732,7 @@ public class Unit {
 	 * 
 	 * @param isWorking
 	 *            The isWorking to check.
-	 * @return | result ==
+	 * @return | result == true if given value is boolean
 	 */
 	public static boolean isValidIsWorking(boolean isWorking) {
 		if (isWorking || isWorking == false)
@@ -776,6 +747,7 @@ public class Unit {
 	 *            The new isWorking for this unit.
 	 * @post The isWorking of this new unit is equal to the given isWorking. |
 	 *       new.getIsWorking() == isWorking
+	 * @post If any other activities are running they are stopped.
 	 * @throws IllegalArgumentException
 	 *             The given isWorking is not a valid isWorking for any unit. |
 	 *             ! isValidIsWorking(getIsWorking())
@@ -785,6 +757,12 @@ public class Unit {
 		if (!isValidIsWorking(isWorking))
 			throw new IllegalArgumentException();
 		this.isWorking = isWorking;
+		if (isWorking) {
+			this.setIsResting(false);
+			this.setIsMoving(false);
+			this.setIsAttacking(false);
+			this.setIsSprinting(false);
+		}
 	}
 
 	/**
@@ -806,7 +784,7 @@ public class Unit {
 	 * 
 	 * @param isAttacking
 	 *            The isAttacking to check.
-	 * @return | result ==
+	 * @return | result == true if given value is boolean
 	 */
 	public static boolean isValidIsAttacking(boolean isAttacking) {
 		if (isAttacking || isAttacking == false)
@@ -821,6 +799,7 @@ public class Unit {
 	 *            The new isAttacking for this unit.
 	 * @post The isAttacking of this new unit is equal to the given isAttacking.
 	 *       | new.getisAttacking() == isAttacking
+	 * @post If any other activities are running they are stopped.
 	 * @throws IllegalArgumentException
 	 *             The given isAttacking is not a valid isAttacking for any
 	 *             unit. | ! isValidIsAttacking(getisAttacking())
@@ -830,6 +809,12 @@ public class Unit {
 		if (!isValidIsAttacking(isAttacking))
 			throw new IllegalArgumentException();
 		this.isAttacking = isAttacking;
+		if (isAttacking) {
+			this.setIsWorking(false);
+			this.setIsMoving(false);
+			this.setIsResting(false);
+			this.setIsSprinting(false);
+		}
 	}
 
 	/**
@@ -851,7 +836,7 @@ public class Unit {
 	 * 
 	 * @param isResting
 	 *            The isResting to check.
-	 * @return | result ==
+	 * @return | result == true if given value is boolean
 	 */
 	public static boolean isValidIsResting(boolean isResting) {
 		if (isResting || isResting == false)
@@ -866,6 +851,7 @@ public class Unit {
 	 *            The new isResting for this unit.
 	 * @post The isResting of this new unit is equal to the given isResting. |
 	 *       new.getIsResting() == isResting
+	 * @post If any other activities are running they are stopped.
 	 * @throws IllegalArgumentException
 	 *             The given isResting is not a valid isResting for any unit. |
 	 *             ! isValidIsResting(getIsResting())
@@ -875,6 +861,12 @@ public class Unit {
 		if (!isValidIsResting(isResting))
 			throw new IllegalArgumentException();
 		this.isResting = isResting;
+		if (isResting) {
+			this.setIsWorking(false);
+			this.setIsMoving(false);
+			this.setIsAttacking(false);
+			this.setIsSprinting(false);
+		}
 	}
 
 	/**
@@ -882,14 +874,15 @@ public class Unit {
 	 */
 	private boolean isResting;
 
-	// TODO dit fixen
 	public void rest() {
-		while (staminapoints != this.getMaxPoints())
-			advanceTime(40 / toughness);
-		if (hitpoints != getMaxPoints())
-			hitpoints += 1;
-		else
-			staminapoints += 2;
+		setIsResting(true);
+		while (staminapoints != this.getMaxPoints()) {
+			advanceTime(0.2);
+			if (hitpoints != getMaxPoints())
+				hitpoints += this.getToughness() / 200;
+			else
+				staminapoints += this.getToughness() / 100;
+		}
 	}
 
 	public int getMaxPoints() {
@@ -897,6 +890,18 @@ public class Unit {
 	}
 
 	public void moveToAdjecent(int dx, int dy, int dz) throws IllegalArgumentException {
+
+		this.setIsMoving(true);
+		zDirection = dz;
+
+		double distance = Math.sqrt((Math.abs(dx) + Math.abs(dy) + Math.abs(dz)));
+
+		double[] velocity = new double[3];
+		velocity[0] = this.getCurrentSpeed() * dx / distance;
+		velocity[1] = this.getCurrentSpeed() * dy / distance;
+		velocity[2] = this.getCurrentSpeed() * dz / distance;
+
+		this.setOrientation((float) (Math.atan2(velocity[1], velocity[0])));
 
 		double[] oldPosition = this.getPosition();
 		double[] newPosition = new double[3];
@@ -951,4 +956,17 @@ public class Unit {
 		}
 
 	}
+
+	public void work() {
+
+		this.setIsWorking(true);
+		double timeWorking = 0;
+		while (timeWorking < 500 / this.getStrength()) {
+			advanceTime(0.2);
+			timeWorking += 0.2;
+		}
+		this.setIsResting(true);
+
+	}
+
 }
