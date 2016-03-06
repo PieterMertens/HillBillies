@@ -3,6 +3,7 @@ package hillbillies.model;
 import java.util.regex.Pattern;
 
 import be.kuleuven.cs.som.annotate.*;
+import hillbillies.helper.Helper;
 
 public class Unit {
 
@@ -576,89 +577,343 @@ public class Unit {
 	 * Variable registering the orientation of this unit.
 	 */
 	private float orientation;
-	
-	
-	
-	
 
 	public void advanceTime(int time) throws IllegalArgumentException {
 		gametime += time;
-		//TODO update pos
-		//TODO update activities
+		// TODO update pos
+		// check if is moving -> calculate speed and update pos
+		// TODO update activities
+		// check if is working/attacking -> update
 	}
 
-	private int gametime;
-	
-	
-	/** TO BE ADDED TO CLASS HEADING
-	 * @invar  The movementSpeed of each unit must be a valid movementSpeed for any
-	 *         unit.
-	 *       | isValidMovementSpeed(getMovementSpeed())
+	private int gametime; // FIXME overbodig?
+
+	/**
+	 * TO BE ADDED TO CLASS HEADING
+	 * 
+	 * @invar The movementSpeed of each unit must be a valid movementSpeed for
+	 *        any unit. | isValidMovementSpeed(getMovementSpeed())
 	 */
 
+	/**
+	 * Initialize this new unit with given movementSpeed.
+	 *
+	 * @param movementSpeed
+	 *            The movementSpeed for this new unit.
+	 * @effect The movementSpeed of this new unit is set to the given
+	 *         movementSpeed. | this.setMovementSpeed(movementSpeed)
+	 */
+	public Unit(double movementSpeed) throws IllegalArgumentException {
+		this.setMovementSpeed(movementSpeed);
+	}
 
-/**
- * Initialize this new unit with given movementSpeed.
- *
- * @param  movementSpeed
- *         The movementSpeed for this new unit.
- * @effect The movementSpeed of this new unit is set to
- *         the given movementSpeed.
- *       | this.setMovementSpeed(movementSpeed)
- */
-public Unit(double movementSpeed)
-		throws IllegalArgumentException {
-	this.setMovementSpeed(movementSpeed);
-}
+	/**
+	 * Return the movementSpeed of this unit.
+	 */
+	@Basic
+	@Raw
+	public double getMovementSpeed() {
+		return this.movementSpeed;
+	}
 
+	/**
+	 * Check whether the given movementSpeed is a valid movementSpeed for any
+	 * unit.
+	 * 
+	 * @param movementSpeed
+	 *            The movementSpeed to check.
+	 * @return | result == //TODO
+	 */
+	public static boolean isValidMovementSpeed(double movementSpeed, int strength, int agility, int weight) {
+		if (movementSpeed == (1.5 * (strength + agility) / (200 * (weight / 100))))
+			return true;
+		return false;
+	}
 
-/**
- * Return the movementSpeed of this unit.
- */
-@Basic @Raw
-public double getMovementSpeed() {
-	return this.movementSpeed;
-}
+	/**
+	 * Set the movementSpeed of this unit to the given movementSpeed.
+	 * 
+	 * @param movementSpeed
+	 *            The new movementSpeed for this unit.
+	 * @post The movementSpeed of this new unit is equal to the given
+	 *       movementSpeed. | new.getMovementSpeed() == movementSpeed
+	 * @throws IllegalArgumentException
+	 *             The given movementSpeed is not a valid movementSpeed for any
+	 *             unit. | ! isValidMovementSpeed(getMovementSpeed())
+	 */
+	@Raw
+	public void setMovementSpeed(double movementSpeed) throws IllegalArgumentException {
+		if (!isValidMovementSpeed(movementSpeed, this.strength, this.agility, this.weight))
+			throw new IllegalArgumentException();
+		this.movementSpeed = movementSpeed;
+	}
 
-/**
- * Check whether the given movementSpeed is a valid movementSpeed for
- * any unit.
- *  
- * @param  movementSpeed
- *         The movementSpeed to check.
- * @return 
- *       | result == //TODO
-*/
-public static boolean isValidMovementSpeed(double movementSpeed) {
-	return false;
-}
+	/**
+	 * Variable registering the movementSpeed of this unit.
+	 */
+	private double movementSpeed;
 
-/**
- * Set the movementSpeed of this unit to the given movementSpeed.
- * 
- * @param  movementSpeed
- *         The new movementSpeed for this unit.
- * @post   The movementSpeed of this new unit is equal to
- *         the given movementSpeed.
- *       | new.getMovementSpeed() == movementSpeed
- * @throws IllegalArgumentException
- *         The given movementSpeed is not a valid movementSpeed for any
- *         unit.
- *       | ! isValidMovementSpeed(getMovementSpeed())
- */
-@Raw
-public void setMovementSpeed(double movementSpeed) 
-		throws IllegalArgumentException {
-	if (! isValidMovementSpeed(movementSpeed))
-		throw new IllegalArgumentException();
-	this.movementSpeed = movementSpeed;
-}
+	/**
+	 * TO BE ADDED TO CLASS HEADING
+	 * 
+	 * @invar The isMoving of each unit must be a valid isMoving for any unit. |
+	 *        isValidIsMoving(getIsMoving())
+	 */
 
-/**
- * Variable registering the movementSpeed of this unit.
- */
-private double movementSpeed;
-	
-	
-	
+	/**
+	 * Initialize this new unit with given isMoving.
+	 * 
+	 * TODO aanvullen voor elke is...
+	 * 
+	 * @param isMoving
+	 *            The isMoving for this new unit.
+	 * @effect The isMoving of this new unit is set to the given isMoving. |
+	 *         this.setIsMoving(isMoving)
+	 */
+	public Unit(boolean isMoving, boolean isSprinting, boolean isWorking, boolean isAttacking, boolean isResting)
+			throws IllegalArgumentException {
+		this.setIsMoving(isMoving);
+		this.setIsSprinting(isSprinting);
+		this.setIsWorking(isWorking);
+		this.setIsAttacking(isAttacking);
+		this.setIsResting(isResting);
+	}
+
+	/**
+	 * Return the isMoving of this unit.
+	 */
+	@Basic
+	@Raw
+	public boolean getIsMoving() {
+		return this.isMoving;
+	}
+
+	/**
+	 * Check whether the given isMoving is a valid isMoving for any unit.
+	 * 
+	 * @param isMoving
+	 *            The isMoving to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidIsMoving(boolean isMoving) {
+		if (isMoving || isMoving == false)
+			return true;
+		return false;
+	}
+
+	/**
+	 * Set the isMoving of this unit to the given isMoving.
+	 * 
+	 * @param isMoving
+	 *            The new isMoving for this unit.
+	 * @post The isMoving of this new unit is equal to the given isMoving. |
+	 *       new.getIsMoving() == isMoving
+	 * @throws IllegalArgumentException
+	 *             The given isMoving is not a valid isMoving for any unit. | !
+	 *             isValidIsMoving(getIsMoving())
+	 */
+	@Raw
+	public void setIsMoving(boolean isMoving) throws IllegalArgumentException {
+		if (!isValidIsMoving(isMoving))
+			throw new IllegalArgumentException();
+		this.isMoving = isMoving;
+	}
+
+	/**
+	 * Variable registering the isMoving of this unit.
+	 */
+	private boolean isMoving;
+
+	/**
+	 * Return the isSprinting of this unit.
+	 */
+	@Basic
+	@Raw
+	public boolean getIsSprinting() {
+		return this.isSprinting;
+	}
+
+	/**
+	 * Check whether the given isSprinting is a valid isSprinting for any unit.
+	 * 
+	 * @param isSprinting
+	 *            The isSprinting to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidIsSprinting(boolean isSprinting) {
+		if (isSprinting || isSprinting == false)
+			return true;
+		return false;
+	}
+
+	/**
+	 * Set the isSprinting of this unit to the given isSprinting.
+	 * 
+	 * @param isSprinting
+	 *            The new isSprinting for this unit.
+	 * @post The isSprinting of this new unit is equal to the given isSprinting.
+	 *       | new.getIsSprinting() == isSprinting
+	 * @throws IllegalArgumentException
+	 *             The given isSprinting is not a valid isSprinting for any
+	 *             unit. | ! isValidIsSprinting(getIsSprinting())
+	 */
+	@Raw
+	public void setIsSprinting(boolean isSprinting) throws IllegalArgumentException {
+		if (!isValidIsSprinting(isSprinting))
+			throw new IllegalArgumentException();
+		this.isSprinting = isSprinting;
+	}
+
+	/**
+	 * Variable registering the isSprinting of this unit.
+	 */
+	private boolean isSprinting;
+
+	/**
+	 * Return the isWorking of this unit.
+	 */
+	@Basic
+	@Raw
+	public boolean getIsWorking() {
+		return this.isWorking;
+	}
+
+	/**
+	 * Check whether the given isWorking is a valid isWorking for any unit.
+	 * 
+	 * @param isWorking
+	 *            The isWorking to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidIsWorking(boolean isWorking) {
+		if (isWorking || isWorking == false)
+			return true;
+		return false;
+	}
+
+	/**
+	 * Set the isWorking of this unit to the given isWorking.
+	 * 
+	 * @param isWorking
+	 *            The new isWorking for this unit.
+	 * @post The isWorking of this new unit is equal to the given isWorking. |
+	 *       new.getIsWorking() == isWorking
+	 * @throws IllegalArgumentException
+	 *             The given isWorking is not a valid isWorking for any unit. |
+	 *             ! isValidIsWorking(getIsWorking())
+	 */
+	@Raw
+	public void setIsWorking(boolean isWorking) throws IllegalArgumentException {
+		if (!isValidIsWorking(isWorking))
+			throw new IllegalArgumentException();
+		this.isWorking = isWorking;
+	}
+
+	/**
+	 * Variable registering the isWorking of this unit.
+	 */
+	private boolean isWorking;
+
+	/**
+	 * Return the isAttacking of this unit.
+	 */
+	@Basic
+	@Raw
+	public boolean getIsAttacking() {
+		return this.isAttacking;
+	}
+
+	/**
+	 * Check whether the given isAttacking is a valid isAttacking for any unit.
+	 * 
+	 * @param isAttacking
+	 *            The isAttacking to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidIsAttacking(boolean isAttacking) {
+		if (isAttacking || isAttacking == false)
+			return true;
+		return false;
+	}
+
+	/**
+	 * Set the isAttacking of this unit to the given isAttacking.
+	 * 
+	 * @param isAttacking
+	 *            The new isAttacking for this unit.
+	 * @post The isAttacking of this new unit is equal to the given isAttacking.
+	 *       | new.getisAttacking() == isAttacking
+	 * @throws IllegalArgumentException
+	 *             The given isAttacking is not a valid isAttacking for any
+	 *             unit. | ! isValidIsAttacking(getisAttacking())
+	 */
+	@Raw
+	public void setIsAttacking(boolean isAttacking) throws IllegalArgumentException {
+		if (!isValidIsAttacking(isAttacking))
+			throw new IllegalArgumentException();
+		this.isAttacking = isAttacking;
+	}
+
+	/**
+	 * Variable registering the isAttacking of this unit.
+	 */
+	private boolean isAttacking;
+
+	/**
+	 * Return the isResting of this unit.
+	 */
+	@Basic
+	@Raw
+	public boolean getIsResting() {
+		return this.isResting;
+	}
+
+	/**
+	 * Check whether the given isResting is a valid isResting for any unit.
+	 * 
+	 * @param isResting
+	 *            The isResting to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidIsResting(boolean isResting) {
+		if (isResting || isResting == false)
+			return true;
+		return false;
+	}
+
+	/**
+	 * Set the isResting of this unit to the given isResting.
+	 * 
+	 * @param isResting
+	 *            The new isResting for this unit.
+	 * @post The isResting of this new unit is equal to the given isResting. |
+	 *       new.getIsResting() == isResting
+	 * @throws IllegalArgumentException
+	 *             The given isResting is not a valid isResting for any unit. |
+	 *             ! isValidIsResting(getIsResting())
+	 */
+	@Raw
+	public void setIsResting(boolean isResting) throws IllegalArgumentException {
+		if (!isValidIsResting(isResting))
+			throw new IllegalArgumentException();
+		this.isResting = isResting;
+	}
+
+	/**
+	 * Variable registering the isResting of this unit.
+	 */
+	private boolean isResting;
+
+	public void moveToAdjecent(int dx, int dy, int dz) throws IllegalArgumentException {
+		
+		
+		
+	}
+
+	public void moveTo(int[] targetPosition) {
+		
+		while Helper.doubleArrayToIntArray(array)
+
+	}
+
 }

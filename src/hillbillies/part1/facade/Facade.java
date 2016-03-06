@@ -17,14 +17,14 @@ public class Facade implements IFacade {
 	public Unit createUnit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
 			boolean enableDefaultBehavior) throws ModelException {
 		// TODO Auto-generated method stub
-		
+
 		Unit newUnit = new Unit(name);
 		newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));
 		newUnit.setWeight(weight);
 		newUnit.setAgility(agility);
 		newUnit.setStrength(strength);
 		newUnit.setToughness(toughness);
-			
+
 		return newUnit;
 	}
 
@@ -168,18 +168,32 @@ public class Facade implements IFacade {
 	@Override
 	public double getCurrentSpeed(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+
+		// TODO moet dit base of walking speed zijn?
+
+		if (isMoving(unit)) {
+			if (isSprinting(unit))
+				return unit.getMovementSpeed() * 2;
+			else
+				return unit.getMovementSpeed();
+		}
+
+		return 0d;
 	}
 
 	@Override
 	public boolean isMoving(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return false;
+
+		return unit.getIsMoving();
+
 	}
 
 	@Override
 	public void startSprinting(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
+
+		unit.setIsSprinting(true);
 
 	}
 
@@ -187,18 +201,23 @@ public class Facade implements IFacade {
 	public void stopSprinting(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
 
+		unit.setIsSprinting(false);
+
 	}
 
 	@Override
 	public boolean isSprinting(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return false;
+
+		return unit.getIsSprinting();
 	}
 
 	@Override
 	public double getOrientation(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		return unit.getOrientation();
+		
 	}
 
 	@Override
@@ -216,7 +235,9 @@ public class Facade implements IFacade {
 	@Override
 	public boolean isWorking(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return false;
+		
+		return unit.getIsWorking();
+		
 	}
 
 	@Override
@@ -228,7 +249,9 @@ public class Facade implements IFacade {
 	@Override
 	public boolean isAttacking(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return false;
+		
+		return unit.getIsAttacking();
+		
 	}
 
 	@Override
@@ -240,7 +263,9 @@ public class Facade implements IFacade {
 	@Override
 	public boolean isResting(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return false;
+		
+		return unit.getIsResting();
+		
 	}
 
 	@Override
@@ -254,8 +279,6 @@ public class Facade implements IFacade {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	
 
 	public int getMaxPoints(Unit unit) throws ModelException {
 		// TODO comenttaar
