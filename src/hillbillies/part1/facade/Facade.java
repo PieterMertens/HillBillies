@@ -2,6 +2,7 @@ package hillbillies.part1.facade;
 
 import hillbillies.model.Unit;
 import ogp.framework.util.ModelException;
+import hillbillies.util.Helper;
 
 /**
  * @author
@@ -254,31 +255,7 @@ public class Facade implements IFacade {
 		return false;
 	}
 
-	public int[] doubleArrayToIntArray(double[] array) {
-		//TODO commentaar
-
-		int[] result = new int[array.length];
-
-		for (int k = 0; k < array.length; k++) {
-			result[k] = (int) array[k];
-		}
-
-		return result;
-
-	}
 	
-	public double[] intArrayToDoubleArray(int[] array) {
-		//TODO commentaar
-
-		double[] result = new double[array.length];
-
-		for (int k = 0; k < array.length; k++) {
-			result[k] = (double) array[k];
-		}
-
-		return result;
-
-	}
 
 	public int getMaxPoints(Unit unit) throws ModelException {
 		// TODO comenttaar

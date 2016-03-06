@@ -583,7 +583,82 @@ public class Unit {
 
 	public void advanceTime(int time) throws IllegalArgumentException {
 		gametime += time;
+		//TODO update pos
+		//TODO update activities
 	}
 
 	private int gametime;
+	
+	
+	/** TO BE ADDED TO CLASS HEADING
+	 * @invar  The movementSpeed of each unit must be a valid movementSpeed for any
+	 *         unit.
+	 *       | isValidMovementSpeed(getMovementSpeed())
+	 */
+
+
+/**
+ * Initialize this new unit with given movementSpeed.
+ *
+ * @param  movementSpeed
+ *         The movementSpeed for this new unit.
+ * @effect The movementSpeed of this new unit is set to
+ *         the given movementSpeed.
+ *       | this.setMovementSpeed(movementSpeed)
+ */
+public Unit(double movementSpeed)
+		throws IllegalArgumentException {
+	this.setMovementSpeed(movementSpeed);
+}
+
+
+/**
+ * Return the movementSpeed of this unit.
+ */
+@Basic @Raw
+public double getMovementSpeed() {
+	return this.movementSpeed;
+}
+
+/**
+ * Check whether the given movementSpeed is a valid movementSpeed for
+ * any unit.
+ *  
+ * @param  movementSpeed
+ *         The movementSpeed to check.
+ * @return 
+ *       | result == //TODO
+*/
+public static boolean isValidMovementSpeed(double movementSpeed) {
+	return false;
+}
+
+/**
+ * Set the movementSpeed of this unit to the given movementSpeed.
+ * 
+ * @param  movementSpeed
+ *         The new movementSpeed for this unit.
+ * @post   The movementSpeed of this new unit is equal to
+ *         the given movementSpeed.
+ *       | new.getMovementSpeed() == movementSpeed
+ * @throws IllegalArgumentException
+ *         The given movementSpeed is not a valid movementSpeed for any
+ *         unit.
+ *       | ! isValidMovementSpeed(getMovementSpeed())
+ */
+@Raw
+public void setMovementSpeed(double movementSpeed) 
+		throws IllegalArgumentException {
+	if (! isValidMovementSpeed(movementSpeed))
+		throw new IllegalArgumentException();
+	this.movementSpeed = movementSpeed;
+}
+
+/**
+ * Variable registering the movementSpeed of this unit.
+ */
+private double movementSpeed;
+	
+	
+	
 }
