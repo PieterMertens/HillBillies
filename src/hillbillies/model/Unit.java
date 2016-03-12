@@ -981,7 +981,7 @@ public class Unit {
 		this.setIsWorking(true);
 		double timeWorking = 0;
 		while (timeWorking < 500 / this.getStrength()) {
-			advanceTime(0.2);
+			advanceTime(0.2);//FIXME
 			timeWorking += 0.2;
 		}
 		this.setIsResting(true);
