@@ -1,15 +1,17 @@
 package hillbillies.model;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import be.kuleuven.cs.som.annotate.*;
 import hillbillies.helper.Helper;
+import ogp.framework.util.Util;
 
 /**
  * 
  * @invar The position of each unit must be a valid position for any unit. |
  *        isValidPosition(getPosition())
- * @invar The hitpoints of each unit must be a valid hitpoints for any unit.
- *        | isValidHitpoints(getHitpoints())
+ * @invar The hitpoints of each unit must be a valid hitpoints for any unit. |
+ *        isValidHitpoints(getHitpoints())
  * @invar The name of each unit must be a valid name for any unit. |
  *        isValidName(getName())
  * @invar The weight of each unit must be a valid weight for any unit. |
@@ -18,12 +20,12 @@ import hillbillies.helper.Helper;
  *        isValidStrength(getStrength())
  * @invar The agility of each unit must be a valid agility for any unit. |
  *        isValidAgility(getAgility())
- * @invar The toughness of each unit must be a valid toughness for any unit.
- *        | isValidToughness(getToughness())
- * @invar The staminapoints of each unit must be a valid staminapoints for
- *        any unit. | isValidStaminapoints(getStaminapoints())
- * @invar The orientation of each unit must be a valid orientation for any
- *        unit. | isValidOrientation(getOrientation())
+ * @invar The toughness of each unit must be a valid toughness for any unit. |
+ *        isValidToughness(getToughness())
+ * @invar The staminapoints of each unit must be a valid staminapoints for any
+ *        unit. | isValidStaminapoints(getStaminapoints())
+ * @invar The orientation of each unit must be a valid orientation for any unit.
+ *        | isValidOrientation(getOrientation())
  * @invar The isMoving of each unit must be a valid isMoving for any unit. |
  *        isValidIsMoving(getIsMoving())
  * 
@@ -57,7 +59,8 @@ public class Unit {
 	 * 
 	 * @param position
 	 *            The position to check.
-	 * @return | result == true if the 3 coordinates are between the given limits.
+	 * @return | result == true if the 3 coordinates are between the given
+	 *         limits.
 	 */
 	public static boolean isValidPosition(double[] position) {
 
@@ -131,7 +134,8 @@ public class Unit {
 	 * 
 	 * @param name
 	 *            The name to check.
-	 * @return | result == true if first letter is uppercase and no symbols except ' and " are used.
+	 * @return | result == true if first letter is uppercase and no symbols
+	 *         except ' and " are used.
 	 */
 	public static boolean isValidName(String name) {
 
@@ -204,7 +208,7 @@ public class Unit {
 		setWeight(weight);
 
 		if (toughness < 25 || toughness > 100)
-			toughness = 25 + (int) (Math.random() * (75)); 
+			toughness = 25 + (int) (Math.random() * (75));
 		setToughness(toughness);
 	}
 
@@ -222,7 +226,8 @@ public class Unit {
 	 * 
 	 * @param weight
 	 *            The weight to check.
-	 * @return | result == true if weight >= 1 and weight <= 200 && weight >= (strength + agility) / 2
+	 * @return | result == true if weight >= 1 and weight <= 200 && weight >=
+	 *         (strength + agility) / 2
 	 */
 	public static boolean isValidWeight(int weight, int strength, int agility) {
 		if (weight >= 1 && weight <= 200 && weight >= (strength + agility) / 2)
@@ -412,7 +417,8 @@ public class Unit {
 	 * 
 	 * @param hitpoints
 	 *            The hitpoints to check.
-	 * @return | result == hitpoints <= (200 * (weight / 100) * (toughness / 100))
+	 * @return | result == hitpoints <= (200 * (weight / 100) * (toughness /
+	 *         100))
 	 */
 	public static boolean isValidHitpoints(int hitpoints, int weight, int toughness) {
 		if (hitpoints <= (200 * (weight / 100) * (toughness / 100)))
@@ -430,7 +436,7 @@ public class Unit {
 	 * @post The hitpoints of this unit is equal to the given hitpoints. |
 	 *       new.getHitpoints() == hitpoints
 	 */
-	@Raw
+	@Raw // TODO private
 	public void setHitpoints(int hitpoints) {
 		assert isValidHitpoints(hitpoints, this.getWeight(), this.getToughness());
 		this.hitpoints = hitpoints;
@@ -456,7 +462,8 @@ public class Unit {
 	 * 
 	 * @param staminapoints
 	 *            The staminapoints to check.
-	 * @return | result == true if staminapoints <= (200 * (weight / 100) * (toughness / 100)) && staminapoints >= 0)
+	 * @return | result == true if staminapoints <= (200 * (weight / 100) *
+	 *         (toughness / 100)) && staminapoints >= 0)
 	 */
 	public static boolean isValidStaminapoints(int staminapoints, int weight, int toughness) {
 		if (staminapoints <= (200 * (weight / 100) * (toughness / 100)) && staminapoints >= 0)
@@ -541,7 +548,7 @@ public class Unit {
 		if (isValidOrientation(orientation))
 			this.orientation = orientation;
 		else
-			this.orientation = (float) (Math.PI/2);
+			this.orientation = (float) (Math.PI / 2);
 	}
 
 	/**
@@ -551,6 +558,7 @@ public class Unit {
 	private double timenotresting;
 
 	public void advanceTime(double dt) throws IllegalArgumentException {
+
 		if (this.getIsResting()) {
 			timenotresting = 0;
 		} else {
@@ -595,7 +603,7 @@ public class Unit {
 	/**
 	 * TO BE ADDED TO CLASS HEADING
 	 * 
-	 
+	 * 
 	 */
 
 	/**
@@ -892,18 +900,15 @@ public class Unit {
 	public void moveToAdjecent(int dx, int dy, int dz) throws IllegalArgumentException {
 
 		this.setIsMoving(true);
+
 		zDirection = dz;
 
-		double distance = Math.sqrt((Math.abs(dx) + Math.abs(dy) + Math.abs(dz)));
-
-		double[] velocity = new double[3];
-		velocity[0] = this.getCurrentSpeed() * dx / distance;
-		velocity[1] = this.getCurrentSpeed() * dy / distance;
-		velocity[2] = this.getCurrentSpeed() * dz / distance;
+		double[] velocity = getVelocity(dx, dy, dz);
 
 		this.setOrientation((float) (Math.atan2(velocity[1], velocity[0])));
 
 		double[] oldPosition = this.getPosition();
+
 		double[] newPosition = new double[3];
 		for (int k = 0; k < oldPosition.length; k++) {
 			newPosition[k] = Math.floor(oldPosition[k]);
@@ -912,7 +917,10 @@ public class Unit {
 		newPosition[0] += dx;
 		newPosition[1] += dy;
 		newPosition[2] += dz;
+
 		this.setPosition(newPosition);
+
+		this.setIsMoving(false);
 
 	}
 
@@ -921,9 +929,18 @@ public class Unit {
 		int x;
 		int y;
 		int z;
+		
+		System.out.println("voor while");
+		
 
-		while (Helper.doubleArrayToIntArray(this.getPosition()).equals(targetPosition)) {
+		int i = 0;
+		while (!Arrays.equals(Helper.doubleArrayToIntArray(this.getPosition()),targetPosition) || i>10) {
 
+			i++;
+			
+			System.out.println("in while    pos: " + this.getPosition()[0] +" "+this.getPosition()[1] +" target: "+targetPosition[0]+" "+targetPosition[1]);
+			
+			// TODO compacter
 			int x1 = Helper.doubleArrayToIntArray(this.getPosition())[0];
 			int y1 = Helper.doubleArrayToIntArray(this.getPosition())[1];
 			int z1 = Helper.doubleArrayToIntArray(this.getPosition())[2];
@@ -955,6 +972,8 @@ public class Unit {
 			moveToAdjecent(x, y, z);
 		}
 
+		this.setIsMoving(false);
+
 	}
 
 	public void work() {
@@ -966,6 +985,25 @@ public class Unit {
 			timeWorking += 0.2;
 		}
 		this.setIsResting(true);
+
+	}
+
+	public double getDisctance(int dx, int dy, int dz) {
+
+		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
+
+	}
+
+	public double[] getVelocity(int dx, int dy, int dz) {
+
+		double[] velocity = new double[3];
+		double distance = getDisctance(dx, dy, dz);
+
+		velocity[0] = this.getCurrentSpeed() * dx / distance;
+		velocity[1] = this.getCurrentSpeed() * dy / distance;
+		velocity[2] = this.getCurrentSpeed() * dz / distance;
+
+		return velocity;
 
 	}
 

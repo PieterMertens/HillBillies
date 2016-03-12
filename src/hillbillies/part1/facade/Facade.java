@@ -161,6 +161,8 @@ public class Facade implements IFacade {
 	@Override
 	public void advanceTime(Unit unit, double dt) throws ModelException {
 		
+		unit.advanceTime(dt);
+		
 
 	}
 
