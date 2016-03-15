@@ -243,6 +243,7 @@ public class Facade implements IFacade {
 	@Override
 	public void fight(Unit attacker, Unit defender) throws ModelException {
 		
+		//TODO fight
 
 	}
 
@@ -271,12 +272,14 @@ public class Facade implements IFacade {
 	@Override
 	public void setDefaultBehaviorEnabled(Unit unit, boolean value) throws ModelException {
 		
+		//TODO setDefaultBehaviorEnabled
 
 	}
 
 	@Override
 	public boolean isDefaultBehaviorEnabled(Unit unit) throws ModelException {
 		
+		//TODO isDefaultBehaviorEnabled
 		return false;
 	}
 

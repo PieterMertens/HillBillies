@@ -1,7 +1,7 @@
 package hillbillies.helper;
 
 public class Helper {
-	
+
 	public static int[] doubleArrayToIntArray(double[] array) {
 
 		int[] result = new int[array.length];
@@ -13,7 +13,7 @@ public class Helper {
 		return result;
 
 	}
-	
+
 	public static double[] intArrayToDoubleArray(int[] array) {
 
 		double[] result = new double[array.length];
@@ -24,6 +24,19 @@ public class Helper {
 
 		return result;
 
+	}
+
+	public static int randInt(int min, int max) {
+
+		int range = (max - min) + 1;
+		return (int) (Math.random() * range) + min;
+
+	}
+
+	public static boolean randBoolean() {
+		
+		return Math.random() < 0.5;
+		
 	}
 
 }

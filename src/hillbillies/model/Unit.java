@@ -196,19 +196,19 @@ public class Unit {
 	public Unit(int weight, int strength, int agility, int toughness) {
 
 		if (strength < 25 || strength > 100)
-			strength = 25 + (int) (Math.random() * (75));
+			strength = 25 + Helper.randInt(0, 75);
 		setStrength(strength);
 
 		if (agility < 25 || agility > 100)
-			agility = 25 + (int) (Math.random() * (75));
+			agility = 25 + Helper.randInt(0, 75);
 		setAgility(agility);
 
 		if (weight < 25 || weight > 100 || weight < (strength + agility) / 2)
-			weight = (strength + agility) / 2 + (int) (Math.random() * (100 - ((strength + agility) / 2)));
+			weight = ((strength + agility) / 2) + Helper.randInt(0, 100 - ((strength + agility) / 2));
 		setWeight(weight);
 
 		if (toughness < 25 || toughness > 100)
-			toughness = 25 + (int) (Math.random() * (75));
+			toughness = 25 + Helper.randInt(0, 75);
 		setToughness(toughness);
 	}
 
@@ -905,6 +905,8 @@ public class Unit {
 
 		double[] velocity = getVelocity(dx, dy, dz);
 
+		System.out.println("velocity: " + velocity[1] + velocity[0]);
+
 		this.setOrientation((float) (Math.atan2(velocity[1], velocity[0])));
 
 		double[] oldPosition = this.getPosition();
@@ -929,17 +931,14 @@ public class Unit {
 		int x;
 		int y;
 		int z;
-		
-		System.out.println("voor while");
-		
 
-		int i = 0;
-		while (!Arrays.equals(Helper.doubleArrayToIntArray(this.getPosition()),targetPosition) || i>10) {
+		System.out.println("voor while");
+
+		int i = 0;// FIXME dit moet zonder gaan
+		while (!Arrays.equals(Helper.doubleArrayToIntArray(this.getPosition()), targetPosition) && i < 100) {
 
 			i++;
-			
-			System.out.println("in while    pos: " + this.getPosition()[0] +" "+this.getPosition()[1] +" target: "+targetPosition[0]+" "+targetPosition[1]);
-			
+
 			// TODO compacter
 			int x1 = Helper.doubleArrayToIntArray(this.getPosition())[0];
 			int y1 = Helper.doubleArrayToIntArray(this.getPosition())[1];
@@ -981,7 +980,7 @@ public class Unit {
 		this.setIsWorking(true);
 		double timeWorking = 0;
 		while (timeWorking < 500 / this.getStrength()) {
-			advanceTime(0.2);
+			advanceTime(0.2);// FIXME
 			timeWorking += 0.2;
 		}
 		this.setIsResting(true);
@@ -1004,6 +1003,43 @@ public class Unit {
 		velocity[2] = this.getCurrentSpeed() * dz / distance;
 
 		return velocity;
+
+	}
+	
+	
+
+	
+	
+	public void startDefaultBehaviour() {
+
+		int rand = Helper.randInt(0, 2);
+		if (rand == 0) {
+
+			int[] targetPosition = getRandomPosition();
+			this.moveTo(targetPosition);
+			this.setIsSprinting(Helper.randBoolean());
+
+		} else if (rand == 1) {
+			this.work();
+
+		} else {
+			this.rest();
+		}
+
+	}
+
+	public void stopDefaultBehaviour() {
+
+	}
+
+	public int[] getRandomPosition() {
+
+		int[] targetPosition = new int[3];
+		targetPosition[0] = Helper.randInt(0, 49);//TODO variabele voor grootte van wereld??
+		targetPosition[1] = Helper.randInt(0, 49);
+		targetPosition[2] = Helper.randInt(0, 49);
+
+		return targetPosition;
 
 	}
 
