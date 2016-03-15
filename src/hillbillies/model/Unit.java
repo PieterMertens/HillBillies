@@ -905,6 +905,8 @@ public class Unit {
 
 		double[] velocity = getVelocity(dx, dy, dz);
 
+		System.out.println("velocity: "+velocity[1]+velocity[0]);
+		
 		this.setOrientation((float) (Math.atan2(velocity[1], velocity[0])));
 
 		double[] oldPosition = this.getPosition();
@@ -933,12 +935,10 @@ public class Unit {
 		System.out.println("voor while");
 		
 
-		int i = 0;
-		while (!Arrays.equals(Helper.doubleArrayToIntArray(this.getPosition()),targetPosition) || i>10) {
+		int i = 0;//FIXME dit moet zonder gaan
+		while (!Arrays.equals(Helper.doubleArrayToIntArray(this.getPosition()),targetPosition) && i<100) {
 
 			i++;
-			
-			System.out.println("in while    pos: " + this.getPosition()[0] +" "+this.getPosition()[1] +" target: "+targetPosition[0]+" "+targetPosition[1]);
 			
 			// TODO compacter
 			int x1 = Helper.doubleArrayToIntArray(this.getPosition())[0];
@@ -1006,5 +1006,6 @@ public class Unit {
 		return velocity;
 
 	}
+	
 
 }

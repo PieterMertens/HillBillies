@@ -22,7 +22,7 @@ public class Facade implements IFacade {
 			Unit newUnit = new Unit(weight, strength, agility, toughness);
 			newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));
 			newUnit.setName(name);
-			newUnit.setOrientation((float) Math.PI/2);
+			newUnit.setOrientation((float) Math.PI/2);//TODO of mag dit niet in facade?
 
 			return newUnit;
 		} catch (IllegalArgumentException e) {
