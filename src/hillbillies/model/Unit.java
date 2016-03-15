@@ -905,8 +905,6 @@ public class Unit {
 
 		double[] velocity = getVelocity(dx, dy, dz);
 
-		System.out.println("velocity: " + velocity[1] + velocity[0]);
-
 		this.setOrientation((float) (Math.atan2(velocity[1], velocity[0])));
 
 		double[] oldPosition = this.getPosition();
@@ -978,12 +976,6 @@ public class Unit {
 	public void work() {
 
 		this.setIsWorking(true);
-		double timeWorking = 0;
-		while (timeWorking < 500 / this.getStrength()) {
-			advanceTime(0.2);// FIXME
-			timeWorking += 0.2;
-		}
-		this.setIsResting(true);
 
 	}
 
@@ -1005,11 +997,7 @@ public class Unit {
 		return velocity;
 
 	}
-	
-	
 
-	
-	
 	public void startDefaultBehaviour() {
 
 		int rand = Helper.randInt(0, 2);
@@ -1032,10 +1020,41 @@ public class Unit {
 
 	}
 
+	public void attack() {
+
+		this.setIsAttacking(true);
+
+	}
+
+	public void defend() {
+		
+		if (!dodge()) {
+			if (!block()) {
+				takeDamage();
+			}
+		}
+			
+		
+
+	}
+
+	public boolean dodge() {
+		return false;
+	}
+
+	public boolean block() {
+		return false;
+	}
+
+	public void takeDamage() {
+	}
+
+	// TODO hier of in Helper
 	public int[] getRandomPosition() {
 
 		int[] targetPosition = new int[3];
-		targetPosition[0] = Helper.randInt(0, 49);//TODO variabele voor grootte van wereld??
+		targetPosition[0] = Helper.randInt(0, 49);// TODO variabele voor grootte
+													// van wereld??
 		targetPosition[1] = Helper.randInt(0, 49);
 		targetPosition[2] = Helper.randInt(0, 49);
 

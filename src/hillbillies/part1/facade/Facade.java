@@ -243,7 +243,9 @@ public class Facade implements IFacade {
 	@Override
 	public void fight(Unit attacker, Unit defender) throws ModelException {
 		
-		//TODO fight
+		//TODO hier orientation vr gevecht ook aanpassen?
+		attacker.attack();
+		defender.defend();
 
 	}
 
