@@ -42,13 +42,24 @@ public class Helper {
 	public static int[] getRandomPosition() {
 
 		int[] targetPosition = new int[3];
-		targetPosition[0] = Helper.randInt(0, 49);// TODO variabele voor grootte
-													// van wereld??
+		targetPosition[0] = Helper.randInt(0, 49);// TODO variabele voor groottevan wereld??
 		targetPosition[1] = Helper.randInt(0, 49);
 		targetPosition[2] = Helper.randInt(0, 49);
 
 		return targetPosition;
 
+	}
+	
+	public static double[] getCenterOfPosition(int[] position){
+		
+		double[] result = new double[position.length];
+
+		for (int k = 0; k < position.length; k++) {
+			result[k] = (double) position[k] + 0.5d;
+		}
+
+		return result;
+		
 	}
 	
 	
