@@ -574,6 +574,11 @@ public class Unit {
 					else
 						this.setIsSprinting(false);
 				}
+				double[] newPosition = this.getPosition();
+				newPosition[0] += velocity[0]*dt;
+				newPosition[1] += velocity[1]*dt;
+				newPosition[2] += velocity[2]*dt;
+				this.setPosition(position);
 			}
 		}
 
@@ -896,14 +901,18 @@ public class Unit {
 	public int getMaxPoints() {
 		return 200 * (this.getWeight() / 100) * (this.getToughness() / 100);
 	}
+	
+	public double[] velocity = new double[3];
+	public boolean reachedAdjecent;
 
 	public void moveToAdjecent(int dx, int dy, int dz) throws IllegalArgumentException {
 
 		this.setIsMoving(true);
+		reachedAdjecent = false;
 
 		zDirection = dz;
 
-		double[] velocity = getVelocity(dx, dy, dz);
+		velocity = getVelocity(dx, dy, dz);//FIXME rekening houden met sprint stop tijdens movetoadj...
 
 		this.setOrientation((float) (Math.atan2(velocity[1], velocity[0])));
 
@@ -917,10 +926,16 @@ public class Unit {
 		newPosition[0] += dx;
 		newPosition[1] += dy;
 		newPosition[2] += dz;
+		
+//		System.out.println("Voor while moveToAdj");
+//		while (!Arrays.equals(this.getPosition(), newPosition)){ //TODO EQUALS REKENING MET AFRONDOing..
+//			System.out.println("In while moveToAdj");
+//		}
+//		System.out.println("Na while moveToAdj");
 
-		this.setPosition(newPosition);
+		//this.setPosition(newPosition);
 
-		this.setIsMoving(false);
+		//this.setIsMoving(false);
 
 	}
 
@@ -1003,8 +1018,7 @@ public class Unit {
 		int rand = Helper.randInt(0, 2);
 		if (rand == 0) {
 
-			int[] targetPosition = getRandomPosition();
-			this.moveTo(targetPosition);
+			this.moveTo(Helper.getRandomPosition());
 			this.setIsSprinting(Helper.randBoolean());
 
 		} else if (rand == 1) {
@@ -1020,13 +1034,14 @@ public class Unit {
 
 	}
 
-	public void attack() {
+	public void attack(Unit attacker, Unit defender) {
 
 		this.setIsAttacking(true);
+		
 
 	}
 
-	public void defend() {
+	public void defend(Unit attacker, Unit defender) {
 		
 		if (!dodge()) {
 			if (!block()) {
@@ -1034,8 +1049,6 @@ public class Unit {
 			}
 		}
 			
-		
-
 	}
 
 	public boolean dodge() {
@@ -1049,17 +1062,7 @@ public class Unit {
 	public void takeDamage() {
 	}
 
-	// TODO hier of in Helper
-	public int[] getRandomPosition() {
-
-		int[] targetPosition = new int[3];
-		targetPosition[0] = Helper.randInt(0, 49);// TODO variabele voor grootte
-													// van wereld??
-		targetPosition[1] = Helper.randInt(0, 49);
-		targetPosition[2] = Helper.randInt(0, 49);
-
-		return targetPosition;
-
-	}
+	
+	
 
 }

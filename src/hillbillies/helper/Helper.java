@@ -38,5 +38,19 @@ public class Helper {
 		return Math.random() < 0.5;
 		
 	}
+	
+	public static int[] getRandomPosition() {
+
+		int[] targetPosition = new int[3];
+		targetPosition[0] = Helper.randInt(0, 49);// TODO variabele voor grootte
+													// van wereld??
+		targetPosition[1] = Helper.randInt(0, 49);
+		targetPosition[2] = Helper.randInt(0, 49);
+
+		return targetPosition;
+
+	}
+	
+	
 
 }
