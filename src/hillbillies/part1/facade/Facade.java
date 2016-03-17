@@ -20,7 +20,7 @@ public class Facade implements IFacade {
 
 		try {
 			Unit newUnit = new Unit(weight, strength, agility, toughness);
-			newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));
+			newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));//TODO niewe constr ofz mr nr midden vn blokje
 			newUnit.setName(name);
 			newUnit.setOrientation((float) Math.PI/2);
 
