@@ -25,6 +25,18 @@ public class Helper {
 		return result;
 
 	}
+	
+	public static double[] positionToCenter(int[] position) {//TODO hier ook isValidpos checken?
+
+		double[] result = new double[3];
+
+		for (int k = 0; k < position.length; k++) {
+			result[k] = (double) position[k] + 0.5d;
+		}
+
+		return result;
+
+	}
 
 	public static int randInt(int min, int max) {
 

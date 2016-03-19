@@ -23,6 +23,21 @@ import ogp.framework.util.Util;
  *
  */
 public class Unit {
+
+	// TODO documentatie
+	public Unit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
+			boolean enableDefaultBehavior) {
+
+		this.setName(name);
+		this.setPosition(Helper.getCenterOfPosition(initialPosition));
+		this.setWeight(weight);
+		this.setAgility(agility);
+		this.setStrength(strength);
+		this.setToughness(toughness);
+		// this.setDefaultbeh
+
+	}
+
 	/**
 	 * Initialize this new unit with given position.
 	 *
@@ -508,13 +523,21 @@ public class Unit {
 	public void advanceTime(double dt) throws IllegalArgumentException {
 
 		if (this.getIsResting()) {
+
 			timenotresting = 0;
+
 		} else {
+
 			timenotresting += dt;
+
 			if (timenotresting >= 180) {
+
 				rest();
+
 			}
+
 			if (this.getIsMoving()) {
+
 				if (this.getIsSprinting()) {
 					int newStaminaPoints = (int) (this.getStaminapoints() - 0.1 * dt);
 					if (newStaminaPoints >= 0)
@@ -523,6 +546,7 @@ public class Unit {
 						this.setIsSprinting(false);
 				}
 				this.updatePosition(dt);
+
 				if (this.moveToAdjecentTargetReached()) {
 					this.setIsMoving(false);
 					if (isMovingTo) {
@@ -542,6 +566,10 @@ public class Unit {
 	}
 
 	public void updatePosition(double dt) {
+		
+		velocity = getVelocity();
+
+		this.setOrientation((float) (Math.atan2(velocity[1], velocity[0])));
 
 		double[] newPosition = this.getPosition();
 		newPosition[0] += velocity[0] * dt;
@@ -551,7 +579,7 @@ public class Unit {
 
 	}
 
-	private int zDirection;
+	private int[] adjecentDelta = new int[3];
 
 	public double getCurrentSpeed() {
 
@@ -560,9 +588,9 @@ public class Unit {
 		if (this.getIsSprinting())
 			baseSpeed *= 2;
 
-		if (zDirection == 1) {
+		if (adjecentDelta[2] == 1) {
 			currentSpeed = baseSpeed * 0.5;
-		} else if (zDirection == -1) {
+		} else if (adjecentDelta[2] == -1) {
 			currentSpeed = baseSpeed * 1.2;
 		} else {
 			currentSpeed = baseSpeed;
@@ -686,7 +714,7 @@ public class Unit {
 			this.setIsResting(false);
 			this.setIsWorking(false);
 			this.setIsAttacking(false);
-			//this.setIsMoving(true);
+			// this.setIsMoving(true);
 		}
 	}
 
@@ -862,9 +890,9 @@ public class Unit {
 
 	public double[] velocity = new double[3];
 	// keeps the position from where the last movetoadjecent started.
-	public static double[] AdjecentStart = new double[3];
+	public static double[] adjecentStart = new double[3];// TODO moet deze statiic zijn?
 	// keeps the postion of the targeted position from the last movetoadjecent.
-	public double[] AdjecentTarget = new double[3];
+	public double[] adjecentTarget = new double[3];
 	// keeps the postion of the targeted position from the last moveto.
 	public double[] target = new double[3];
 
@@ -872,11 +900,11 @@ public class Unit {
 
 		System.out.println("start movetoadj");
 
-		AdjecentStart = this.getPosition().clone();
+		adjecentStart = this.getPosition().clone();
 
 		double[] newPosition = new double[3];
-		for (int k = 0; k < AdjecentStart.length; k++) {
-			newPosition[k] = Math.floor(AdjecentStart[k]) + 0.5;
+		for (int k = 0; k < adjecentStart.length; k++) {
+			newPosition[k] = Math.floor(adjecentStart[k]) + 0.5;
 		}
 
 		newPosition[0] += dx;
@@ -887,15 +915,16 @@ public class Unit {
 			throw new IllegalArgumentException();
 		else {
 
-			AdjecentTarget = newPosition;
+			adjecentTarget = newPosition;
 
 			this.setIsMoving(true);
 
-			zDirection = dz;
+			adjecentDelta[0] = dx;
+			adjecentDelta[1] = dy;
+			adjecentDelta[2] = dz;
+			
+			distance = getDisctance(dx, dy, dz);//in principe overbodig mr beter in variabel -> minder rekenwerk...
 
-			velocity = getVelocity(dx, dy, dz);// FIXME rekening houden met sprint stop tijdens movetoadj...
-
-			this.setOrientation((float) (Math.atan2(velocity[1], velocity[0])));
 
 		}
 
@@ -921,16 +950,16 @@ public class Unit {
 
 	public boolean moveToAdjecentTargetReached() throws IllegalArgumentException {
 
-//		System.out.println(
-//				"distance between start and adjtarget=" + getDisctanceBetweenPositions(AdjecentStart, AdjecentTarget)
-//						+ " and start and current=" + getDisctanceBetweenPositions(AdjecentStart, this.getPosition()));
-		if (getDisctanceBetweenPositions(AdjecentStart, AdjecentTarget) <= getDisctanceBetweenPositions(AdjecentStart,
+		// System.out.println(
+		// "distance between start and adjtarget=" + getDisctanceBetweenPositions(AdjecentStart, AdjecentTarget)
+		// + " and start and current=" + getDisctanceBetweenPositions(AdjecentStart, this.getPosition()));
+		if (getDisctanceBetweenPositions(adjecentStart, adjecentTarget) <= getDisctanceBetweenPositions(adjecentStart,
 				this.getPosition())) {
-			this.setPosition(AdjecentTarget);
+			this.setPosition(adjecentTarget);
 
 			System.out.println(
-					"moveToAdjecentTargetReached " + getDisctanceBetweenPositions(AdjecentStart, AdjecentTarget) + " "
-							+ getDisctanceBetweenPositions(AdjecentStart, this.getPosition()));
+					"moveToAdjecentTargetReached " + getDisctanceBetweenPositions(adjecentStart, adjecentTarget) + " "
+							+ getDisctanceBetweenPositions(adjecentStart, this.getPosition()));
 
 			return true;
 
@@ -940,10 +969,10 @@ public class Unit {
 
 	}
 
-	public void moveTo(int[] targetPosition) throws IllegalArgumentException {
+	public void moveTo(int[] targetPosition) throws IllegalArgumentException { // FIXME 2 keer moveto achter elkaar fout
 
 		System.out.println("---------------- moveto begonnen ----------------------");
-		
+
 		isMovingTo = true;
 
 		if (!isValidTarget(Helper.getCenterOfPosition(targetPosition))) {
@@ -953,7 +982,6 @@ public class Unit {
 			target[0] = targetPosition[0] + 0.5d;
 			target[1] = targetPosition[1] + 0.5d;
 			target[2] = targetPosition[2] + 0.5d;
-			
 
 			moveToAdjecent(getMoveToDirectionX(), getMoveToDirectionY(), getMoveToDirectionZ());
 
@@ -993,8 +1021,8 @@ public class Unit {
 
 	public boolean moveToTargetReached() throws IllegalArgumentException {
 
-		System.out.println("- moveToTargetReached " + getDisctanceBetweenPositions(this.getPosition(), target)
-				+ " <1 ");
+		System.out
+				.println("- moveToTargetReached " + getDisctanceBetweenPositions(this.getPosition(), target) + " <1 ");
 
 		if (getDisctanceBetweenPositions(this.getPosition(), target) < 1) {
 			System.out.println("- getDisctanceBetweenPositions(this.getPosition(), target) < 1 "
@@ -1018,6 +1046,8 @@ public class Unit {
 		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
 
 	}
+	
+	private double distance;
 
 	public double getDisctanceBetweenPositions(double[] position1, double[] position2) {// TODO nr helper??
 
@@ -1026,14 +1056,14 @@ public class Unit {
 
 	}
 
-	public double[] getVelocity(int dx, int dy, int dz) {
+	public double[] getVelocity() {
 
 		double[] velocity = new double[3];
-		double distance = getDisctance(dx, dy, dz);
 
-		velocity[0] = this.getCurrentSpeed() * dx / distance;
-		velocity[1] = this.getCurrentSpeed() * dy / distance;
-		velocity[2] = this.getCurrentSpeed() * dz / distance;
+
+		velocity[0] = this.getCurrentSpeed() * adjecentDelta[0] / distance;
+		velocity[1] = this.getCurrentSpeed() * adjecentDelta[1] / distance;
+		velocity[2] = this.getCurrentSpeed() * adjecentDelta[2] / distance;
 
 		return velocity;
 
