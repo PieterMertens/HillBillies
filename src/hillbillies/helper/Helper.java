@@ -25,10 +25,10 @@ public class Helper {
 		return result;
 
 	}
-	
-	public static double[] positionToCenter(int[] position) {//TODO hier ook isValidpos checken?
 
-		double[] result = new double[3];
+	public static double[] getCenterOfPosition(int[] position) {
+
+		double[] result = new double[position.length];
 
 		for (int k = 0; k < position.length; k++) {
 			result[k] = (double) position[k] + 0.5d;
@@ -46,11 +46,11 @@ public class Helper {
 	}
 
 	public static boolean randBoolean() {
-		
+
 		return Math.random() < 0.5;
-		
+
 	}
-	
+
 	public static int[] getRandomPosition() {
 
 		int[] targetPosition = new int[3];
@@ -61,19 +61,5 @@ public class Helper {
 		return targetPosition;
 
 	}
-	
-	public static double[] getCenterOfPosition(int[] position){
-		
-		double[] result = new double[position.length];
-
-		for (int k = 0; k < position.length; k++) {
-			result[k] = (double) position[k] + 0.5d;
-		}
-
-		return result;
-		
-	}
-	
-	
 
 }

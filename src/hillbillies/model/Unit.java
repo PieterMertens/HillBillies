@@ -551,9 +551,8 @@ public class Unit {
 					this.setIsMoving(false);
 					if (isMovingTo) {
 						if (this.moveToTargetReached()) {
-							this.setIsMoving(false);
-							isMovingTo = false;
-							System.out.println("moveToReached");
+							isMovingTo = false;// TODO setter maken
+							System.out.println("---------------- moveto beeindigd ----------------------");
 						} else {
 							this.moveToAdjecent(getMoveToDirectionX(), getMoveToDirectionY(), getMoveToDirectionZ());
 						}
@@ -566,7 +565,7 @@ public class Unit {
 	}
 
 	public void updatePosition(double dt) {
-		
+
 		velocity = getVelocity();
 
 		this.setOrientation((float) (Math.atan2(velocity[1], velocity[0])));
@@ -901,10 +900,11 @@ public class Unit {
 		System.out.println("start movetoadj");
 
 		adjecentStart = this.getPosition().clone();
+		System.out.println("adjecentStart:" + adjecentStart[0] + " " + adjecentStart[1] + " " + adjecentStart[2]);
 
-		double[] newPosition = new double[3];
+		double[] newPosition = new double[3];// TODO functie gebruiken
 		for (int k = 0; k < adjecentStart.length; k++) {
-			newPosition[k] = Math.floor(adjecentStart[k]) + 0.5;
+			newPosition[k] = Math.floor(adjecentStart[k]) + 0.5d;
 		}
 
 		newPosition[0] += dx;
@@ -917,14 +917,17 @@ public class Unit {
 
 			adjecentTarget = newPosition;
 
+			System.out
+					.println("new AdjTarget: " + adjecentTarget[0] + " " + adjecentTarget[1] + " " + adjecentTarget[2]);
+
 			this.setIsMoving(true);
 
 			adjecentDelta[0] = dx;
 			adjecentDelta[1] = dy;
 			adjecentDelta[2] = dz;
-			
-			distance = getDisctance(dx, dy, dz);//in principe overbodig mr beter in variabel -> minder rekenwerk...
 
+			distance = getDisctance(dx, dy, dz);// in principe overbodig mr beter in variabel -> minder rekenwerk...
+			System.out.println("velocity=" + velocity[0] + " " + velocity[1] + " dist: " + distance);
 
 		}
 
@@ -932,17 +935,22 @@ public class Unit {
 
 	private boolean isValidTarget(double[] target) {// TODO lijkt hard op isvalidPods
 
-		Double lowerlimit = 0.5d;
+		Double lowerlimit = 0.5d;// variabelen in class declaren?
 		Double upperlimit = 49.5d;
+		boolean differentPos = false;
 
 		if (target.length == 3) {
 
 			for (int k = 0; k < target.length; k++) {
 				if (target[k] > upperlimit || target[k] < lowerlimit)
 					return false;
+				if (target[k] != adjecentStart[k]) {
+					differentPos = true;
+				}
 			}
-			return true;
 		}
+		if (differentPos)
+			return true;
 
 		return false;
 
@@ -950,17 +958,11 @@ public class Unit {
 
 	public boolean moveToAdjecentTargetReached() throws IllegalArgumentException {
 
-		// System.out.println(
-		// "distance between start and adjtarget=" + getDisctanceBetweenPositions(AdjecentStart, AdjecentTarget)
-		// + " and start and current=" + getDisctanceBetweenPositions(AdjecentStart, this.getPosition()));
 		if (getDisctanceBetweenPositions(adjecentStart, adjecentTarget) <= getDisctanceBetweenPositions(adjecentStart,
 				this.getPosition())) {
+
+			System.out.println("moveToAdjecentTargetReached ");
 			this.setPosition(adjecentTarget);
-
-			System.out.println(
-					"moveToAdjecentTargetReached " + getDisctanceBetweenPositions(adjecentStart, adjecentTarget) + " "
-							+ getDisctanceBetweenPositions(adjecentStart, this.getPosition()));
-
 			return true;
 
 		}
@@ -979,10 +981,10 @@ public class Unit {
 			throw new IllegalArgumentException();
 		} else {
 
-			target[0] = targetPosition[0] + 0.5d;
+			target[0] = targetPosition[0] + 0.5d;// TODO forlus
 			target[1] = targetPosition[1] + 0.5d;
 			target[2] = targetPosition[2] + 0.5d;
-
+			System.out.println("new target: " + target[0] + " " + target[1] + " " + target[2]);
 			moveToAdjecent(getMoveToDirectionX(), getMoveToDirectionY(), getMoveToDirectionZ());
 
 		}
@@ -1021,13 +1023,7 @@ public class Unit {
 
 	public boolean moveToTargetReached() throws IllegalArgumentException {
 
-		System.out
-				.println("- moveToTargetReached " + getDisctanceBetweenPositions(this.getPosition(), target) + " <1 ");
-
 		if (getDisctanceBetweenPositions(this.getPosition(), target) < 1) {
-			System.out.println("- getDisctanceBetweenPositions(this.getPosition(), target) < 1 "
-					+ getDisctanceBetweenPositions(this.getPosition(), target));
-			this.setPosition(target);
 			return true;
 		}
 
@@ -1041,15 +1037,19 @@ public class Unit {
 
 	}
 
+	private float getWorkingTime() {
+		return 500 / this.getStrength();
+	}
+
 	public double getDisctance(int dx, int dy, int dz) {// TODO nr helper
 
 		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
 
 	}
-	
+
 	private double distance;
 
-	public double getDisctanceBetweenPositions(double[] position1, double[] position2) {// TODO nr helper??
+	public double getDisctanceBetweenPositions(double[] position1, double[] position2) {// TODO nr helper
 
 		return Math.sqrt(Math.pow(position2[0] - position1[0], 2) + Math.pow(position2[1] - position1[1], 2)
 				+ Math.pow(position2[2] - position1[2], 2));
@@ -1059,7 +1059,6 @@ public class Unit {
 	public double[] getVelocity() {
 
 		double[] velocity = new double[3];
-
 
 		velocity[0] = this.getCurrentSpeed() * adjecentDelta[0] / distance;
 		velocity[1] = this.getCurrentSpeed() * adjecentDelta[1] / distance;
