@@ -2,7 +2,11 @@ package hillbillies.model;
 
 import hillbillies.part2.listener.TerrainChangeListener;
 import ogp.framework.util.ModelException;
+
+import java.util.Set;
+
 import be.kuleuven.cs.som.annotate.*;
+import hillbillies.util.ConnectedToBorder;
 
 /**
  * @invar The terrain of each World must be a valid terrain for any World. | isValidTerrain(getTerrain())
@@ -39,7 +43,7 @@ public class World {
 	 * @return | result ==
 	 */
 	public static boolean isValidTerrain(int[][][] terrain) {
-		return true;
+		return true;// TODO vereisten checken
 	}
 
 	/**
@@ -90,7 +94,7 @@ public class World {
 		return this.getTerrain()[0][0].length;
 	}
 
-	public void advanceTime(double dt) throws IllegalArgumentException {//TODO
+	public void advanceTime(double dt) throws IllegalArgumentException {// TODO
 	}
 
 	/**
@@ -101,7 +105,7 @@ public class World {
 	public int getCubeType(int x, int y, int z) {
 		return this.getTerrain()[x][y][z];
 	}
-	
+
 	/**
 	 * Check whether the given terrain type is a valid at the given position.
 	 * 
@@ -109,13 +113,12 @@ public class World {
 	 *            The terrain to check.
 	 * @return | result ==
 	 */
-	public static boolean isValidCubeType(int type) {
-		return true;
+	public static boolean isValidCubeType(int value) {
+		return true;// TODO vereisten checken
 	}
 
 	/**
-	 * Set the terrain type of the cube at the given coordinates the given
-	 * value.
+	 * Set the terrain type of the cube at the given coordinates the given value.
 	 * 
 	 * @param terrain
 	 *            The new terrain for this World.
@@ -129,6 +132,43 @@ public class World {
 			throw new IllegalArgumentException();
 		this.getTerrain()[x][y][z] = value;
 	}
+
+	/**
+	 * Return whether the cube at the given coordinates is solid and connected to the border of the world.
+	 */
+	public boolean isSolidConnectedToBorder(int x, int y, int z) {
+		return isSolidConnectedToBorder(x, y, z);
+	}
+
+	/**
+	 * Spawn a new unit in the world.
+	 */
+	public Unit spawnUnit(boolean enableDefaultBehavior) throws IllegalArgumentException {
+		
+		
+		if 
+		
+		return new Unit();//TODO gepast constructor maken voor deze toepassing
+	}
+
+	/**
+	 * Adds the given unit to the given world.
+	 */
+	public void addUnit(Unit unit) throws IllegalArgumentException {
+		
+		if ((units.size() <= 100) && 
+				//unit.inFaction() && unit.getFactionSize <= 50//TODO inFaction toevoegen aan Unit
+				
+		units.add(unit);
+
+	}
+
+	private Set<Unit> units;
 	
-	
+	/**
+	 * Return all units that are currently part of the world.
+	 */
+	public Set<Unit> getUnits() throws IllegalArgumentException {
+		return units;
+	}
 }
