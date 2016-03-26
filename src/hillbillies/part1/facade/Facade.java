@@ -47,7 +47,7 @@ public class Facade implements IFacade {
 	public void fight(Unit attacker, Unit defender) throws ModelException {
 
 		attacker.attack(attacker, defender);
-		defender.defend(attacker, defender);
+		//defender.defend(attacker, defender);
 
 	}
 
@@ -149,8 +149,7 @@ public class Facade implements IFacade {
 	@Override
 	public boolean isDefaultBehaviorEnabled(Unit unit) throws ModelException {
 
-		// TODO isDefaultBehaviorEnabled
-		return false;
+		return unit.defaultBehaviorEnabled;
 	}
 
 	@Override
@@ -208,7 +207,7 @@ public class Facade implements IFacade {
 	@Override
 	public void setDefaultBehaviorEnabled(Unit unit, boolean value) throws ModelException {
 
-		// TODO setDefaultBehaviorEnabled
+		unit.setDefaultBehavior(value);
 
 	}
 
