@@ -147,7 +147,7 @@ public class World {
 		
 		
 		if 
-		
+		  
 		return new Unit();//TODO gepast constructor maken voor deze toepassing
 	}
 
@@ -156,9 +156,9 @@ public class World {
 	 */
 	public void addUnit(Unit unit) throws IllegalArgumentException {
 		
-		if ((units.size() <= 100) && 
+		if ((units.size() <= 100) //&& 
 				//unit.inFaction() && unit.getFactionSize <= 50//TODO inFaction toevoegen aan Unit
-				
+				)
 		units.add(unit);
 
 	}

@@ -13,7 +13,7 @@ public class Helper {
 		return result;
 
 	}
-	
+
 	public static double[] intArrayToDoubleArray(int[] array) {
 
 		double[] result = new double[array.length];
@@ -25,5 +25,54 @@ public class Helper {
 		return result;
 
 	}
+
+	public double[] getCenterOfPosition(int[] position) {
+
+		double[] result = new double[position.length];
+
+		for (int k = 0; k < position.length; k++) {
+			result[k] = (double) position[k] + 0.5d;
+		}
+
+		return result;
+
+	}
+	
+	public static double[] getCenterOfPosition(double[] position) {
+
+		double[] result = new double[position.length];
+
+		for (int k = 0; k < position.length; k++) {
+			result[k] = (int) position[k] + 0.5d;
+		}
+
+		return result;
+
+	}
+
+	public static int randInt(int min, int max) {
+
+		int range = (max - min) + 1;
+		return (int) (Math.random() * range) + min;
+
+	}
+
+	public boolean randBoolean() {
+
+		return Math.random() < 0.5;
+
+	}
+
+	public int[] getRandomPosition() {
+
+		int[] targetPosition = new int[3];
+		targetPosition[0] = Helper.randInt(0, 49);// TODO variabele voor groottevan wereld??
+		targetPosition[1] = Helper.randInt(0, 49);
+		targetPosition[2] = Helper.randInt(0, 49);
+
+		return targetPosition;
+
+	}
+
 
 }

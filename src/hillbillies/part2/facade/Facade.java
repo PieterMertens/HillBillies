@@ -14,9 +14,16 @@ import ogp.framework.util.ModelException;
 
 public class Facade implements IFacade {
 
+	// TODO exceptions wrappen indien nodig
+
 	@Override
 	public World createWorld(int[][][] terrainTypes, TerrainChangeListener modelListener) throws ModelException {
-		return new World(terrainTypes, modelListener);
+		try {
+			return new World(terrainTypes, modelListener);
+
+		} catch (IllegalArgumentException e) {
+			throw new ModelException();
+		}
 	}
 
 	@Override
@@ -46,7 +53,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void setCubeType(World world, int x, int y, int z, int value) throws ModelException {
-		world.setCubeType(x, y, z, value);
+		try {
+			world.setCubeType(x, y, z, value);
+		} catch (IllegalArgumentException e) {
+			throw new ModelException();
+		}
 	}
 
 	@Override
@@ -57,13 +68,12 @@ public class Facade implements IFacade {
 	@Override
 	public Unit spawnUnit(World world, boolean enableDefaultBehavior) throws ModelException {
 
-		
-		
-		return null;
+		return world.spawnUnit(enableDefaultBehavior);
 	}
 
 	@Override
 	public void addUnit(Unit unit, World world) throws ModelException {
+		world.addUnit(unit);
 
 	}
 
@@ -121,29 +131,28 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getPosition(Boulder boulder) throws ModelException {
-
-		return null;
+		return boulder.getPosition();
 	}
 
 	@Override
 	public Set<Boulder> getBoulders(World world) throws ModelException {
 
-		return null;
+		return Boulder.boulders;
 	}
 
 	@Override
 	public double[] getPosition(Log log) throws ModelException {
 
-		return null;
+		return log.getPosition();
 	}
 
 	@Override
 	public Set<Log> getLogs(World world) throws ModelException {
 
-		return null;
+		return Log.logs;
 	}
 
-	// XXX ----------------------- PT1 below------------------------------------
+	// XXX -------------------------------------- PT1 below------------------------------------
 
 	public Facade() {
 	};
