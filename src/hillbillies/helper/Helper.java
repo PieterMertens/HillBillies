@@ -26,7 +26,7 @@ public class Helper {
 
 	}
 
-	public double[] getCenterOfPosition(int[] position) {
+	public static double[] getCenterOfPosition(int[] position) {
 
 		double[] result = new double[position.length];
 
@@ -57,13 +57,13 @@ public class Helper {
 
 	}
 
-	public boolean randBoolean() {
+	public static boolean randBoolean() {
 
 		return Math.random() < 0.5;
 
 	}
 
-	public int[] getRandomPosition() {
+	public static int[] getRandomPosition() {
 
 		int[] targetPosition = new int[3];
 		targetPosition[0] = Helper.randInt(0, 49);// TODO variabele voor groottevan wereld??
@@ -73,6 +73,15 @@ public class Helper {
 		return targetPosition;
 
 	}
+	
+	/* 
+	 * -----
+	 * World
+	 * -----
+	 */
 
+//	public static boolean isPassable(){
+//		
+//	}
 
 }

@@ -1,5 +1,6 @@
 package hillbillies.model;
 
+import hillbillies.helper.Helper;
 import hillbillies.part2.listener.TerrainChangeListener;
 import ogp.framework.util.ModelException;
 
@@ -107,6 +108,31 @@ public class World {
 	}
 
 	/**
+	 * Return if the terrain type of the cube at the given coordinates is passable.
+	 */
+	public boolean isPassable(double x, double y, double z) {
+		int terraintype = getCubeType((int) x, (int) y, (int) z);
+		if (terraintype == 0 || terraintype == 3)
+			return true;
+
+		return false;
+	}
+
+	public boolean hasImpassableNeighbour(double x, double y, double z) {
+
+		for (int i = -1; i < 1; i++) {
+			for (int j = -1; i < 1; i++) {
+				for (int k = -1; i < 1; i++) {
+					if (!isPassable(x + i, y + j, z + k))
+						return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Check whether the given terrain type is a valid at the given position.
 	 * 
 	 * @param terrain
@@ -144,27 +170,31 @@ public class World {
 	 * Spawn a new unit in the world.
 	 */
 	public Unit spawnUnit(boolean enableDefaultBehavior) throws IllegalArgumentException {
-		
-		
-		if 
-		  
-		return new Unit();//TODO gepast constructor maken voor deze toepassing
+
+		String name = "Aaa";
+		int[] initialPosition = Helper.getRandomPosition();
+		int weight = 0;
+		int agility = 0;
+		int strength = 0;
+		int toughness = 0;
+		// if
+		return new Unit(name, initialPosition, weight, agility, strength, toughness, enableDefaultBehavior);
 	}
 
 	/**
 	 * Adds the given unit to the given world.
 	 */
 	public void addUnit(Unit unit) throws IllegalArgumentException {
-		
-		if ((units.size() <= 100) //&& 
-				//unit.inFaction() && unit.getFactionSize <= 50//TODO inFaction toevoegen aan Unit
-				)
-		units.add(unit);
+
+		if ((units.size() <= 100) // &&
+		// unit.inFaction() && unit.getFactionSize <= 50//TODO inFaction toevoegen aan Unit
+		)
+			units.add(unit);
 
 	}
 
 	private Set<Unit> units;
-	
+
 	/**
 	 * Return all units that are currently part of the world.
 	 */

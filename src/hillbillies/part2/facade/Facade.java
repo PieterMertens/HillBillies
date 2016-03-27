@@ -168,30 +168,30 @@ public class Facade implements IFacade {
 	public Unit createUnit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
 			boolean enableDefaultBehavior) throws ModelException {
 
-		// try {
-		// Unit newUnit = new Unit(name, initialPosition, weight, agility, strength, toughness, enableDefaultBehavior);
-		// return newUnit;
-		// } catch (IllegalArgumentException e) {
-		// throw new ModelException();
-		// }
-
 		try {
-			Unit newUnit = new Unit(weight, strength, agility, toughness);
-			newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));// TODO niewe constr ofz mr nr midden vn blokje
-			newUnit.setName(name);
-			newUnit.setOrientation((float) Math.PI / 2);
-
+			Unit newUnit = new Unit(name, initialPosition, weight, agility, strength, toughness, enableDefaultBehavior);
 			return newUnit;
 		} catch (IllegalArgumentException e) {
 			throw new ModelException();
 		}
+
+		// try {
+		// Unit newUnit = new Unit(weight, strength, agility, toughness);
+		// newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));//TODO niewe constr ofz mr nr midden vn blokje
+		// newUnit.setName(name);
+		// newUnit.setOrientation((float) Math.PI/2);
+		//
+		// return newUnit;
+		// } catch (IllegalArgumentException e) {
+		// throw new ModelException();
+		// }
 	}
 
 	@Override
 	public void fight(Unit attacker, Unit defender) throws ModelException {
 
-		// attacker.attack(attacker, defender);
-		// defender.defend(attacker, defender);
+		attacker.attack(attacker, defender);
+		//defender.defend(attacker, defender);
 
 	}
 
@@ -293,8 +293,7 @@ public class Facade implements IFacade {
 	@Override
 	public boolean isDefaultBehaviorEnabled(Unit unit) throws ModelException {
 
-		// TODO isDefaultBehaviorEnabled
-		return false;
+		return unit.defaultBehaviorEnabled;
 	}
 
 	@Override
@@ -352,7 +351,7 @@ public class Facade implements IFacade {
 	@Override
 	public void setDefaultBehaviorEnabled(Unit unit, boolean value) throws ModelException {
 
-		// TODO setDefaultBehaviorEnabled
+		unit.setDefaultBehavior(value);
 
 	}
 
