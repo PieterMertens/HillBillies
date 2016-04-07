@@ -131,6 +131,7 @@ public class World {
 
 		return false;
 	}
+	
 
 	/**
 	 * Check whether the given terrain type is a valid at the given position.
