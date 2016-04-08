@@ -29,12 +29,23 @@ public class Unit {
 	public Unit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
 			boolean enableDefaultBehavior) {
 
+		if (strength < 25 || strength > 100)
+			strength = 25 + Helper.randInt(0, 75);
+		setStrength(strength);
+
+		if (agility < 25 || agility > 100)
+			agility = 25 + Helper.randInt(0, 75);
+		setAgility(agility);
+
+		if (weight < 25 || weight > 100 || weight < (strength + agility) / 2)
+			weight = ((strength + agility) / 2) + Helper.randInt(0, 100 - ((strength + agility) / 2));
+		setWeight(weight);
+
+		if (toughness < 25 || toughness > 100)
+			toughness = 25 + Helper.randInt(0, 75);
+		setToughness(toughness);
 		this.setName(name);
 		this.setPosition(Helper.getCenterOfPosition(initialPosition));
-		this.setWeight(weight);
-		this.setAgility(agility);
-		this.setStrength(strength);
-		this.setToughness(toughness);
 		this.setHitpoints(200 * weight * toughness / 10000);
 		this.setStaminapoints(200 * weight * toughness / 10000);
 		if (enableDefaultBehavior == true) {
