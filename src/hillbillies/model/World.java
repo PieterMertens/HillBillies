@@ -10,7 +10,8 @@ import be.kuleuven.cs.som.annotate.*;
 import hillbillies.util.ConnectedToBorder;
 
 /**
- * @invar The terrain of each World must be a valid terrain for any World. | isValidTerrain(getTerrain())
+ * @invar The terrain of each World must be a valid terrain for any World. |
+ *        isValidTerrain(getTerrain())
  */
 public class World {
 
@@ -19,7 +20,8 @@ public class World {
 	 *
 	 * @param terrain
 	 *            The terrain for this new World.
-	 * @effect The terrain of this new World is set to the given terrain. | this.setTerrain(terrain)
+	 * @effect The terrain of this new World is set to the given terrain. |
+	 *         this.setTerrain(terrain)
 	 */
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener) throws IllegalArgumentException {
 
@@ -52,9 +54,11 @@ public class World {
 	 * 
 	 * @param terrain
 	 *            The new terrain for this World.
-	 * @post The terrain of this new World is equal to the given terrain. | new.getTerrain() == terrain
+	 * @post The terrain of this new World is equal to the given terrain. |
+	 *       new.getTerrain() == terrain
 	 * @throws IllegalArgumentException
-	 *             The given terrain is not a valid terrain for any World. | ! isValidTerrain(getTerrain())
+	 *             The given terrain is not a valid terrain for any World. | !
+	 *             isValidTerrain(getTerrain())
 	 */
 	@Raw
 	public void setTerrain(int[][][] terrain) throws IllegalArgumentException {
@@ -108,7 +112,8 @@ public class World {
 	}
 
 	/**
-	 * Return if the terrain type of the cube at the given coordinates is passable.
+	 * Return if the terrain type of the cube at the given coordinates is
+	 * passable.
 	 */
 	public boolean isPassable(double x, double y, double z) {
 		int terraintype = getCubeType((int) x, (int) y, (int) z);
@@ -131,7 +136,6 @@ public class World {
 
 		return false;
 	}
-	
 
 	/**
 	 * Check whether the given terrain type is a valid at the given position.
@@ -145,13 +149,16 @@ public class World {
 	}
 
 	/**
-	 * Set the terrain type of the cube at the given coordinates the given value.
+	 * Set the terrain type of the cube at the given coordinates the given
+	 * value.
 	 * 
 	 * @param terrain
 	 *            The new terrain for this World.
-	 * @post The terrain of this new World is equal to the given terrain. | new.getTerrain() == terrain
+	 * @post The terrain of this new World is equal to the given terrain. |
+	 *       new.getTerrain() == terrain
 	 * @throws IllegalArgumentException
-	 *             The given terrain is not a valid terrain for any World. | ! isValidTerrain(getTerrain())
+	 *             The given terrain is not a valid terrain for any World. | !
+	 *             isValidTerrain(getTerrain())
 	 */
 	@Raw
 	public void setCubeType(int x, int y, int z, int value) throws IllegalArgumentException {
@@ -161,7 +168,8 @@ public class World {
 	}
 
 	/**
-	 * Return whether the cube at the given coordinates is solid and connected to the border of the world.
+	 * Return whether the cube at the given coordinates is solid and connected
+	 * to the border of the world.
 	 */
 	public boolean isSolidConnectedToBorder(int x, int y, int z) {
 		return isSolidConnectedToBorder(x, y, z);
@@ -172,12 +180,22 @@ public class World {
 	 */
 	public Unit spawnUnit(boolean enableDefaultBehavior) throws IllegalArgumentException {
 
+		if (this.units.size() >= 100) {
+			throw new IllegalArgumentException();
+		}
+		Unit unit = createUnit(enableDefaultBehavior);
+		unit.setFaction(this.getSmallestFaction());
+		unit.getFaction().addUnit(unit);
+		return unit;
+	}
+
+	public Unit createUnit(boolean enableDefaultBehavior) {
 		String name = "Aaa";
 		int[] initialPosition = Helper.getRandomPosition();
-		int weight = 0;
-		int agility = 0;
-		int strength = 0;
-		int toughness = 0;
+		int weight = 10;
+		int agility = 10;
+		int strength = 10;
+		int toughness = 10;
 		// if
 		return new Unit(name, initialPosition, weight, agility, strength, toughness, enableDefaultBehavior);
 	}
@@ -187,8 +205,9 @@ public class World {
 	 */
 	public void addUnit(Unit unit) throws IllegalArgumentException {
 
-		if ((units.size() <= 100) // &&
-		// unit.inFaction() && unit.getFactionSize <= 50//TODO inFaction toevoegen aan Unit
+		if ((units.size() < 100) // &&
+		// unit.inFaction() && unit.getFactionSize <= 50//TODO inFaction
+		// toevoegen aan Unit
 		)
 			units.add(unit);
 
@@ -202,4 +221,33 @@ public class World {
 	public Set<Unit> getUnits() throws IllegalArgumentException {
 		return units;
 	}
+
+	private void addFaction(Faction faction) {
+		this.factions.add(faction);
+	}
+
+	public Set<Faction> getActiveFactions() {
+		return this.factions;
+	}
+
+	private Set<Faction> factions;
+
+	private Faction getSmallestFaction() {
+		if (this.getActiveFactions().size() < 5) {
+			Faction faction = new Faction(this);
+			this.addFaction(faction);
+			return faction;
+		} else {
+			int smallestSize = 51;
+			Faction smallestFaction = null;
+			for (Faction faction : this.getActiveFactions()) {
+				if (faction.getUnitsOfFaction().size() < smallestSize) {
+					smallestSize = faction.getUnitsOfFaction().size();
+					smallestFaction = faction;
+				}
+			}
+			return smallestFaction;
+		}
+	}
+
 }
