@@ -585,15 +585,16 @@ public class Unit {
 
 	public void advanceTime(double dt) throws IllegalArgumentException {
 
-		if (!getWorld().hasImpassableNeighbour(this.getPosition()[0],this.getPosition()[1],this.getPosition()[2])) {
-			fall();
+		if (!getWorld().hasImpassableNeighbour(this.getPosition()[0],this.getPosition()[1],this.getPosition()[2]) && !isFalling) {
+			this.setIsFalling(true);
+			moveToAdjecent(0,0,-1);
 		} else {
 			if (this.getIsResting()) {
 				doRest(dt);
 				timenotresting = 0;
 			} else {
 				timenotresting += dt;
-				if (timenotresting >= 180) {
+				if (timenotresting >= 180 && !this.getIsFalling()) {
 					rest();
 				}
 				if (defaultBehaviorEnabled && !this.getIsAttacking() && !this.getIsMoving() && !this.getIsResting()
@@ -617,6 +618,10 @@ public class Unit {
 					this.updatePosition(dt);
 					if (this.moveToAdjecentTargetReached()) {
 						this.setIsMoving(false);
+						if (this.getIsFalling()) {
+							this.setHitpoints(this.getHitpoints() - 10);
+							this.setIsFalling(false);
+						}
 						if (isMovingTo) {
 							if (this.moveToTargetReached()) {
 								isMovingTo = false;// TODO setter maken
