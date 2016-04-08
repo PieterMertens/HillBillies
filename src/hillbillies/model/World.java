@@ -15,6 +15,11 @@ import hillbillies.util.ConnectedToBorder;
  */
 public class World {
 
+	public static final int air = 0;
+	public static final int rock = 1;
+	public static final int tree = 2;
+	public static final int workshop = 3;
+
 	/**
 	 * Initialize this new World with given terrain.
 	 *
@@ -113,7 +118,7 @@ public class World {
 	 */
 	public boolean isPassable(double x, double y, double z) {
 		int terraintype = getCubeType((int) x, (int) y, (int) z);
-		if (terraintype == 0 || terraintype == 3)
+		if (terraintype == air || terraintype == workshop)
 			return true;
 
 		return false;
@@ -172,6 +177,21 @@ public class World {
 		this.getTerrain()[x][y][z] = value;
 	}
 
+	
+	public void collapseCube(int x, int y, int z, boolean certainDrop) {
+
+		int cubeType = this.getCubeType(x, y, z);
+		this.setCubeType(x, y, z, air);
+		if (certainDrop || Helper.randInt(1, 4) == 1) {
+			if (cubeType == rock)
+				new Boulder(Helper.getCenterOfPosition(Helper.toIntArray(x, y, z)));
+			if (cubeType == tree)
+				new Log(Helper.getCenterOfPosition(Helper.toIntArray(x, y, z)));
+
+		}
+
+	}
+
 	/**
 	 * Return whether the cube at the given coordinates is solid and connected to the border of the world.
 	 */
@@ -205,18 +225,22 @@ public class World {
 
 		int[] initialPosition = Helper.getRandomPosition(this.getNbCubesX(), this.getNbCubesY(), this.getNbCubesZ());
 
-		System.out.println("voor while: "+initialPosition[0]+" "+ initialPosition[1]+" "+ initialPosition[2]);
-		System.out.println(isPassable(initialPosition[0], initialPosition[1], initialPosition[2])+" "+hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2])+" "+(initialPosition[2] == 0));
-		//TODO while conditie checken..
+		System.out.println("voor while: " + initialPosition[0] + " " + initialPosition[1] + " " + initialPosition[2]);
+		System.out.println(isPassable(initialPosition[0], initialPosition[1], initialPosition[2]) + " "
+				+ hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2]) + " "
+				+ (initialPosition[2] == 0));
+		// TODO while conditie checken..
 		while ((!isPassable(initialPosition[0], initialPosition[1], initialPosition[2])
 				&& !((hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2]))
-				|| initialPosition[2] == 0))) {
+						|| initialPosition[2] == 0))) {
 			initialPosition = Helper.getRandomPosition(getNbCubesX(), getNbCubesY(), getNbCubesZ());
-			System.out.println("in while"+initialPosition[0]+ initialPosition[1]+ initialPosition[2]);
+			System.out.println("in while" + initialPosition[0] + initialPosition[1] + initialPosition[2]);
 		}
-		System.out.println("na while: "+initialPosition[0]+" "+ initialPosition[1]+" "+ initialPosition[2]);
-		System.out.println(isPassable(initialPosition[0], initialPosition[1], initialPosition[2])+" "+hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2])+" "+(initialPosition[2] == 0));
-		
+		System.out.println("na while: " + initialPosition[0] + " " + initialPosition[1] + " " + initialPosition[2]);
+		System.out.println(isPassable(initialPosition[0], initialPosition[1], initialPosition[2]) + " "
+				+ hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2]) + " "
+				+ (initialPosition[2] == 0));
+
 		// return new Unit(name, initialPosition, 0, 0, 0, 0, enableDefaultBehavior);//TODO zou random waarden moeten zoeken voor 0
 		return new Unit(name, initialPosition, 30, 30, 30, 30, enableDefaultBehavior);
 	}

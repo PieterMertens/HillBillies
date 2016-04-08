@@ -50,6 +50,16 @@ public class Helper {
 
 	}
 
+	public static int[] toIntArray(int x, int y, int z) {
+		int[] array = new int[3];
+		array[0] = x;
+		array[1] = y;
+		array[2] = z;
+
+		return array;
+
+	}
+
 	public static int randInt(int min, int max) {
 
 		int range = (max - min) + 1;
@@ -66,20 +76,12 @@ public class Helper {
 	public static int[] getRandomPosition(int nbX, int nbY, int nbZ) {
 
 		int[] targetPosition = new int[3];
-		targetPosition[0] = Helper.randInt(0, nbX-1);
-		targetPosition[1] = Helper.randInt(0, nbY-1);
-		targetPosition[2] = Helper.randInt(0, nbZ-1);
+		targetPosition[0] = Helper.randInt(0, nbX - 1);
+		targetPosition[1] = Helper.randInt(0, nbY - 1);
+		targetPosition[2] = Helper.randInt(0, nbZ - 1);
 
 		return targetPosition;
 
 	}
-
-	/*
-	 * ----- World -----
-	 */
-
-	// public static boolean isPassable(){
-	//
-	// }
 
 }
