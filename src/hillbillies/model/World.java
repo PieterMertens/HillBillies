@@ -4,6 +4,7 @@ import hillbillies.helper.Helper;
 import hillbillies.part2.listener.TerrainChangeListener;
 import ogp.framework.util.ModelException;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -179,9 +180,9 @@ public class World {
 	 * Spawn a new unit in the world.
 	 */
 	public Unit spawnUnit(boolean enableDefaultBehavior) throws IllegalArgumentException {
-
+		System.out.println("units" + units + units.size());
 		if (this.units.size() >= 100) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Max amount of units reached.");
 		}
 		Unit unit = createUnit(enableDefaultBehavior);
 		unit.setFaction(this.getSmallestFaction());
@@ -213,7 +214,7 @@ public class World {
 
 	}
 
-	private Set<Unit> units;
+	private Set<Unit> units = new HashSet<>();
 
 	/**
 	 * Return all units that are currently part of the world.
@@ -230,7 +231,7 @@ public class World {
 		return this.factions;
 	}
 
-	private Set<Faction> factions;
+	private Set<Faction> factions = new HashSet<>();
 
 	private Faction getSmallestFaction() {
 		if (this.getActiveFactions().size() < 5) {

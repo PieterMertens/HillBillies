@@ -1,5 +1,6 @@
 package hillbillies.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -35,7 +36,8 @@ public class Faction {
 	 * @return | result ==
 	 */
 	public static boolean isValidWorld(World world) {
-		return false;
+		//TODO fixen
+		return true;
 	}
 
 	/**
@@ -69,7 +71,7 @@ public class Faction {
 	/**
 	 * Set of units in the faction.
 	 */
-	private Set<Unit> unitsOfFaction;
+	private Set<Unit> unitsOfFaction = new HashSet<>();
 
 	/**
 	 * Adds the given unit to this faction.

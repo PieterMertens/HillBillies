@@ -1568,7 +1568,8 @@ public class Unit {
 	 * @return | result ==
 	 */
 	public static boolean isValidFaction(Faction faction) {
-		return false;
+		//TODO fixen
+		return true;
 	}
 
 	/**
