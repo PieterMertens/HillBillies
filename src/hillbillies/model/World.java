@@ -119,6 +119,9 @@ public class World {
 		return false;
 	}
 
+	/**
+	 * Return if any of the neighbouring cubes at the given coordinates are impassable.
+	 */
 	public boolean hasImpassableNeighbour(double x, double y, double z) {
 
 		for (int i = -1; i < 1; i++) {
@@ -130,6 +133,15 @@ public class World {
 			}
 		}
 
+		return false;
+	}
+
+	/**
+	 * Return if the terrain type of the cube below the given coordinates is impassable.
+	 */
+	public boolean hasImpassableBelow(double x, double y, double z) {
+		if (z > 0)
+			return !isPassable(x, y, z - 1);
 		return false;
 	}
 
@@ -171,13 +183,17 @@ public class World {
 	 * Spawn a new unit in the world.
 	 */
 	public Unit spawnUnit(boolean enableDefaultBehavior) throws IllegalArgumentException {
-		System.out.println("units" + units + units.size());
+
 		if (this.units.size() >= 100) {
 			throw new IllegalArgumentException("Max amount of units reached.");
 		}
+		System.out.println("units size " + units.size());
 		Unit unit = createUnit(enableDefaultBehavior);
+
 		unit.setFaction(this.getSmallestFaction());
+
 		unit.getFaction().addUnit(unit);
+		System.out.println("faction size:" + unit.getFaction().getUnitsOfFaction().size());
 		return unit;
 	}
 
@@ -187,13 +203,22 @@ public class World {
 				+ Character.toString((char) Helper.randInt(97, 122))
 				+ Character.toString((char) Helper.randInt(97, 122));
 
-		int[] initialPosition = Helper.getRandomPosition();
+		int[] initialPosition = Helper.getRandomPosition(this.getNbCubesX(), this.getNbCubesY(), this.getNbCubesZ());
 
-		while (!isPassable(initialPosition[0], initialPosition[1], initialPosition[2])
-				&& (!hasImpassibleBelow() || initialPosition[2] == 0)) {
+		System.out.println("voor while: "+initialPosition[0]+" "+ initialPosition[1]+" "+ initialPosition[2]);
+		System.out.println(isPassable(initialPosition[0], initialPosition[1], initialPosition[2])+" "+hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2])+" "+(initialPosition[2] == 0));
+		//TODO while conditie checken..
+		while ((!isPassable(initialPosition[0], initialPosition[1], initialPosition[2])
+				&& !((hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2]))
+				|| initialPosition[2] == 0))) {
+			initialPosition = Helper.getRandomPosition(getNbCubesX(), getNbCubesY(), getNbCubesZ());
+			System.out.println("in while"+initialPosition[0]+ initialPosition[1]+ initialPosition[2]);
 		}
-
-		return new Unit(name, initialPosition, 0, 0, 0, 0, enableDefaultBehavior);
+		System.out.println("na while: "+initialPosition[0]+" "+ initialPosition[1]+" "+ initialPosition[2]);
+		System.out.println(isPassable(initialPosition[0], initialPosition[1], initialPosition[2])+" "+hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2])+" "+(initialPosition[2] == 0));
+		
+		// return new Unit(name, initialPosition, 0, 0, 0, 0, enableDefaultBehavior);//TODO zou random waarden moeten zoeken voor 0
+		return new Unit(name, initialPosition, 30, 30, 30, 30, enableDefaultBehavior);
 	}
 
 	/**

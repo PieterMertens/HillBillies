@@ -1,7 +1,7 @@
 package hillbillies.helper;
 
 public class Helper {
-	
+
 	public static int[] doubleArrayToIntArray(double[] array) {
 
 		int[] result = new int[array.length];
@@ -37,7 +37,7 @@ public class Helper {
 		return result;
 
 	}
-	
+
 	public static double[] getCenterOfPosition(double[] position) {
 
 		double[] result = new double[position.length];
@@ -63,25 +63,23 @@ public class Helper {
 
 	}
 
-	public static int[] getRandomPosition() {
+	public static int[] getRandomPosition(int nbX, int nbY, int nbZ) {
 
 		int[] targetPosition = new int[3];
-		targetPosition[0] = Helper.randInt(0, 49);// TODO variabele voor groottevan wereld??
-		targetPosition[1] = Helper.randInt(0, 49);
-		targetPosition[2] = Helper.randInt(0, 49);
+		targetPosition[0] = Helper.randInt(0, nbX-1);
+		targetPosition[1] = Helper.randInt(0, nbY-1);
+		targetPosition[2] = Helper.randInt(0, nbZ-1);
 
 		return targetPosition;
 
 	}
-	
-	/* 
-	 * -----
-	 * World
-	 * -----
+
+	/*
+	 * ----- World -----
 	 */
 
-//	public static boolean isPassable(){
-//		
-//	}
+	// public static boolean isPassable(){
+	//
+	// }
 
 }
