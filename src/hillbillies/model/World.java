@@ -11,8 +11,7 @@ import be.kuleuven.cs.som.annotate.*;
 import hillbillies.util.ConnectedToBorder;
 
 /**
- * @invar The terrain of each World must be a valid terrain for any World. |
- *        isValidTerrain(getTerrain())
+ * @invar The terrain of each World must be a valid terrain for any World. | isValidTerrain(getTerrain())
  */
 public class World {
 
@@ -21,8 +20,7 @@ public class World {
 	 *
 	 * @param terrain
 	 *            The terrain for this new World.
-	 * @effect The terrain of this new World is set to the given terrain. |
-	 *         this.setTerrain(terrain)
+	 * @effect The terrain of this new World is set to the given terrain. | this.setTerrain(terrain)
 	 */
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener) throws IllegalArgumentException {
 
@@ -55,11 +53,9 @@ public class World {
 	 * 
 	 * @param terrain
 	 *            The new terrain for this World.
-	 * @post The terrain of this new World is equal to the given terrain. |
-	 *       new.getTerrain() == terrain
+	 * @post The terrain of this new World is equal to the given terrain. | new.getTerrain() == terrain
 	 * @throws IllegalArgumentException
-	 *             The given terrain is not a valid terrain for any World. | !
-	 *             isValidTerrain(getTerrain())
+	 *             The given terrain is not a valid terrain for any World. | ! isValidTerrain(getTerrain())
 	 */
 	@Raw
 	public void setTerrain(int[][][] terrain) throws IllegalArgumentException {
@@ -113,8 +109,7 @@ public class World {
 	}
 
 	/**
-	 * Return if the terrain type of the cube at the given coordinates is
-	 * passable.
+	 * Return if the terrain type of the cube at the given coordinates is passable.
 	 */
 	public boolean isPassable(double x, double y, double z) {
 		int terraintype = getCubeType((int) x, (int) y, (int) z);
@@ -150,16 +145,13 @@ public class World {
 	}
 
 	/**
-	 * Set the terrain type of the cube at the given coordinates the given
-	 * value.
+	 * Set the terrain type of the cube at the given coordinates the given value.
 	 * 
 	 * @param terrain
 	 *            The new terrain for this World.
-	 * @post The terrain of this new World is equal to the given terrain. |
-	 *       new.getTerrain() == terrain
+	 * @post The terrain of this new World is equal to the given terrain. | new.getTerrain() == terrain
 	 * @throws IllegalArgumentException
-	 *             The given terrain is not a valid terrain for any World. | !
-	 *             isValidTerrain(getTerrain())
+	 *             The given terrain is not a valid terrain for any World. | ! isValidTerrain(getTerrain())
 	 */
 	@Raw
 	public void setCubeType(int x, int y, int z, int value) throws IllegalArgumentException {
@@ -169,8 +161,7 @@ public class World {
 	}
 
 	/**
-	 * Return whether the cube at the given coordinates is solid and connected
-	 * to the border of the world.
+	 * Return whether the cube at the given coordinates is solid and connected to the border of the world.
 	 */
 	public boolean isSolidConnectedToBorder(int x, int y, int z) {
 		return isSolidConnectedToBorder(x, y, z);
@@ -191,14 +182,18 @@ public class World {
 	}
 
 	public Unit createUnit(boolean enableDefaultBehavior) {
-		String name = "Aaa";
+
+		String name = Character.toString((char) Helper.randInt(65, 90))
+				+ Character.toString((char) Helper.randInt(97, 122))
+				+ Character.toString((char) Helper.randInt(97, 122));
+
 		int[] initialPosition = Helper.getRandomPosition();
-		int weight = 10;
-		int agility = 10;
-		int strength = 10;
-		int toughness = 10;
-		// if
-		return new Unit(name, initialPosition, weight, agility, strength, toughness, enableDefaultBehavior);
+
+		while (!isPassable(initialPosition[0], initialPosition[1], initialPosition[2])
+				&& (!hasImpassibleBelow() || initialPosition[2] == 0)) {
+		}
+
+		return new Unit(name, initialPosition, 0, 0, 0, 0, enableDefaultBehavior);
 	}
 
 	/**

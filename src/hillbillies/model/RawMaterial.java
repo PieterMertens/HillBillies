@@ -30,7 +30,7 @@ public abstract class RawMaterial {
 	 */
 	public RawMaterial(double[] position) throws IllegalArgumentException {
 		this.setPosition(position);
-		int weight = Helper.randInt(10, 50)
+		int weight = Helper.randInt(10, 50);
 		if (!canHaveAsWeight(weight))
 			throw new IllegalArgumentException();
 		this.weight = weight;
@@ -56,6 +56,7 @@ public abstract class RawMaterial {
 	 */
 	@Raw
 	public boolean canHaveAsWeight(int weight) {
+		//TODO checken
 		return false;
 	}
 

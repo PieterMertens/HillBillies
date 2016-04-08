@@ -83,8 +83,11 @@ public class Unit {
 	 */
 	public static boolean isValidPosition(double[] position) {
 
+		
+		//TODO check if passable
+		
 		Double lowerlimit = 0d;
-		Double upperlimit = 50d;
+		Double upperlimit = 50d;//TODO aan grenzen vn wereld aanpassen
 
 		if (position.length == 3) {
 

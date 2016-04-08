@@ -66,7 +66,7 @@ public class Faction {
 	/**
 	 * Maximum number of units a faction can have.
 	 */
-	private int maxUnits = 50;
+	private static final int maxUnits = 50;
 
 	/**
 	 * Set of units in the faction.
