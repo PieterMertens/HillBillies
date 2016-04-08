@@ -430,7 +430,7 @@ public class Unit {
 	 */
 	@Raw // TODO private
 	public void setHitpoints(int hitpoints) {
-		//System.out.println(hitpoints);
+		// System.out.println(hitpoints);
 		assert isValidHitpoints(hitpoints, this.getWeight(), this.getToughness());
 		if (hitpoints <= 0) {
 			terminate(); // weet niet of ge dit in een setter moogt bijzetten

@@ -30,6 +30,8 @@ public class World {
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener) throws IllegalArgumentException {
 
 		this.setTerrain(terrainTypes);
+		this.setTerrainChangeListener(modelListener);
+		this.connectedToBorder = new ConnectedToBorder(this.getNbCubesX(), this.getNbCubesY(), this.getNbCubesZ());
 
 	}
 
@@ -67,12 +69,31 @@ public class World {
 		if (!isValidTerrain(terrain))
 			throw new IllegalArgumentException();
 		this.terrain = terrain;
+
 	}
 
 	/**
 	 * Variable registering the terrain of this World.
 	 */
 	private int[][][] terrain;
+
+	/**
+	 * Set the terrainChangeListener of this World to the given terrainChangeListener.
+	 * 
+	 * @param terrainChangeListener
+	 *            The new terrain for this World.
+	 * @post The terrainChangeListener of this new World is equal to the given terrainChangeListener.
+	 */
+	@Raw
+	public void setTerrainChangeListener(TerrainChangeListener modelListener) {
+		this.modelListener = modelListener;
+
+	}
+
+	/**
+	 * Variable registering the terrainChangeListener of this World.
+	 */
+	private TerrainChangeListener modelListener;
 
 	/**
 	 * Return the number of cubes in the world in the x-direction.
@@ -101,7 +122,18 @@ public class World {
 		return this.getTerrain()[0][0].length;
 	}
 
-	public void advanceTime(double dt) throws IllegalArgumentException {// TODO
+	public void advanceTime(double dt) throws IllegalArgumentException {
+
+		
+		
+		for (Unit unit: this.getUnits()){
+			unit.advanceTime(dt);
+		}
+		//for (Boulder boulder: this.getBoulders()){boulder.advanceTime(dt)}
+		//for (Log log: this.getLogs()){log.advanceTime(dt)}
+		
+		
+		
 	}
 
 	/**
@@ -177,11 +209,11 @@ public class World {
 		this.getTerrain()[x][y][z] = value;
 	}
 
-	
 	public void collapseCube(int x, int y, int z, boolean certainDrop) {
 
 		int cubeType = this.getCubeType(x, y, z);
 		this.setCubeType(x, y, z, air);
+		modelListener.notifyTerrainChanged(x, y, z);
 		if (certainDrop || Helper.randInt(1, 4) == 1) {
 			if (cubeType == rock)
 				new Boulder(Helper.getCenterOfPosition(Helper.toIntArray(x, y, z)));
@@ -193,10 +225,15 @@ public class World {
 	}
 
 	/**
+	 * Variable registering if blocks are connected to the border.
+	 */
+	private ConnectedToBorder connectedToBorder;
+
+	/**
 	 * Return whether the cube at the given coordinates is solid and connected to the border of the world.
 	 */
 	public boolean isSolidConnectedToBorder(int x, int y, int z) {
-		return isSolidConnectedToBorder(x, y, z);
+		return connectedToBorder.isSolidConnectedToBorder(x, y, z);
 	}
 
 	/**
@@ -225,24 +262,28 @@ public class World {
 
 		int[] initialPosition = Helper.getRandomPosition(this.getNbCubesX(), this.getNbCubesY(), this.getNbCubesZ());
 
-		System.out.println("voor while: " + initialPosition[0] + " " + initialPosition[1] + " " + initialPosition[2]);
-		System.out.println(isPassable(initialPosition[0], initialPosition[1], initialPosition[2]) + " "
-				+ hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2]) + " "
-				+ (initialPosition[2] == 0));
-		// TODO while conditie checken..
-		while ((!isPassable(initialPosition[0], initialPosition[1], initialPosition[2])
-				&& !((hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2]))
-						|| initialPosition[2] == 0))) {
-			initialPosition = Helper.getRandomPosition(getNbCubesX(), getNbCubesY(), getNbCubesZ());
-			System.out.println("in while" + initialPosition[0] + initialPosition[1] + initialPosition[2]);
-		}
-		System.out.println("na while: " + initialPosition[0] + " " + initialPosition[1] + " " + initialPosition[2]);
-		System.out.println(isPassable(initialPosition[0], initialPosition[1], initialPosition[2]) + " "
-				+ hasImpassableBelow(initialPosition[0], initialPosition[1], initialPosition[2]) + " "
-				+ (initialPosition[2] == 0));
+		// System.out.println("voor while: " + initialPosition[0] + " " + initialPosition[1] + " " + initialPosition[2]);
 
-		// return new Unit(name, initialPosition, 0, 0, 0, 0, enableDefaultBehavior);//TODO zou random waarden moeten zoeken voor 0
-		return new Unit(name, initialPosition, 30, 30, 30, 30, enableDefaultBehavior);
+		while (!isValidInitialPosition(initialPosition)) {
+			initialPosition = Helper.getRandomPosition(getNbCubesX(), getNbCubesY(), getNbCubesZ());
+			// System.out.println("in while" + initialPosition[0] + initialPosition[1] + initialPosition[2]);
+		}
+		// System.out.println("na while: " + initialPosition[0] + " " + initialPosition[1] + " " + initialPosition[2]);
+
+		return new Unit(name, initialPosition, 0, 0, 0, 0, enableDefaultBehavior);
+	}
+
+	public boolean isValidInitialPosition(int[] position) {
+
+		if (isPassable(position[0], position[1], position[2])) {
+			if (position[2] == 0)
+				return true;
+			if (hasImpassableBelow(position[0], position[1], position[2]))
+				return true;
+		}
+
+		return false;
+
 	}
 
 	/**
