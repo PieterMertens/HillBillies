@@ -635,21 +635,24 @@ public class Unit {
 						if (this.getIsFalling()) {
 							this.setHitpoints(this.getHitpoints() - 10);
 							this.setIsFalling(false);
-						} else {this.setExperience(this.getExperience() + 1);
-						if (isMovingTo) {
-							if (this.moveToTargetReached()) {
-								isMovingTo = false;// TODO setter maken
-								// System.out.println("---------------- moveto
-								// beeindigd ----------------------");
-							} else {
-								this.moveToAdjecent(getMoveToDirectionX(), getMoveToDirectionY(),
-										getMoveToDirectionZ());
-							}
+						} else {
+							this.setExperience(this.getExperience() + 1);
+							if (isMovingTo) {
+								if (this.moveToTargetReached()) {
+									isMovingTo = false;// TODO setter maken
+									// System.out.println("----------------
+									// moveto
+									// beeindigd ----------------------");
+								} else {
+									this.moveToAdjecent(getMoveToDirectionX(), getMoveToDirectionY(),
+											getMoveToDirectionZ());
+								}
 
+							}
 						}
 					}
-				}
 
+				}
 			}
 		}
 
@@ -1229,14 +1232,18 @@ public class Unit {
 		float time = getWorkTime() - (float) dt;
 		if (time <= 0) {
 			int experience = 10;
-			if (this.isCarryingBoulder() || this.isCarryingLog()) {
+			if (this.getCarryingBoulder() || this.getCarryingLog()) {
 				this.drop();
-			} else if (this.getWorld().getCubeType(x, y, z) == 0 && itemsAvailable()) { // TODO
-																						// targetcoord
-				this.improve();
-			} else if (boulderAvailable()) {
+			} else if (this.getWorld().getCubeType(x, y, z) == 0 && itemsAvailable(position)) { // TODO
+																								// targetcoord
+				this.setWeight(this.getWeight() + 5);
+				this.setToughness(this.getToughness() + 5);
+
+			} else if (this.getWorld().boulderAtCube(position)) { // TODO
+																	// targetcoord
 				this.pickUpBoulder();
-			} else if (logAvailable()) {
+			} else if (this.getWorld().logAtCube(position)) { // TODO
+																// targetcoord
 				this.pickUpLog();
 			} else if (this.getWorld().getCubeType(x, y, z) == 2) { // TODO
 																	// targetcoord
@@ -1299,6 +1306,14 @@ public class Unit {
 	 * Variable registering the work time of this unit.
 	 */
 	private float workTime;
+
+	private boolean itemsAvailable(int[] position) {
+		if (this.getWorld().boulderAtCube(position) && this.getWorld().logAtCube(position)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public double getDistance(int dx, int dy, int dz) {// TODO nr helper
 
@@ -1672,5 +1687,98 @@ public class Unit {
 	 * Variable registering the faction of this unit.
 	 */
 	private Faction faction;
+
+	/**
+	 * Return the carryingBoulder of this unit.
+	 */
+	@Basic
+	@Raw
+	public boolean getCarryingBoulder() {
+		return this.carryingBoulder;
+	}
+
+	/**
+	 * Check whether the given carryingBoulder is a valid carryingBoulder for
+	 * any unit.
+	 * 
+	 * @param carryingBoulder
+	 *            The carryingBoulder to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidCarryingBoulder(boolean carryingBoulder) {
+		if (carryingBoulder == true || carryingBoulder == false) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Set the carryingBoulder of this unit to the given carryingBoulder.
+	 * 
+	 * @param carryingBoulder
+	 *            The new carryingBoulder for this unit.
+	 * @post The carryingBoulder of this new unit is equal to the given
+	 *       carryingBoulder. | new.getCarryingBoulder() == carryingBoulder
+	 * @throws IllegalArgumentException
+	 *             The given carryingBoulder is not a valid carryingBoulder for
+	 *             any unit. | ! isValidCarryingBoulder(getCarryingBoulder())
+	 */
+	@Raw
+	public void setCarryingBoulder(boolean carryingBoulder) throws IllegalArgumentException {
+		if (!isValidCarryingBoulder(carryingBoulder))
+			throw new IllegalArgumentException();
+		this.carryingBoulder = carryingBoulder;
+	}
+
+	/**
+	 * Variable registering the carryingBoulder of this unit.
+	 */
+	private boolean carryingBoulder;
+
+	/**
+	 * Return the carryingLog of this unit.
+	 */
+	@Basic
+	@Raw
+	public boolean getCarryingLog() {
+		return this.carryingLog;
+	}
+
+	/**
+	 * Check whether the given carryingLog is a valid carryingLog for any unit.
+	 * 
+	 * @param carryingLog
+	 *            The carryingLog to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidCarryingLog(boolean carryingLog) {
+		if (carryingLog == true || carryingLog == false) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Set the carryingLog of this unit to the given carryingLog.
+	 * 
+	 * @param carryingLog
+	 *            The new carryingLog for this unit.
+	 * @post The carryingLog of this new unit is equal to the given carryingLog.
+	 *       | new.getCarryingLog() == carryingLog
+	 * @throws IllegalArgumentException
+	 *             The given carryingLog is not a valid carryingLog for any
+	 *             unit. | ! isValidCarryingLog(getCarryingLog())
+	 */
+	@Raw
+	public void setCarryingLog(boolean carryingLog) throws IllegalArgumentException {
+		if (!isValidCarryingLog(carryingLog))
+			throw new IllegalArgumentException();
+		this.carryingLog = carryingLog;
+	}
+
+	/**
+	 * Variable registering the carryingLog of this unit.
+	 */
+	private boolean carryingLog;
 
 }
