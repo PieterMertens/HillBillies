@@ -1234,17 +1234,17 @@ public class Unit {
 			int experience = 10;
 			if (this.getCarryingBoulder() || this.getCarryingLog()) {
 				this.drop();
-			} else if (this.getWorld().getCubeType(x, y, z) == 0 && itemsAvailable(position)) { // TODO
+			} else if (this.getWorld().getCubeType(x, y, z) == 0 && itemsAvailable(Helper.doubleArrayToIntArray(position))) { // TODO
 																								// targetcoord
 				this.setWeight(this.getWeight() + 5);
 				this.setToughness(this.getToughness() + 5);
 
-			} else if (this.getWorld().boulderAtCube(position)) { // TODO
+			} else if (this.getWorld().boulderAtCube(Helper.doubleArrayToIntArray(position))) { // TODO
 																	// targetcoord
-				this.pickUpBoulder();
-			} else if (this.getWorld().logAtCube(position)) { // TODO
+				this.pickUpBoulder(); //TODO in boulder class random weight meegeven
+			} else if (this.getWorld().logAtCube(Helper.doubleArrayToIntArray(position))) { // TODO
 																// targetcoord
-				this.pickUpLog();
+				this.pickUpLog(); //TODO in log class random weight meegeven
 			} else if (this.getWorld().getCubeType(x, y, z) == 2) { // TODO
 																	// targetcoord
 				this.getWorld().collapseCube(x, y, z, true);
