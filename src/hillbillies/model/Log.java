@@ -7,14 +7,23 @@ public class Log extends RawMaterial {
 		world.addLog(this);
 	}
 
-	public void setIsTerminated(boolean terminated) {
-		super.setIsTerminated(terminated);
-		if (terminated) {
-			this.getWorld().addLog(this);
-		} else {
-			this.getWorld().removeLog(this);
-		}
+	public void terminate() {
+		super.terminate();
+		this.getWorld().removeLog(this);
+		this.setWorld(null);
+		this.stopCarrying();
+
 	}
 
+	public void setIsCarriedBy(Unit isCarriedBy) {
+		super.setIsCarriedBy(isCarriedBy);
+		this.getIsCarriedBy().setCarryingLog(true);
+		this.getWorld().removeLog(this);
+	}
+	
+	public void stopCarrying() {
+		this.getIsCarriedBy().setCarryingLog(false);
+		this.setIsCarriedBy(null);
+	}
 
 }

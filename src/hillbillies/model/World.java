@@ -2,8 +2,6 @@ package hillbillies.model;
 
 import hillbillies.helper.Helper;
 import hillbillies.part2.listener.TerrainChangeListener;
-import ogp.framework.util.ModelException;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -141,11 +139,15 @@ public class World {
 			unit.advanceTime(dt);
 		}
 
-		// System.out.println("-- boulder");
-		// for (Boulder boulder: this.getBoulders()){boulder.advanceTime(dt)}
+		System.out.println("-- boulder");
+		for (Boulder boulder : this.getBoulders()) {
+			boulder.advanceTime(dt);
+		}
 
-		// System.out.println("-- log");
-		// for (Log log: this.getLogs()){log.advanceTime(dt)}
+		System.out.println("-- log");
+		for (Log log : this.getLogs()) {
+			log.advanceTime(dt);
+		}
 
 		System.out.println("--- --- --- --- ---");
 
@@ -235,10 +237,12 @@ public class World {
 		this.setCubeType(x, y, z, air);
 
 		if (certainDrop || Helper.randInt(1, 4) == 1) {
+			int[] pos = { x, y, z };
+			double[] position = Helper.getCenterOfPosition(pos);
 			if (cubeType == rock)
-				new Boulder(Helper.getCenterOfPosition(Helper.toIntArray(x, y, z)));
+				new Boulder(this, position);
 			if (cubeType == tree)
-				new Log(Helper.getCenterOfPosition(Helper.toIntArray(x, y, z)));
+				new Log(this, position);
 
 		}
 
@@ -418,7 +422,7 @@ public class World {
 		boulders.remove(boulder);
 
 	}
-	
+
 	public boolean boulderAtCube(int[] position) {
 
 		for (Boulder boulder : this.getBoulders()) {

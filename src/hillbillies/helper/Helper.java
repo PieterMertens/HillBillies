@@ -50,16 +50,6 @@ public class Helper {
 
 	}
 
-	public static int[] toIntArray(int x, int y, int z) {
-		int[] array = new int[3];
-		array[0] = x;
-		array[1] = y;
-		array[2] = z;
-
-		return array;
-
-	}
-
 	public static int randInt(int min, int max) {
 
 		int range = (max - min) + 1;

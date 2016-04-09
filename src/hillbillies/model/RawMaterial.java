@@ -1,7 +1,5 @@
 package hillbillies.model;
 
-import java.math.BigInteger;
-
 import be.kuleuven.cs.som.annotate.*;
 import hillbillies.helper.Helper;
 
@@ -41,7 +39,6 @@ public abstract class RawMaterial {
 		if (!canHaveAsWeight(weight))
 			throw new IllegalArgumentException();
 		this.weight = weight;
-		this.setIsPresent(true);
 		this.world = world;
 	}
 
@@ -62,7 +59,7 @@ public abstract class RawMaterial {
 	 * @return | result ==
 	 */
 	public static boolean isValidWorld(World world) {
-		//TODO checken f geldige wereld
+		// TODO checken f geldige wereld
 		return true;
 	}
 
@@ -178,6 +175,13 @@ public abstract class RawMaterial {
 	@Raw
 	public void setIsTerminated(boolean terminated) {
 		this.terminated = terminated;
+
+	}
+
+	public void terminate() {
+		this.setIsTerminated(true);
+		this.setIsAvailible(false);
+
 	}
 
 	/**
@@ -185,9 +189,112 @@ public abstract class RawMaterial {
 	 */
 	private boolean terminated;
 
-	public void advanceTime() {
+	/**
+	 * TO BE ADDED TO CLASS HEADING
+	 * 
+	 * @invar The isCarriedBy of each raw material must be a valid isCarriedBy for any raw material. | isValidIsCarriedBy(getIsCarriedBy())
+	 */
 
-		// TODO fall
+	/**
+	 * Return the isCarriedBy of this raw material.
+	 */
+	@Basic
+	@Raw
+	public Unit getIsCarriedBy() {
+		return this.isCarriedBy;
 	}
+
+	/**
+	 * Check whether the given isCarriedBy is a valid isCarriedBy for any raw material.
+	 * 
+	 * @param isCarriedBy
+	 *            The isCarriedBy to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidIsCarriedBy(Unit isCarriedBy) {
+		// TODO conditie
+		return true;
+	}
+
+	/**
+	 * Set the isCarriedBy of this raw material to the given isCarriedBy.
+	 * 
+	 * @param isCarriedBy
+	 *            The new isCarriedBy for this raw material.
+	 * @post The isCarriedBy of this new raw material is equal to the given isCarriedBy. | new.getIsCarriedBy() == isCarriedBy
+	 * @throws IllegalArgumentException
+	 *             The given isCarriedBy is not a valid isCarriedBy for any raw material. | ! isValidIsCarriedBy(getIsCarriedBy())
+	 */
+	@Raw
+	public void setIsCarriedBy(Unit isCarriedBy) throws IllegalArgumentException {
+		if (!isValidIsCarriedBy(isCarriedBy))
+			throw new IllegalArgumentException();
+		this.setIsAvailible(false);
+		this.isCarriedBy = isCarriedBy;
+	}
+
+	/**
+	 * Variable registering the isCarriedBy of this raw material.
+	 */
+	private Unit isCarriedBy;
+
+	/**
+	 * TO BE ADDED TO CLASS HEADING
+	 * 
+	 * @invar The isAvailible of each raw material must be a valid isAvailible for any raw material. | isValidIsAvailible(getIsAvailible())
+	 */
+
+	/**
+	 * Return the isAvailible of this raw material.
+	 */
+	@Basic
+	@Raw
+	public boolean getIsAvailible() {
+		return this.isAvailible;
+	}
+
+	/**
+	 * Set the isAvailible of this raw material to the given isAvailible.
+	 * 
+	 * @param isAvailible
+	 *            The new isAvailible for this raw material.
+	 * @post The isAvailible of this new raw material is equal to the given isAvailible. | new.getIsAvailible() == isAvailible
+	 * @throws IllegalArgumentException
+	 *             The given isAvailible is not a valid isAvailible for any raw material. | ! isValidIsAvailible(getIsAvailible())
+	 */
+	@Raw
+	public void setIsAvailible(boolean isAvailible) throws IllegalArgumentException {
+		this.isAvailible = isAvailible;
+	}
+
+	/**
+	 * Variable registering the isAvailible of this raw material.
+	 */
+	private boolean isAvailible = true;
+
+	public void advanceTime(double dt) {
+
+		if (this.isAvailible && !this.getIsTerminated() && !(this.atPassable() && this.blockBelow())) {
+
+			double[] position = this.getPosition();
+			position[2] += dt*fallingSpeed;
+			this.setPosition(position);
+			
+		}
+
+	}
+
+	public boolean atPassable() {
+		return this.getWorld().isPassable((int) this.getPosition()[0], (int) this.getPosition()[1],
+				(int) this.getPosition()[2]);
+	}
+
+	public boolean blockBelow() {
+
+		return this.getPosition()[2] == 0 || this.getWorld().hasImpassableBelow((int) this.getPosition()[0], (int) this.getPosition()[1],
+				(int) this.getPosition()[2]);
+	}
+	
+	public static final int fallingSpeed = -3;
 
 }
