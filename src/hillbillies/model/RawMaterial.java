@@ -1,5 +1,7 @@
 package hillbillies.model;
 
+import org.junit.experimental.theories.Theories;
+
 import be.kuleuven.cs.som.annotate.*;
 import hillbillies.helper.Helper;
 
@@ -7,38 +9,27 @@ import hillbillies.helper.Helper;
  * @invar The position of each raw material must be a valid position for any raw material. | isValidPosition(getPosition())
  * @invar Each raw material can have its weight as weight. | canHaveAsWeight(this.getWeight())
  * @invar The world of each raw material must be a valid world for any raw material. | isValidWorld(getWorld())*
+ * @invar The isCarriedBy of each raw material must be a valid isCarriedBy for any raw material. | isValidIsCarriedBy(getIsCarriedBy())
+ * @invar The isAvailible of each raw material must be a valid isAvailible for any raw material. | isValidIsAvailible(getIsAvailible())
  */
 public abstract class RawMaterial {
 
 	/**
-	 * Initialize this new raw material with given weight.
+	 * Initialize this new raw material in given world, with given position.
 	 * 
-	 * @param weight
-	 *            The weight for this new raw material.
-	 * @post The weight of this new raw material is equal to the given weight. | new.getWeight() == weight
-	 * @throws IllegalArgumentException
-	 *             This new raw material cannot have the given weight as its weight. | ! canHaveAsWeight(this.getWeight())
-	 *
-	 *             Initialize this new raw material with given position.
-	 *
-	 * @param position
-	 *            The position for this new raw material.
-	 * @effect The position of this new raw material is set to the given position. | this.setPosition(position)
-	 *
-	 * 
-	 *         Initialize this new raw material with given world.
-	 *
 	 * @param world
 	 *            The world for this new raw material.
+	 * 
+	 * @param position
+	 *            The position for this new raw material.
 	 * @effect The world of this new raw material is set to the given world. | this.setWorld(world)
+	 *
+	 * @effect The position of this new raw material is set to the given position. | this.setPosition(position)
 	 * 
 	 */
 	public RawMaterial(World world, double[] position) throws IllegalArgumentException {
 		this.setPosition(position);
-		int weight = Helper.randInt(10, 50);
-		if (!canHaveAsWeight(weight))
-			throw new IllegalArgumentException();
-		this.weight = weight;
+		this.weight = Helper.randInt(10, 50);
 		this.world = world;
 	}
 
@@ -59,8 +50,9 @@ public abstract class RawMaterial {
 	 * @return | result ==
 	 */
 	public static boolean isValidWorld(World world) {
-		// TODO checken f geldige wereld
-		return true;
+		if (world != null && !world.getIsTerminated())
+			return true;
+		return false;
 	}
 
 	/**
@@ -95,19 +87,6 @@ public abstract class RawMaterial {
 	}
 
 	/**
-	 * Check whether this raw material can have the given weight as its weight.
-	 * 
-	 * @param weight
-	 *            The weight to check.
-	 * @return | result ==
-	 */
-	@Raw
-	public boolean canHaveAsWeight(int weight) {
-		// TODO checken
-		return false;
-	}
-
-	/**
 	 * Variable registering the weight of this raw material.
 	 */
 	private final int weight;
@@ -129,6 +108,7 @@ public abstract class RawMaterial {
 	 * @return | result ==
 	 */
 	public static boolean isValidPosition(double[] position) {
+
 		return true;
 		// TODO kijken f geldige pos is
 	}
@@ -178,6 +158,10 @@ public abstract class RawMaterial {
 
 	}
 
+	/**
+	 * @post The raw material gets terminated.
+	 * 
+	 */
 	public void terminate() {
 		this.setIsTerminated(true);
 		this.setIsAvailible(false);
@@ -188,12 +172,6 @@ public abstract class RawMaterial {
 	 * Variable registering the terminated status of this raw material.
 	 */
 	private boolean terminated;
-
-	/**
-	 * TO BE ADDED TO CLASS HEADING
-	 * 
-	 * @invar The isCarriedBy of each raw material must be a valid isCarriedBy for any raw material. | isValidIsCarriedBy(getIsCarriedBy())
-	 */
 
 	/**
 	 * Return the isCarriedBy of this raw material.
@@ -212,8 +190,9 @@ public abstract class RawMaterial {
 	 * @return | result ==
 	 */
 	public static boolean isValidIsCarriedBy(Unit isCarriedBy) {
-		// TODO conditie
-		return true;
+		if (isCarriedBy != null && !isCarriedBy.isTerminated())
+			return true;
+		return false;
 	}
 
 	/**
@@ -237,12 +216,6 @@ public abstract class RawMaterial {
 	 * Variable registering the isCarriedBy of this raw material.
 	 */
 	private Unit isCarriedBy;
-
-	/**
-	 * TO BE ADDED TO CLASS HEADING
-	 * 
-	 * @invar The isAvailible of each raw material must be a valid isAvailible for any raw material. | isValidIsAvailible(getIsAvailible())
-	 */
 
 	/**
 	 * Return the isAvailible of this raw material.
@@ -277,24 +250,33 @@ public abstract class RawMaterial {
 		if (this.isAvailible && !this.getIsTerminated() && !(this.atPassable() && this.blockBelow())) {
 
 			double[] position = this.getPosition();
-			position[2] += dt*fallingSpeed;
+			position[2] += dt * fallingSpeed;
 			this.setPosition(position);
-			
+
 		}
 
 	}
 
+	/**
+	 * Return whether the terrain type is passable at the current position.
+	 */
 	public boolean atPassable() {
 		return this.getWorld().isPassable((int) this.getPosition()[0], (int) this.getPosition()[1],
 				(int) this.getPosition()[2]);
 	}
 
+	/**
+	 * Return whether there is an impassable terrain type below the current position.
+	 */
 	public boolean blockBelow() {
 
-		return this.getPosition()[2] == 0 || this.getWorld().hasImpassableBelow((int) this.getPosition()[0], (int) this.getPosition()[1],
-				(int) this.getPosition()[2]);
+		return (this.getPosition()[2] == 0 || this.getWorld().hasImpassableBelow((int) this.getPosition()[0],
+				(int) this.getPosition()[1], (int) this.getPosition()[2]));
 	}
-	
+
+	/**
+	 * Variable holding the fallingSpeed of raw materials.
+	 */
 	public static final int fallingSpeed = -3;
 
 }

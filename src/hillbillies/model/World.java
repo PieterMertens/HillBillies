@@ -435,5 +435,16 @@ public class World {
 	}
 
 	private Set<Boulder> boulders = new HashSet<>();
+	
+	
+	public void terminate(){
+		this.isTerminated = true;		
+	}
+	
+	public boolean getIsTerminated(){
+		return this.isTerminated;
+	}
+	
+	private boolean isTerminated;
 
 }
