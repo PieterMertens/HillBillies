@@ -1,23 +1,22 @@
 package hillbillies.model;
 
-import java.util.Set;
-
 public class Boulder extends RawMaterial{
 
-	public Boulder(double[] position) throws IllegalArgumentException {
-		super(position);
+	public Boulder(World world, double[] position) throws IllegalArgumentException {
+		super(world, position);
+		world.addBoulder(this);
+		
 	}
 	
 
-	public void setIsPresent(boolean present) {
-		super.setIsPresent(present);
-		if (present) {
-			boulders.add(this);
+	public void setIsTerminated(boolean terminated) {
+		super.setIsTerminated(terminated);
+		if (terminated) {
+			this.getWorld().addBoulder(this);;
 		} else {
-			boulders.remove(this);
+			this.getWorld().removeBoulder(this);;
 		}
 	}
 
-	public static Set<Boulder> boulders;
 
 }

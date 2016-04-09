@@ -4,7 +4,9 @@ import hillbillies.helper.Helper;
 import hillbillies.part2.listener.TerrainChangeListener;
 import ogp.framework.util.ModelException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -124,16 +126,29 @@ public class World {
 
 	public void advanceTime(double dt) throws IllegalArgumentException {
 
-		
-		
-		for (Unit unit: this.getUnits()){
+		System.out.println("--- advance time ---");
+
+		System.out.println("-- world");
+		for (int[] pos : disconnected) {
+			System.out.println("disconnected cave in" + pos[0] + " " + pos[1] + " " + pos[2]);
+			this.collapseCube(pos[0], pos[1], pos[2], false);
+		}
+		disconnected.clear();
+		this.getDisconnectedCubes();
+
+		System.out.println("-- unit");
+		for (Unit unit : this.getUnits()) {
 			unit.advanceTime(dt);
 		}
-		//for (Boulder boulder: this.getBoulders()){boulder.advanceTime(dt)}
-		//for (Log log: this.getLogs()){log.advanceTime(dt)}
-		
-		
-		
+
+		// System.out.println("-- boulder");
+		// for (Boulder boulder: this.getBoulders()){boulder.advanceTime(dt)}
+
+		// System.out.println("-- log");
+		// for (Log log: this.getLogs()){log.advanceTime(dt)}
+
+		System.out.println("--- --- --- --- ---");
+
 	}
 
 	/**
@@ -206,14 +221,19 @@ public class World {
 	public void setCubeType(int x, int y, int z, int value) throws IllegalArgumentException {
 		if (!isValidCubeType(value))
 			throw new IllegalArgumentException();
+		System.out.println("SetCubeType at:" + x + " " + y + " " + z + " from " + this.getCubeType(x, y, z) + " or "
+				+ this.getTerrain()[x][y][z]);
 		this.getTerrain()[x][y][z] = value;
+		System.out.println("to: " + this.getCubeType(x, y, z) + " or " + this.getTerrain()[x][y][z]);
+
+		modelListener.notifyTerrainChanged(x, y, z);
 	}
 
 	public void collapseCube(int x, int y, int z, boolean certainDrop) {
 
 		int cubeType = this.getCubeType(x, y, z);
 		this.setCubeType(x, y, z, air);
-		modelListener.notifyTerrainChanged(x, y, z);
+
 		if (certainDrop || Helper.randInt(1, 4) == 1) {
 			if (cubeType == rock)
 				new Boulder(Helper.getCenterOfPosition(Helper.toIntArray(x, y, z)));
@@ -235,6 +255,24 @@ public class World {
 	public boolean isSolidConnectedToBorder(int x, int y, int z) {
 		return connectedToBorder.isSolidConnectedToBorder(x, y, z);
 	}
+
+	public void getDisconnectedCubes() {
+		// XXX kan effecienter wrschnlk
+		for (int x = 0; x < this.getNbCubesX(); x++) {
+			for (int y = 0; y < this.getNbCubesY(); y++) {
+				for (int z = 0; z < this.getNbCubesZ(); z++) {
+					if (isPassable(x, y, z))
+						disconnected.addAll(connectedToBorder.changeSolidToPassable(x, y, z));
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Variable registering the blocks disconnected from the border.
+	 */
+	private List<int[]> disconnected = new ArrayList<>();
 
 	/**
 	 * Spawn a new unit in the world.
@@ -335,5 +373,63 @@ public class World {
 			return smallestFaction;
 		}
 	}
+
+	public Set<Log> getLogs() {
+		return this.logs;
+	}
+
+	public void addLog(Log log) throws IllegalArgumentException {
+
+		logs.add(log);
+
+	}
+
+	public void removeLog(Log log) throws IllegalArgumentException {
+
+		logs.remove(log);
+
+	}
+
+	public boolean logAtCube(int[] position) {
+
+		for (Log log : this.getLogs()) {
+			if (Helper.doubleArrayToIntArray(log.getPosition()) == position)
+				return true;
+		}
+
+		return false;
+
+	}
+
+	private Set<Log> logs = new HashSet<>();
+
+	public Set<Boulder> getBoulders() {
+		return this.boulders;
+	}
+
+	public void addBoulder(Boulder boulder) throws IllegalArgumentException {
+
+		boulders.add(boulder);
+
+	}
+
+	public void removeBoulder(Boulder boulder) throws IllegalArgumentException {
+
+		boulders.remove(boulder);
+
+	}
+	
+	public boolean boulderAtCube(int[] position) {
+
+		for (Boulder boulder : this.getBoulders()) {
+			if (Helper.doubleArrayToIntArray(boulder.getPosition()) == position)
+				return true;
+		}
+
+		return false;
+
+	}
+
+	private Set<Boulder> boulders = new HashSet<>();
 
 }

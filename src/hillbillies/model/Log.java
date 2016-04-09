@@ -1,22 +1,20 @@
 package hillbillies.model;
 
-import java.util.Set;
-
 public class Log extends RawMaterial {
 
-	public Log(double[] position) throws IllegalArgumentException {
-		super(position);
+	public Log(World world, double[] position) throws IllegalArgumentException {
+		super(world, position);
+		world.addLog(this);
 	}
 
-	public void setIsPresent(boolean present) {
-		super.setIsPresent(present);
-		if (present) {
-			logs.add(this);
+	public void setIsTerminated(boolean terminated) {
+		super.setIsTerminated(terminated);
+		if (terminated) {
+			this.getWorld().addLog(this);
 		} else {
-			logs.remove(this);
+			this.getWorld().removeLog(this);
 		}
 	}
 
-	public static Set<Log> logs;
 
 }
