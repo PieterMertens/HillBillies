@@ -1364,23 +1364,24 @@ public class Unit {
 	public boolean defaultBehaviorEnabled = false;
 
 	public void attack(Unit attacker, Unit defender) {
+		if (attacker.getFaction() != defender.getFaction()) {
+			double[] attackerpos = attacker.getPosition();
+			double[] defenderpos = defender.getPosition();
+			// int[] defendercubepos = new int[3];
+			// for (int i = 0; i < 3; ++i)
+			// defendercubepos[i] = (int) defenderpos[i];
+			double dx = attackerpos[0] - defenderpos[0];
+			double dy = attackerpos[1] - defenderpos[1];
+			double dz = attackerpos[2] - defenderpos[2];
+			if (getDistance(dx, dy, dz) <= Math.sqrt(2)) {
+				setAttackOrientation(attackerpos, defenderpos, defender);
+				this.defender = defender;
+				this.setIsAttacking(true);
 
-		double[] attackerpos = attacker.getPosition();
-		double[] defenderpos = defender.getPosition();
-		// int[] defendercubepos = new int[3];
-		// for (int i = 0; i < 3; ++i)
-		// defendercubepos[i] = (int) defenderpos[i];
-		double dx = attackerpos[0] - defenderpos[0];
-		double dy = attackerpos[1] - defenderpos[1];
-		double dz = attackerpos[2] - defenderpos[2];
-		if (getDistance(dx, dy, dz) <= Math.sqrt(2)) {
-			setAttackOrientation(attackerpos, defenderpos, defender);
-			this.defender = defender;
-			this.setIsAttacking(true);
-
-			// } else {
-			// this.moveTo(defendercubepos);
-			// attack(attacker, defender);
+				// } else {
+				// this.moveTo(defendercubepos);
+				// attack(attacker, defender);
+			}
 		}
 
 	}

@@ -102,7 +102,7 @@ public class Facade implements IFacade {
 	@Override
 	public int getExperiencePoints(Unit unit) throws ModelException {
 
-		return 0;
+		return unit.getExperience();
 	}
 
 	@Override
