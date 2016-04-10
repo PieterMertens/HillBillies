@@ -85,13 +85,13 @@ public class Facade implements IFacade {
 	@Override
 	public boolean isCarryingLog(Unit unit) throws ModelException {
 
-		return false;
+		return unit.getCarryingLog();
 	}
 
 	@Override
 	public boolean isCarryingBoulder(Unit unit) throws ModelException {
 
-		return false;
+		return unit.getCarryingBoulder();
 	}
 
 	@Override
@@ -107,6 +107,9 @@ public class Facade implements IFacade {
 
 	@Override
 	public void workAt(Unit unit, int x, int y, int z) throws ModelException {
+		
+		//TODO hier funcitee!!!!
+		//unit.workAt(x,y,z);
 
 	}
 

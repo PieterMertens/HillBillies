@@ -124,9 +124,9 @@ public class World {
 
 	public void advanceTime(double dt) throws IllegalArgumentException {
 
-		System.out.println("--- advance time ---");
+		//System.out.println("--- advance time ---");
 
-		System.out.println("-- world");
+		//System.out.println("-- world");
 		for (int[] pos : disconnected) {
 			System.out.println("disconnected cave in" + pos[0] + " " + pos[1] + " " + pos[2]);
 			this.collapseCube(pos[0], pos[1], pos[2], false);
@@ -134,22 +134,22 @@ public class World {
 		disconnected.clear();
 		this.getDisconnectedCubes();
 
-		System.out.println("-- unit");
+		//System.out.println("-- unit");
 		for (Unit unit : this.getUnits()) {
 			unit.advanceTime(dt);
 		}
 
-		System.out.println("-- boulder");
+		//System.out.println("-- boulder");
 		for (Boulder boulder : this.getBoulders()) {
 			boulder.advanceTime(dt);
 		}
 
-		System.out.println("-- log");
+		//System.out.println("-- log");
 		for (Log log : this.getLogs()) {
 			log.advanceTime(dt);
 		}
 
-		System.out.println("--- --- --- --- ---");
+		//System.out.println("--- --- --- --- ---");
 
 	}
 
@@ -292,6 +292,8 @@ public class World {
 		unit.setFaction(this.getSmallestFaction());
 
 		unit.getFaction().addUnit(unit);
+		//System.out.println("faction name:" + unit.getFaction().getName());
+		
 		System.out.println("faction size:" + unit.getFaction().getUnitsOfFaction().size());
 		return unit;
 	}
