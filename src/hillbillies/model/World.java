@@ -11,7 +11,8 @@ import be.kuleuven.cs.som.annotate.*;
 import hillbillies.util.ConnectedToBorder;
 
 /**
- * @invar The terrain of each World must be a valid terrain for any World. | isValidTerrain(getTerrain())
+ * @invar The terrain of each World must be a valid terrain for any World. |
+ *        isValidTerrain(getTerrain())
  */
 public class World {
 
@@ -25,7 +26,8 @@ public class World {
 	 *
 	 * @param terrain
 	 *            The terrain for this new World.
-	 * @effect The terrain of this new World is set to the given terrain. | this.setTerrain(terrain)
+	 * @effect The terrain of this new World is set to the given terrain. |
+	 *         this.setTerrain(terrain)
 	 */
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener) throws IllegalArgumentException {
 
@@ -60,9 +62,11 @@ public class World {
 	 * 
 	 * @param terrain
 	 *            The new terrain for this World.
-	 * @post The terrain of this new World is equal to the given terrain. | new.getTerrain() == terrain
+	 * @post The terrain of this new World is equal to the given terrain. |
+	 *       new.getTerrain() == terrain
 	 * @throws IllegalArgumentException
-	 *             The given terrain is not a valid terrain for any World. | ! isValidTerrain(getTerrain())
+	 *             The given terrain is not a valid terrain for any World. | !
+	 *             isValidTerrain(getTerrain())
 	 */
 	@Raw
 	public void setTerrain(int[][][] terrain) throws IllegalArgumentException {
@@ -78,11 +82,13 @@ public class World {
 	private int[][][] terrain;
 
 	/**
-	 * Set the terrainChangeListener of this World to the given terrainChangeListener.
+	 * Set the terrainChangeListener of this World to the given
+	 * terrainChangeListener.
 	 * 
 	 * @param terrainChangeListener
 	 *            The new terrain for this World.
-	 * @post The terrainChangeListener of this new World is equal to the given terrainChangeListener.
+	 * @post The terrainChangeListener of this new World is equal to the given
+	 *       terrainChangeListener.
 	 */
 	@Raw
 	public void setTerrainChangeListener(TerrainChangeListener modelListener) {
@@ -124,9 +130,9 @@ public class World {
 
 	public void advanceTime(double dt) throws IllegalArgumentException {
 
-		//System.out.println("--- advance time ---");
+		// System.out.println("--- advance time ---");
 
-		//System.out.println("-- world");
+		// System.out.println("-- world");
 		for (int[] pos : disconnected) {
 			System.out.println("disconnected cave in" + pos[0] + " " + pos[1] + " " + pos[2]);
 			this.collapseCube(pos[0], pos[1], pos[2], false);
@@ -134,22 +140,22 @@ public class World {
 		disconnected.clear();
 		this.getDisconnectedCubes();
 
-		//System.out.println("-- unit");
+		// System.out.println("-- unit");
 		for (Unit unit : this.getUnits()) {
 			unit.advanceTime(dt);
 		}
 
-		//System.out.println("-- boulder");
+		// System.out.println("-- boulder");
 		for (Boulder boulder : this.getBoulders()) {
 			boulder.advanceTime(dt);
 		}
 
-		//System.out.println("-- log");
+		// System.out.println("-- log");
 		for (Log log : this.getLogs()) {
 			log.advanceTime(dt);
 		}
 
-		//System.out.println("--- --- --- --- ---");
+		// System.out.println("--- --- --- --- ---");
 
 	}
 
@@ -163,7 +169,8 @@ public class World {
 	}
 
 	/**
-	 * Return if the terrain type of the cube at the given coordinates is passable.
+	 * Return if the terrain type of the cube at the given coordinates is
+	 * passable.
 	 */
 	public boolean isPassable(double x, double y, double z) {
 		int terraintype = getCubeType((int) x, (int) y, (int) z);
@@ -174,7 +181,8 @@ public class World {
 	}
 
 	/**
-	 * Return if any of the neighbouring cubes at the given coordinates are impassable.
+	 * Return if any of the neighbouring cubes at the given coordinates are
+	 * impassable.
 	 */
 	public boolean hasImpassableNeighbour(double x, double y, double z) {
 
@@ -191,7 +199,8 @@ public class World {
 	}
 
 	/**
-	 * Return if the terrain type of the cube below the given coordinates is impassable.
+	 * Return if the terrain type of the cube below the given coordinates is
+	 * impassable.
 	 */
 	public boolean hasImpassableBelow(double x, double y, double z) {
 		if (z > 0)
@@ -211,13 +220,16 @@ public class World {
 	}
 
 	/**
-	 * Set the terrain type of the cube at the given coordinates the given value.
+	 * Set the terrain type of the cube at the given coordinates the given
+	 * value.
 	 * 
 	 * @param terrain
 	 *            The new terrain for this World.
-	 * @post The terrain of this new World is equal to the given terrain. | new.getTerrain() == terrain
+	 * @post The terrain of this new World is equal to the given terrain. |
+	 *       new.getTerrain() == terrain
 	 * @throws IllegalArgumentException
-	 *             The given terrain is not a valid terrain for any World. | ! isValidTerrain(getTerrain())
+	 *             The given terrain is not a valid terrain for any World. | !
+	 *             isValidTerrain(getTerrain())
 	 */
 	@Raw
 	public void setCubeType(int x, int y, int z, int value) throws IllegalArgumentException {
@@ -254,7 +266,8 @@ public class World {
 	private ConnectedToBorder connectedToBorder;
 
 	/**
-	 * Return whether the cube at the given coordinates is solid and connected to the border of the world.
+	 * Return whether the cube at the given coordinates is solid and connected
+	 * to the border of the world.
 	 */
 	public boolean isSolidConnectedToBorder(int x, int y, int z) {
 		return connectedToBorder.isSolidConnectedToBorder(x, y, z);
@@ -292,8 +305,8 @@ public class World {
 		unit.setFaction(this.getSmallestFaction());
 		this.units.add(unit);
 		unit.getFaction().addUnit(unit);
-		//System.out.println("faction name:" + unit.getFaction().getName());
-		
+		// System.out.println("faction name:" + unit.getFaction().getName());
+
 		System.out.println("faction size:" + unit.getFaction().getUnitsOfFaction().size());
 		return unit;
 	}
@@ -306,13 +319,16 @@ public class World {
 
 		int[] initialPosition = Helper.getRandomPosition(this.getNbCubesX(), this.getNbCubesY(), this.getNbCubesZ());
 
-		// System.out.println("voor while: " + initialPosition[0] + " " + initialPosition[1] + " " + initialPosition[2]);
+		// System.out.println("voor while: " + initialPosition[0] + " " +
+		// initialPosition[1] + " " + initialPosition[2]);
 
 		while (!isValidInitialPosition(initialPosition)) {
 			initialPosition = Helper.getRandomPosition(getNbCubesX(), getNbCubesY(), getNbCubesZ());
-			// System.out.println("in while" + initialPosition[0] + initialPosition[1] + initialPosition[2]);
+			// System.out.println("in while" + initialPosition[0] +
+			// initialPosition[1] + initialPosition[2]);
 		}
-		// System.out.println("na while: " + initialPosition[0] + " " + initialPosition[1] + " " + initialPosition[2]);
+		// System.out.println("na while: " + initialPosition[0] + " " +
+		// initialPosition[1] + " " + initialPosition[2]);
 
 		return new Unit(name, initialPosition, 0, 0, 0, 0, enableDefaultBehavior);
 	}
@@ -396,16 +412,26 @@ public class World {
 
 	}
 
-	public boolean logAtCube(int[] position) {
-
+//	public boolean logAtCube(int[] position) {
+//
+//		for (Log log : this.getLogs()) {
+//			if (Helper.doubleArrayToIntArray(log.getPosition()) == position)
+//				return true;
+//		}
+//
+//		return false;
+//
+//	}
+	
+	public Log getLog(int[] position) {
 		for (Log log : this.getLogs()) {
-			if (Helper.doubleArrayToIntArray(log.getPosition()) == position)
-				return true;
+			if (Helper.doubleArrayToIntArray(log.getPosition()) == position) {
+				return log;
+			}
 		}
-
-		return false;
-
+		return null;
 	}
+
 
 	private Set<Log> logs = new HashSet<>();
 
@@ -425,28 +451,36 @@ public class World {
 
 	}
 
-	public boolean boulderAtCube(int[] position) {
+//	public boolean boulderAtCube(int[] position) {
+//
+//		for (Boulder boulder : this.getBoulders()) {
+//			if (Helper.doubleArrayToIntArray(boulder.getPosition()) == position)
+//				return true;
+//		}
+//
+//		return false;
+//
+//	}
 
+	public Boulder getBoulder(int[] position) {
 		for (Boulder boulder : this.getBoulders()) {
-			if (Helper.doubleArrayToIntArray(boulder.getPosition()) == position)
-				return true;
+			if (Helper.doubleArrayToIntArray(boulder.getPosition()) == position) {
+				return boulder;
+			}
 		}
-
-		return false;
-
+		return null;
 	}
 
 	private Set<Boulder> boulders = new HashSet<>();
-	
-	
-	public void terminate(){
-		this.isTerminated = true;		
+
+	public void terminate() {
+		this.isTerminated = true;
 	}
-	
-	public boolean getIsTerminated(){
+
+	public boolean getIsTerminated() {
 		return this.isTerminated;
 	}
-	
+
 	private boolean isTerminated;
 
 }

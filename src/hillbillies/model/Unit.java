@@ -1175,10 +1175,16 @@ public class Unit {
 				this.setWeight(this.getWeight() + 5);
 				this.setToughness(this.getToughness() + 5);
 
-			} else if (this.getWorld().boulderAtCube(Helper.doubleArrayToIntArray(position))) {
-				this.pickUpBoulder();
-			} else if (this.getWorld().logAtCube(Helper.doubleArrayToIntArray(position))) {
-				this.pickUpLog();
+			} else if (this.getWorld().getBoulder(Helper.doubleArrayToIntArray(position)) != null) {
+				Boulder boulder = this.getWorld().getBoulder(Helper.doubleArrayToIntArray(position));
+				this.pickedUpBoulder = boulder;
+				boulder.setIsCarriedBy(this);
+				this.setWeight(this.getWeight() + boulder.getWeight());
+			} else if (this.getWorld().getLog(Helper.doubleArrayToIntArray(position)) != null) {
+				Log log = this.getWorld().getLog(Helper.doubleArrayToIntArray(position));
+				this.pickedUpLog = log;
+				log.setIsCarriedBy(this);
+				this.setWeight(this.getWeight() + log.getWeight());
 			} else if (this.getWorld().getCubeType(x, y, z) == 2) {
 				this.getWorld().collapseCube(x, y, z, true);
 			} else if (this.getWorld().getCubeType(x, y, z) == 1) {
@@ -1192,6 +1198,9 @@ public class Unit {
 			setWorkTime(time);
 		}
 	}
+	
+	private Boulder pickedUpBoulder;
+	private Log pickedUpLog;
 
 	/**
 	 * Return the work time of this unit.
@@ -1286,7 +1295,7 @@ public class Unit {
 		int rand = Helper.randInt(0, 3);
 		if (rand == 0) {
 
-			this.moveTo(Helper.getRandomPosition());
+			this.moveTo(Helper.getRandomPosition(this.getWorld().getNbCubesX(),this.getWorld().getNbCubesY(),this.getWorld().getNbCubesZ()));
 			this.setIsSprinting(Helper.randBoolean());
 
 		} else if (rand == 1) {
@@ -1544,6 +1553,7 @@ public class Unit {
 		System.out.println("terminate");
 		// TODO drop carrying items
 		this.isTerminated = true;
+	
 	}
 
 	/**
