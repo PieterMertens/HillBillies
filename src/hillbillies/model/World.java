@@ -290,7 +290,7 @@ public class World {
 		Unit unit = createUnit(enableDefaultBehavior);
 
 		unit.setFaction(this.getSmallestFaction());
-
+		this.units.add(unit);
 		unit.getFaction().addUnit(unit);
 		//System.out.println("faction name:" + unit.getFaction().getName());
 		
