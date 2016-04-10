@@ -1,6 +1,8 @@
 package hillbillies.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 import be.kuleuven.cs.som.annotate.*;
@@ -1097,6 +1099,7 @@ public class Unit {
 		newPosition[0] += dx;
 		newPosition[1] += dy;
 		newPosition[2] += dz;
+		System.out.println("x: " + newPosition[0] + "y: " + newPosition[1] + "z: " + newPosition[2]);
 
 		if (!isValidTarget(newPosition))
 			throw new IllegalArgumentException();
@@ -1125,25 +1128,36 @@ public class Unit {
 
 	private boolean isValidTarget(double[] target) {// TODO lijkt hard op
 													// isvalidPods
-
-		Double lowerlimit = 0.5d;// variabelen in class declaren?
-		Double upperlimit = 49.5d;
-		boolean differentPos = false;
-
-		if (target.length == 3) {
-
-			for (int k = 0; k < target.length; k++) {
-				if (target[k] > upperlimit || target[k] < lowerlimit)
-					return false;
-				if (target[k] != adjecentStart[k]) {
-					differentPos = true;
-				}
-			}
-		}
-		if (differentPos)
+		System.out.println(target[0] + target[1] + target[2]);
+		System.out.println(this.getWorld().isPassable(target[0], target[1], target[2]));
+		System.out.println(this.getWorld());
+		if (0 < target[0] && target[0] < this.getWorld().getNbCubesX() && 0 < target[1]
+				&& target[1] < this.getWorld().getNbCubesY() && 0 < target[2]
+				&& target[2] < this.getWorld().getNbCubesZ()
+				&& this.getWorld().isPassable(target[0], target[1], target[2])) {
 			return true;
 
+		}
 		return false;
+
+		// Double lowerlimit = 0.5d;// variabelen in class declaren?
+		// Double upperlimit = 49.5d;
+		// boolean differentPos = false;
+
+		// if (target.length == 3) {
+
+		// for (int k = 0; k < target.length; k++) {
+		// if (target[k] > upperlimit || target[k] < lowerlimit)
+		// return false;
+		// if (target[k] != adjecentStart[k]) {
+		// differentPos = true;
+		// }
+		// }
+		// }
+		// if (differentPos)
+		// return true;
+
+		// return false;
 
 	}
 
@@ -1173,21 +1187,32 @@ public class Unit {
 		// System.out.println("---------------- moveto begonnen
 		// ----------------------");
 
-		isMovingTo = true;// TODO getter en setter
+		// isMovingTo = true;// TODO getter en setter
+		//
+		// if (!isValidTarget(Helper.getCenterOfPosition(targetPosition))) {
+		// throw new IllegalArgumentException();
+		// } else {
+		//
+		// target[0] = targetPosition[0] + 0.5d;// TODO forlus
+		// target[1] = targetPosition[1] + 0.5d;
+		// target[2] = targetPosition[2] + 0.5d;
+		// System.out.println("new target: " + target[0] + " " + target[1] +
+		// " " + target[2]);
+		// moveToAdjecent(getMoveToDirectionX(), getMoveToDirectionY(),
+		// getMoveToDirectionZ());
+
+		// }
+		isMovingTo = true;
 
 		if (!isValidTarget(Helper.getCenterOfPosition(targetPosition))) {
 			throw new IllegalArgumentException();
 		} else {
-
-			target[0] = targetPosition[0] + 0.5d;// TODO forlus
+			target[0] = targetPosition[0] + 0.5d;
 			target[1] = targetPosition[1] + 0.5d;
 			target[2] = targetPosition[2] + 0.5d;
-			// System.out.println("new target: " + target[0] + " " + target[1] +
-			// " " + target[2]);
-			moveToAdjecent(getMoveToDirectionX(), getMoveToDirectionY(), getMoveToDirectionZ());
-
 		}
 
+		findPath();
 	}
 
 	public int getMoveToDirectionX() {
@@ -1230,6 +1255,126 @@ public class Unit {
 
 	}
 
+	public void findPath() throws IllegalStateException {
+
+		System.out.println("--- findPath ---");
+
+		int[] moveToTarget = Helper.doubleArrayToIntArray(this.target);
+		int[] currentPosition = Helper.doubleArrayToIntArray(this.getPosition());
+
+		List<Object[]> Q = new ArrayList<>();
+
+		if (currentPosition != moveToTarget) {
+
+			System.out.println("-- currentPosition != moveToTarget");
+
+			Object[] initialEntry = { moveToTarget, 0 };
+			Q.add(initialEntry);
+
+			int i = 0;
+			while (!inQ(Q, currentPosition) && i < Q.size()) {
+
+				System.out.println("-- !inQ(Q, currentPosition) && i < Q.size()");
+
+				Object[] newEntry = ((Object[]) Q.get(i));
+				search((int[]) newEntry[0], (int) newEntry[1], Q);
+				i++;
+
+			}
+
+			if (inQ(Q, currentPosition)) {
+
+				System.out.println("-- inQ(Q, currentPosition");
+
+				List<int[]> possibilities = getNeighbouringCubes(currentPosition);
+				int[] nextPosition = null;
+				int nextN = Integer.MAX_VALUE;
+
+				for (int[] neigbouringCube : possibilities) {
+					if (inQ(Q, neigbouringCube)) {
+						int currentN = getNumberQ(Q, neigbouringCube);
+						if (currentN < nextN) {
+							nextN = currentN;
+							nextPosition = neigbouringCube;
+
+						}
+					}
+				}
+				if (nextPosition != null) {
+					System.out.println("-- moveToAdjecent");
+					moveToAdjecent(nextPosition[0] - currentPosition[0], nextPosition[1] - currentPosition[1],
+							nextPosition[2] - currentPosition[2]);
+				}
+
+			} else {
+				throw new IllegalStateException("The target cannot be reached.");
+			}
+
+		}
+
+	}
+
+	public void search(int[] position, int n, List<Object[]> Q) {
+
+		System.out.println("-- search(" + position[0] + " " + position[1] + " " + position[2] + " , " + n + ")");
+
+		List<int[]> possibilities = getNeighbouringCubes(position);
+		World world = this.getWorld();
+
+		for (int[] neigbouringCube : possibilities) {
+			if (world.isPassable(neigbouringCube[0], neigbouringCube[1], neigbouringCube[2])
+					&& world.hasImpassableNeighbour((double) neigbouringCube[0], (double) neigbouringCube[1],
+							(double) neigbouringCube[2])
+					&& !inQ(Q, neigbouringCube)) {
+				Object[] a = { neigbouringCube, n + 1 };
+				Q.add(a);
+
+			}
+		}
+	}
+
+	public int getNumberQ(List<Object[]> Q, int[] position) {
+
+		try {
+			for (int i = 0; i < Q.size(); i++) {
+				int[] positionQ = (int[]) Q.get(i)[0];
+				if (positionQ[0] == position[0] && positionQ[1] == position[1] && positionQ[2] == position[2])
+					return (int) Q.get(i)[1];
+			}
+		} catch (IllegalStateException e) {
+		}
+		return Integer.MAX_VALUE;
+
+	}
+
+	public boolean inQ(List<Object[]> Q, int[] position) {
+
+		for (int i = 0; i < Q.size(); i++) {
+			int[] positionQ = (int[]) Q.get(i)[0];
+			if (positionQ[0] == position[0] && positionQ[1] == position[1] && positionQ[2] == position[2])
+				return true;
+		}
+		return false;
+	}
+
+	public List<int[]> getNeighbouringCubes(int[] position) {
+
+		List<int[]> neighbouringCubes = new ArrayList<>();
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				for (int k = -1; k <= 1; k++) {
+					if (!(i == 0 && j == 0 && k == 0) && (i + position[0] >= 0) && (j + position[1] >= 0)
+							&& (k + position[2] >= 0)) {// TODO isvalidpositions
+						int[] newNeighbour = { position[0] + i, position[1] + j, position[2] + k };
+						neighbouringCubes.add(newNeighbour);
+					}
+				}
+			}
+		}
+		return neighbouringCubes;
+
+	}
+
 	public void work() {
 		setWorkTime(500 / (float) this.getStrength());
 		this.wantToWork = false;
@@ -1238,32 +1383,52 @@ public class Unit {
 	}
 
 	public void workAt(int x, int y, int z) {
-		int[] position = { x, y, z };
-		this.moveTo(position);
-		this.wantToWork = true;
+		this.workPosition[0] = x;
+		this.workPosition[1] = y;
+		this.workPosition[2] = z;
+		if (!(Helper.doubleArrayToIntArray(this.getPosition())[0] == workPosition[0]
+				&& Helper.doubleArrayToIntArray(this.getPosition())[1] == workPosition[1]
+				&& Helper.doubleArrayToIntArray(this.getPosition())[2] == workPosition[2])) {
+			for (int[] pos : this.getNeighbouringCubes(workPosition)) {
+				if (this.isValidTarget(Helper.intArrayToDoubleArray(pos))) {
+					this.wantToWork = true;
+					this.moveTo(pos);
+				}
+			}
+		} else {
+			work();
+		}
 	}
+
+	private int[] workPosition = { 0, 0, 0 };
 
 	private void doWork(double dt) { // TODO functies schrijven
 		float time = getWorkTime() - (float) dt;
+		int x = this.workPosition[0];
+		int y = this.workPosition[1];
+		int z = this.workPosition[2];
+		if (workPosition != Helper.doubleArrayToIntArray(this.getPosition())) {
+			double dx = x - this.getPosition()[0];
+			double dy = y - this.getPosition()[1];
+			double dz = z - this.getPosition()[2];
+			this.setOrientation((float) Math.atan2(dy, dx));
+		}
 		if (time <= 0) {
 			int experience = 10;
-			int x = (int) this.getPosition()[0];
-			int y = (int) this.getPosition()[1];
-			int z = (int) this.getPosition()[2];
+			
 			if (this.getCarryingBoulder() || this.getCarryingLog()) {
 				this.drop();
-			} else if (this.getWorld().getCubeType(x, y, z) == 0
-					&& itemsAvailable(Helper.doubleArrayToIntArray(position))) {
+			} else if (this.getWorld().getCubeType(x, y, z) == 0 && itemsAvailable(workPosition)) {
 				this.setWeight(this.getWeight() + 5);
 				this.setToughness(this.getToughness() + 5);
 
-			} else if (this.getWorld().getBoulder(Helper.doubleArrayToIntArray(position)) != null) {
-				Boulder boulder = this.getWorld().getBoulder(Helper.doubleArrayToIntArray(position));
+			} else if (this.getWorld().getBoulder(workPosition) != null) {
+				Boulder boulder = this.getWorld().getBoulder(workPosition);
 				this.pickedUpBoulder = boulder;
 				boulder.setIsCarriedBy(this);
 				this.setWeight(this.getWeight() + boulder.getWeight());
-			} else if (this.getWorld().getLog(Helper.doubleArrayToIntArray(position)) != null) {
-				Log log = this.getWorld().getLog(Helper.doubleArrayToIntArray(position));
+			} else if (this.getWorld().getLog(workPosition) != null) {
+				Log log = this.getWorld().getLog(workPosition);
 				this.pickedUpLog = log;
 				log.setIsCarriedBy(this);
 				this.setWeight(this.getWeight() + log.getWeight());
@@ -1407,7 +1572,7 @@ public class Unit {
 				defender = this.selectRandomUnit();
 			}
 			attack(this, this.selectRandomUnit());
-			
+
 		} else {
 			this.rest();
 		}
@@ -1422,7 +1587,8 @@ public class Unit {
 				return unit;
 			}
 			i = +1;
-		} return this;
+		}
+		return this;
 	}
 
 	public void stopDefaultBehavior() {
@@ -1615,7 +1781,7 @@ public class Unit {
 		if (!isValidRestTime(restTime, this.getToughness()))
 			throw new IllegalArgumentException();
 		this.restTime = restTime;
-		System.out.println(restTime + "rt");
+		// System.out.println(restTime + "rt");
 	}
 
 	/**
@@ -1661,7 +1827,21 @@ public class Unit {
 	public void setExperience(int experience) throws IllegalArgumentException {
 		if (!isValidExperience(experience))
 			throw new IllegalArgumentException();
-		this.experience = experience;
+		if (this.getExperience() != experience) {
+			this.experience = experience;
+			if (experience % 10 == 0 && experience != 0) {
+				int rand = Helper.randInt(0, 2);
+				if (rand == 0) {
+					this.setStrength(this.getStrength() + 1);
+				}
+				if (rand == 1) {
+					this.setAgility(this.getAgility() + 1);
+				}
+				if (rand == 2) {
+					this.setToughness(this.getToughness() + 1);
+				}
+			}
+		}
 	}
 
 	/**

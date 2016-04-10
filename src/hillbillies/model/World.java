@@ -186,9 +186,9 @@ public class World {
 	 */
 	public boolean hasImpassableNeighbour(double x, double y, double z) {
 
-		for (int i = -1; i < 1; i++) {
-			for (int j = -1; i < 1; i++) {
-				for (int k = -1; i < 1; i++) {
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				for (int k = -1; k <= 1; k++) {
 					if (!isPassable(x + i, y + j, z + k))
 						return true;
 				}
