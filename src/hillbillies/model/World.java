@@ -355,8 +355,12 @@ public class World {
 		// unit.inFaction() && unit.getFactionSize <= 50//TODO inFaction
 		// toevoegen aan Unit
 		)
-			units.add(unit);
+			this.units.add(unit);
 
+	}
+	
+	public void removeUnit(Unit unit) {
+		this.units.remove(unit);
 	}
 
 	private Set<Unit> units = new HashSet<>();

@@ -9,16 +9,26 @@ import ogp.framework.util.Util;
 
 /**
  * 
- * @invar The position of each unit must be a valid position for any unit. | isValidPosition(getPosition())
- * @invar The hitpoints of each unit must be a valid hitpoints for any unit. | isValidHitpoints(getHitpoints())
- * @invar The name of each unit must be a valid name for any unit. | isValidName(getName())
- * @invar The weight of each unit must be a valid weight for any unit. | isValidWeight(getWeight())
- * @invar The strength of each unit must be a valid strength for any unit. | isValidStrength(getStrength())
- * @invar The agility of each unit must be a valid agility for any unit. | isValidAgility(getAgility())
- * @invar The toughness of each unit must be a valid toughness for any unit. | isValidToughness(getToughness())
- * @invar The staminapoints of each unit must be a valid staminapoints for any unit. | isValidStaminapoints(getStaminapoints())
- * @invar The orientation of each unit must be a valid orientation for any unit. | isValidOrientation(getOrientation())
- * @invar The isMoving of each unit must be a valid isMoving for any unit. | isValidIsMoving(getIsMoving())
+ * @invar The position of each unit must be a valid position for any unit. |
+ *        isValidPosition(getPosition())
+ * @invar The hitpoints of each unit must be a valid hitpoints for any unit. |
+ *        isValidHitpoints(getHitpoints())
+ * @invar The name of each unit must be a valid name for any unit. |
+ *        isValidName(getName())
+ * @invar The weight of each unit must be a valid weight for any unit. |
+ *        isValidWeight(getWeight())
+ * @invar The strength of each unit must be a valid strength for any unit. |
+ *        isValidStrength(getStrength())
+ * @invar The agility of each unit must be a valid agility for any unit. |
+ *        isValidAgility(getAgility())
+ * @invar The toughness of each unit must be a valid toughness for any unit. |
+ *        isValidToughness(getToughness())
+ * @invar The staminapoints of each unit must be a valid staminapoints for any
+ *        unit. | isValidStaminapoints(getStaminapoints())
+ * @invar The orientation of each unit must be a valid orientation for any unit.
+ *        | isValidOrientation(getOrientation())
+ * @invar The isMoving of each unit must be a valid isMoving for any unit. |
+ *        isValidIsMoving(getIsMoving())
  * 
  * @author Pieter and Matthias
  *
@@ -28,7 +38,6 @@ public class Unit {
 	// TODO documentatie
 	public Unit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
 			boolean enableDefaultBehavior) {
-	
 
 		if (strength < 25 || strength > 100)
 			strength = 25 + Helper.randInt(0, 75);
@@ -59,7 +68,8 @@ public class Unit {
 	 *
 	 * @param position
 	 *            The position for this new unit.
-	 * @effect The position of this new unit is set to the given position. | this.setPosition(position)
+	 * @effect The position of this new unit is set to the given position. |
+	 *         this.setPosition(position)
 	 */
 	public Unit(double[] position) throws IllegalArgumentException {
 		this.setPosition(position);
@@ -79,7 +89,8 @@ public class Unit {
 	 * 
 	 * @param position
 	 *            The position to check.
-	 * @return | result == true if the 3 coordinates are between the given limits.
+	 * @return | result == true if the 3 coordinates are between the given
+	 *         limits.
 	 */
 	public static boolean isValidPosition(double[] position) {
 
@@ -105,9 +116,11 @@ public class Unit {
 	 * 
 	 * @param position
 	 *            The new position for this unit.
-	 * @post The position of this new unit is equal to the given position. | new.getPosition() == position
+	 * @post The position of this new unit is equal to the given position. |
+	 *       new.getPosition() == position
 	 * @throws IllegalArgumentException
-	 *             The given position is not a valid position for any unit. | !isValidPosition(getPosition())
+	 *             The given position is not a valid position for any unit. |
+	 *             !isValidPosition(getPosition())
 	 */
 	@Raw
 	public void setPosition(double[] position) throws IllegalArgumentException {
@@ -133,7 +146,8 @@ public class Unit {
 	 *
 	 * @param name
 	 *            The name for this new unit.
-	 * @effect The name of this new unit is set to the given name. | this.setName(name)
+	 * @effect The name of this new unit is set to the given name. |
+	 *         this.setName(name)
 	 */
 	public Unit(String name) throws IllegalArgumentException {
 		this.setName(name);
@@ -154,7 +168,8 @@ public class Unit {
 	 * 
 	 * @param name
 	 *            The name to check.
-	 * @return | result == true if first letter is uppercase and no symbols except ' and " are used.
+	 * @return | result == true if first letter is uppercase and no symbols
+	 *         except ' and " are used.
 	 */
 	public static boolean isValidName(String name) {
 
@@ -170,9 +185,11 @@ public class Unit {
 	 * 
 	 * @param name
 	 *            The new name for this unit.
-	 * @post The name of this new unit is equal to the given name. | new.getName() == name
+	 * @post The name of this new unit is equal to the given name. |
+	 *       new.getName() == name
 	 * @throws IllegalArgumentException
-	 *             The given name is not a valid name for any unit. | ! isValidName(getName())
+	 *             The given name is not a valid name for any unit. | !
+	 *             isValidName(getName())
 	 */
 	@Raw
 	public void setName(String name) throws IllegalArgumentException {
@@ -187,7 +204,8 @@ public class Unit {
 	private String name;
 
 	/**
-	 * Initialize this new unit with given weight, strength, agility and toughness.
+	 * Initialize this new unit with given weight, strength, agility and
+	 * toughness.
 	 * 
 	 * @param weight
 	 *            The weight for this new unit.
@@ -197,10 +215,17 @@ public class Unit {
 	 *            The agility for this new unit.
 	 * @param toughness
 	 *            The toughness for this new unit.
-	 * @post If the given weight, strength, agility and toughness are valid values for any unit, the attributes of this new unit are equal to the given attributes. Otherwise, the attribute of this new
-	 *       unit is equal to its default value. | if (isValidWeight(weight)) | then new.getWeight() == weight | else new.getWeight() == defaultWeight | if (isValidStrength(strength)) | then
-	 *       new.getStrength() == strength | else new.getStrength() == defaultStrength | if (isValidAgility(agility)) | then new.getAgility() == agility | else new.getAgility() == defaultAgility | if
-	 *       (isValidToughness(toughness)) | then new.getToughness() == toughness | else new.getToughness() == defaultToughness
+	 * @post If the given weight, strength, agility and toughness are valid
+	 *       values for any unit, the attributes of this new unit are equal to
+	 *       the given attributes. Otherwise, the attribute of this new unit is
+	 *       equal to its default value. | if (isValidWeight(weight)) | then
+	 *       new.getWeight() == weight | else new.getWeight() == defaultWeight |
+	 *       if (isValidStrength(strength)) | then new.getStrength() == strength
+	 *       | else new.getStrength() == defaultStrength | if
+	 *       (isValidAgility(agility)) | then new.getAgility() == agility | else
+	 *       new.getAgility() == defaultAgility | if
+	 *       (isValidToughness(toughness)) | then new.getToughness() ==
+	 *       toughness | else new.getToughness() == defaultToughness
 	 */
 	public Unit(int weight, int strength, int agility, int toughness) {
 
@@ -235,7 +260,8 @@ public class Unit {
 	 * 
 	 * @param weight
 	 *            The weight to check.
-	 * @return | result == true if weight >= 1 and weight <= 200 && weight >= (strength + agility) / 2
+	 * @return | result == true if weight >= 1 and weight <= 200 && weight >=
+	 *         (strength + agility) / 2
 	 */
 	public static boolean isValidWeight(int weight, int strength, int agility) {
 		if (weight >= 1 && weight <= 200 && weight >= (strength + agility) / 2)
@@ -248,7 +274,9 @@ public class Unit {
 	 * 
 	 * @param weight
 	 *            The new weight for this unit.
-	 * @post If the given weight is a valid weight for any unit, the weight of this new unit is equal to the given weight. | if (isValidWeight(weight)) | then new.getWeight() == weight
+	 * @post If the given weight is a valid weight for any unit, the weight of
+	 *       this new unit is equal to the given weight. | if
+	 *       (isValidWeight(weight)) | then new.getWeight() == weight
 	 */
 	@Raw
 	public void setWeight(int weight) {
@@ -288,7 +316,9 @@ public class Unit {
 	 * 
 	 * @param strength
 	 *            The new strength for this unit.
-	 * @post If the given strength is a valid strength for any unit, the strength of this new unit is equal to the given strength. | if (isValidStrength(strength)) | then new.getStrength() == strength
+	 * @post If the given strength is a valid strength for any unit, the
+	 *       strength of this new unit is equal to the given strength. | if
+	 *       (isValidStrength(strength)) | then new.getStrength() == strength
 	 */
 	@Raw
 	public void setStrength(int strength) {
@@ -328,7 +358,9 @@ public class Unit {
 	 * 
 	 * @param agility
 	 *            The new agility for this unit.
-	 * @post If the given agility is a valid agility for any unit, the agility of this new unit is equal to the given agility. | if (isValidAgility(agility)) | then new.getAgility() == agility
+	 * @post If the given agility is a valid agility for any unit, the agility
+	 *       of this new unit is equal to the given agility. | if
+	 *       (isValidAgility(agility)) | then new.getAgility() == agility
 	 */
 	@Raw
 	public void setAgility(int agility) {
@@ -368,7 +400,9 @@ public class Unit {
 	 * 
 	 * @param toughness
 	 *            The new toughness for this unit.
-	 * @post If the given toughness is a valid toughness for any unit, the toughness of this new unit is equal to the given toughness. | if (isValidToughness(toughness)) | then new.getToughness() ==
+	 * @post If the given toughness is a valid toughness for any unit, the
+	 *       toughness of this new unit is equal to the given toughness. | if
+	 *       (isValidToughness(toughness)) | then new.getToughness() ==
 	 *       toughness
 	 */
 	@Raw
@@ -389,10 +423,14 @@ public class Unit {
 	 *            The hitpoints for this new unit.
 	 * @param staminapoints
 	 *            The staminapoints for this new unit.
-	 * @pre The given hitpoints must be a valid value for any unit. | isValidHitpoints(hitpoints)
-	 * @pre The given staminapoints must be a valid value for any unit. | isValidStaminapoints(staminapoints)
-	 * @post The hitpoints of this new unit are equal to the given hitpoints. | new.getHitpoints() == hitpoints
-	 * @post The staminapoints of this new unit are equal to the given staminapoints. | new.getStaminapoints() == staminapoints
+	 * @pre The given hitpoints must be a valid value for any unit. |
+	 *      isValidHitpoints(hitpoints)
+	 * @pre The given staminapoints must be a valid value for any unit. |
+	 *      isValidStaminapoints(staminapoints)
+	 * @post The hitpoints of this new unit are equal to the given hitpoints. |
+	 *       new.getHitpoints() == hitpoints
+	 * @post The staminapoints of this new unit are equal to the given
+	 *       staminapoints. | new.getStaminapoints() == staminapoints
 	 */
 	public Unit(int hitpoints, int staminapoints) {
 		this.setHitpoints(hitpoints);
@@ -426,8 +464,10 @@ public class Unit {
 	 * 
 	 * @param hitpoints
 	 *            The new hitpoints for this unit.
-	 * @pre The given hitpoints must be a valid hitpoints for any unit. | isValidHitpoints(hitpoints)
-	 * @post The hitpoints of this unit is equal to the given hitpoints. | new.getHitpoints() == hitpoints
+	 * @pre The given hitpoints must be a valid hitpoints for any unit. |
+	 *      isValidHitpoints(hitpoints)
+	 * @post The hitpoints of this unit is equal to the given hitpoints. |
+	 *       new.getHitpoints() == hitpoints
 	 */
 	@Raw // TODO private
 	public void setHitpoints(int hitpoints) {
@@ -456,11 +496,13 @@ public class Unit {
 	}
 
 	/**
-	 * Check whether the given staminapoints is a valid staminapoints for any unit.
+	 * Check whether the given staminapoints is a valid staminapoints for any
+	 * unit.
 	 * 
 	 * @param staminapoints
 	 *            The staminapoints to check.
-	 * @return | result == true if staminapoints <= (200 * weight * toughness / 10000) && staminapoints >= 0)
+	 * @return | result == true if staminapoints <= (200 * weight * toughness /
+	 *         10000) && staminapoints >= 0)
 	 */
 	public static boolean isValidStaminapoints(int staminapoints, int weight, int toughness) {
 		if (staminapoints <= (200 * weight * toughness / 10000) && staminapoints >= 0)
@@ -473,8 +515,10 @@ public class Unit {
 	 * 
 	 * @param staminapoints
 	 *            The new staminapoints for this unit.
-	 * @pre The given staminapoints must be a valid staminapoints for any unit. | isValidStaminapoints(staminapoints)
-	 * @post The staminapoints of this unit is equal to the given staminapoints. | new.getStaminapoints() == staminapoints
+	 * @pre The given staminapoints must be a valid staminapoints for any unit.
+	 *      | isValidStaminapoints(staminapoints)
+	 * @post The staminapoints of this unit is equal to the given staminapoints.
+	 *       | new.getStaminapoints() == staminapoints
 	 */
 	@Raw
 	public void setStaminapoints(int staminapoints) {
@@ -492,8 +536,11 @@ public class Unit {
 	 * 
 	 * @param orientation
 	 *            The orientation for this new unit.
-	 * @post If the given orientation is a valid orientation for any unit, the orientation of this new unit is equal to the given orientation. Otherwise, the orientation of this new unit is equal to
-	 *       PI/2. | if (isValidOrientation(orientation)) | then new.getOrientation() == orientation | else new.getOrientation() == PI/2
+	 * @post If the given orientation is a valid orientation for any unit, the
+	 *       orientation of this new unit is equal to the given orientation.
+	 *       Otherwise, the orientation of this new unit is equal to PI/2. | if
+	 *       (isValidOrientation(orientation)) | then new.getOrientation() ==
+	 *       orientation | else new.getOrientation() == PI/2
 	 */
 	public Unit(float orientation) {
 		if (!isValidOrientation(orientation))
@@ -515,7 +562,9 @@ public class Unit {
 	 * 
 	 * @param orientation
 	 *            The orientation to check.
-	 * @return If the given orientation is between 0 and 2*PI, the method returns true. | result == true if (orientation >= 0 && orientation <= Math.PI * 2)
+	 * @return If the given orientation is between 0 and 2*PI, the method
+	 *         returns true. | result == true if (orientation >= 0 &&
+	 *         orientation <= Math.PI * 2)
 	 */
 	public static boolean isValidOrientation(float orientation) {
 		if (orientation >= (float) -Math.PI && orientation <= (float) Math.PI)
@@ -528,8 +577,10 @@ public class Unit {
 	 * 
 	 * @param orientation
 	 *            The new orientation for this unit.
-	 * @post If the given orientation is a valid orientation for any unit, the orientation of this new unit is equal to the given orientation. | if (isValidOrientation(orientation)) | then
-	 *       new.getOrientation() == orientation
+	 * @post If the given orientation is a valid orientation for any unit, the
+	 *       orientation of this new unit is equal to the given orientation. |
+	 *       if (isValidOrientation(orientation)) | then new.getOrientation() ==
+	 *       orientation
 	 */
 	@Raw
 	public void setOrientation(float orientation) {
@@ -592,6 +643,12 @@ public class Unit {
 									// System.out.println("----------------
 									// moveto
 									// beeindigd ----------------------");
+									if (this.wantToWork) {
+										work();
+									}
+									if (this.wantToAttack) {
+										attack(this, this.defender);
+									}
 								} else {
 									this.moveToAdjecent(getMoveToDirectionX(), getMoveToDirectionY(),
 											getMoveToDirectionZ());
@@ -606,6 +663,8 @@ public class Unit {
 		}
 
 	}
+
+	private boolean wantToWork = false;
 
 	public void updatePosition(double dt) {
 
@@ -657,7 +716,8 @@ public class Unit {
 	 * 
 	 * @param isMoving
 	 *            The isMoving for this new unit.
-	 * @effect The isMoving of this new unit is set to the given isMoving. | this.setIsMoving(isMoving)
+	 * @effect The isMoving of this new unit is set to the given isMoving. |
+	 *         this.setIsMoving(isMoving)
 	 */
 	public Unit(boolean isMoving, boolean isSprinting, boolean isWorking, boolean isAttacking, boolean isResting)
 			throws IllegalArgumentException {
@@ -695,9 +755,11 @@ public class Unit {
 	 * 
 	 * @param isMoving
 	 *            The new isMoving for this unit.
-	 * @post The isMoving of this new unit is equal to the given isMoving. | new.getIsMoving() == isMoving
+	 * @post The isMoving of this new unit is equal to the given isMoving. |
+	 *       new.getIsMoving() == isMoving
 	 * @throws IllegalArgumentException
-	 *             The given isMoving is not a valid isMoving for any unit. | ! isValidIsMoving(getIsMoving())
+	 *             The given isMoving is not a valid isMoving for any unit. | !
+	 *             isValidIsMoving(getIsMoving())
 	 */
 	@Raw
 	public void setIsMoving(boolean isMoving) throws IllegalArgumentException {
@@ -743,11 +805,13 @@ public class Unit {
 	 * 
 	 * @param isSprinting
 	 *            The new isSprinting for this unit.
-	 * @post The isSprinting of this new unit is equal to the given isSprinting. | new.getIsSprinting() == isSprinting
+	 * @post The isSprinting of this new unit is equal to the given isSprinting.
+	 *       | new.getIsSprinting() == isSprinting
 	 * @post If unit was resting, working or attacking, that activity stopped.
 	 * @post If he wasn't already, the unit started moving.
 	 * @throws IllegalArgumentException
-	 *             The given isSprinting is not a valid isSprinting for any unit. | ! isValidIsSprinting(getIsSprinting())
+	 *             The given isSprinting is not a valid isSprinting for any
+	 *             unit. | ! isValidIsSprinting(getIsSprinting())
 	 */
 	@Raw
 	public void setIsSprinting(boolean isSprinting) throws IllegalArgumentException {
@@ -794,10 +858,12 @@ public class Unit {
 	 * 
 	 * @param isWorking
 	 *            The new isWorking for this unit.
-	 * @post The isWorking of this new unit is equal to the given isWorking. | new.getIsWorking() == isWorking
+	 * @post The isWorking of this new unit is equal to the given isWorking. |
+	 *       new.getIsWorking() == isWorking
 	 * @post If any other activities are running they are stopped.
 	 * @throws IllegalArgumentException
-	 *             The given isWorking is not a valid isWorking for any unit. | ! isValidIsWorking(getIsWorking())
+	 *             The given isWorking is not a valid isWorking for any unit. |
+	 *             ! isValidIsWorking(getIsWorking())
 	 */
 	@Raw
 	public void setIsWorking(boolean isWorking) throws IllegalArgumentException {
@@ -844,10 +910,12 @@ public class Unit {
 	 * 
 	 * @param isAttacking
 	 *            The new isAttacking for this unit.
-	 * @post The isAttacking of this new unit is equal to the given isAttacking. | new.getisAttacking() == isAttacking
+	 * @post The isAttacking of this new unit is equal to the given isAttacking.
+	 *       | new.getisAttacking() == isAttacking
 	 * @post If any other activities are running they are stopped.
 	 * @throws IllegalArgumentException
-	 *             The given isAttacking is not a valid isAttacking for any unit. | ! isValidIsAttacking(getisAttacking())
+	 *             The given isAttacking is not a valid isAttacking for any
+	 *             unit. | ! isValidIsAttacking(getisAttacking())
 	 */
 	@Raw
 	public void setIsAttacking(boolean isAttacking) throws IllegalArgumentException {
@@ -894,10 +962,12 @@ public class Unit {
 	 * 
 	 * @param isResting
 	 *            The new isResting for this unit.
-	 * @post The isResting of this new unit is equal to the given isResting. | new.getIsResting() == isResting
+	 * @post The isResting of this new unit is equal to the given isResting. |
+	 *       new.getIsResting() == isResting
 	 * @post If any other activities are running they are stopped.
 	 * @throws IllegalArgumentException
-	 *             The given isResting is not a valid isResting for any unit. | ! isValidIsResting(getIsResting())
+	 *             The given isResting is not a valid isResting for any unit. |
+	 *             ! isValidIsResting(getIsResting())
 	 */
 	@Raw
 	public void setIsResting(boolean isResting) throws IllegalArgumentException {
@@ -973,9 +1043,11 @@ public class Unit {
 	 * 
 	 * @param isFalling
 	 *            The new isFalling for this unit.
-	 * @post The isFalling of this new unit is equal to the given isFalling. | new.getIsFalling() == isFalling
+	 * @post The isFalling of this new unit is equal to the given isFalling. |
+	 *       new.getIsFalling() == isFalling
 	 * @throws IllegalArgumentException
-	 *             The given isFalling is not a valid isFalling for any unit. | ! isValidIsFalling(getIsFalling())
+	 *             The given isFalling is not a valid isFalling for any unit. |
+	 *             ! isValidIsFalling(getIsFalling())
 	 */
 	@Raw
 	public void setIsFalling(boolean isFalling) throws IllegalArgumentException {
@@ -1160,18 +1232,28 @@ public class Unit {
 
 	public void work() {
 		setWorkTime(500 / (float) this.getStrength());
+		this.wantToWork = false;
 		this.setIsWorking(true);
 
+	}
+
+	public void workAt(int x, int y, int z) {
+		int[] position = { x, y, z };
+		this.moveTo(position);
+		this.wantToWork = true;
 	}
 
 	private void doWork(double dt) { // TODO functies schrijven
 		float time = getWorkTime() - (float) dt;
 		if (time <= 0) {
 			int experience = 10;
+			int x = (int) this.getPosition()[0];
+			int y = (int) this.getPosition()[1];
+			int z = (int) this.getPosition()[2];
 			if (this.getCarryingBoulder() || this.getCarryingLog()) {
 				this.drop();
 			} else if (this.getWorld().getCubeType(x, y, z) == 0
-					&& itemsAvailable(Helper.doubleArrayToIntArray(position))) { 
+					&& itemsAvailable(Helper.doubleArrayToIntArray(position))) {
 				this.setWeight(this.getWeight() + 5);
 				this.setToughness(this.getToughness() + 5);
 
@@ -1198,7 +1280,7 @@ public class Unit {
 			setWorkTime(time);
 		}
 	}
-	
+
 	private Boulder pickedUpBoulder;
 	private Log pickedUpLog;
 
@@ -1230,9 +1312,11 @@ public class Unit {
 	 * 
 	 * @param workTime
 	 *            The new work time for this unit.
-	 * @post The work time of this new unit is equal to the given work time. | new.getWorktime() == workTime
+	 * @post The work time of this new unit is equal to the given work time. |
+	 *       new.getWorktime() == workTime
 	 * @throws IllegalArgumentException
-	 *             The given work time is not a valid work time for any unit. | ! isValidWorktime(getWorktime())
+	 *             The given work time is not a valid work time for any unit. |
+	 *             ! isValidWorktime(getWorktime())
 	 */
 	@Raw
 	public void setWorkTime(float workTime) throws IllegalArgumentException {
@@ -1247,10 +1331,25 @@ public class Unit {
 	private float workTime;
 
 	private boolean itemsAvailable(int[] position) {
-		if (this.getWorld().boulderAtCube(position) && this.getWorld().logAtCube(position)) {
+		if (this.getWorld().getBoulder(position) != null && this.getWorld().getLog(position) != null) {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	private void drop() {
+		if (this.getCarryingBoulder()) {
+			this.pickedUpBoulder.setPosition(this.getPosition());
+			this.pickedUpBoulder.setIsCarriedBy(null);
+			this.setWeight(this.getWeight() - this.pickedUpBoulder.getWeight());
+			this.pickedUpBoulder = null;
+		}
+		if (this.getCarryingLog()) {
+			this.pickedUpLog.setPosition(this.getPosition());
+			this.pickedUpLog.setIsCarriedBy(null);
+			this.setWeight(this.getWeight() - this.pickedUpLog.getWeight());
+			this.pickedUpLog = null;
 		}
 	}
 
@@ -1295,16 +1394,35 @@ public class Unit {
 		int rand = Helper.randInt(0, 3);
 		if (rand == 0) {
 
-			this.moveTo(Helper.getRandomPosition(this.getWorld().getNbCubesX(),this.getWorld().getNbCubesY(),this.getWorld().getNbCubesZ()));
+			this.moveTo(Helper.getRandomPosition(this.getWorld().getNbCubesX(), this.getWorld().getNbCubesY(),
+					this.getWorld().getNbCubesZ()));
 			this.setIsSprinting(Helper.randBoolean());
 
 		} else if (rand == 1) {
 			this.work();
 
+		} else if (rand == 2) {
+			defender = this;
+			while (defender.getFaction() == this.getFaction()) {
+				defender = this.selectRandomUnit();
+			}
+			attack(this, this.selectRandomUnit());
+			
 		} else {
 			this.rest();
 		}
 
+	}
+
+	private Unit selectRandomUnit() {
+		int rand = Helper.randInt(0, this.getWorld().getUnits().size() - 1);
+		int i = 0;
+		for (Unit unit : this.getWorld().getUnits()) {
+			if (i == rand) {
+				return unit;
+			}
+			i = +1;
+		} return this;
 	}
 
 	public void stopDefaultBehavior() {
@@ -1318,6 +1436,7 @@ public class Unit {
 	public boolean defaultBehaviorEnabled = false;
 
 	public void attack(Unit attacker, Unit defender) {
+		this.wantToAttack = false;
 		if (attacker.getFaction() != defender.getFaction()) {
 			double[] attackerpos = attacker.getPosition();
 			double[] defenderpos = defender.getPosition();
@@ -1327,18 +1446,19 @@ public class Unit {
 			double dx = attackerpos[0] - defenderpos[0];
 			double dy = attackerpos[1] - defenderpos[1];
 			double dz = attackerpos[2] - defenderpos[2];
+			this.defender = defender;
 			if (getDistance(dx, dy, dz) <= Math.sqrt(2)) {
 				setAttackOrientation(attackerpos, defenderpos, defender);
-				this.defender = defender;
 				this.setIsAttacking(true);
-
-				// } else {
-				// this.moveTo(defendercubepos);
-				// attack(attacker, defender);
+			} else {
+				this.moveTo(Helper.doubleArrayToIntArray(defender.getPosition()));
+				this.wantToAttack = true;
 			}
 		}
 
 	}
+
+	private boolean wantToAttack = false;
 
 	private Unit defender;
 
@@ -1435,9 +1555,11 @@ public class Unit {
 	 * 
 	 * @param attackTime
 	 *            The new attack time for this unit.
-	 * @post The attack time of this new unit is equal to the given attack time. | new.getAttackTime() == attackTime
+	 * @post The attack time of this new unit is equal to the given attack time.
+	 *       | new.getAttackTime() == attackTime
 	 * @throws ExceptionName_Java
-	 *             The given attack time is not a valid attack time for any unit. | ! isValidAttackTime(getAttackTime())
+	 *             The given attack time is not a valid attack time for any
+	 *             unit. | ! isValidAttackTime(getAttackTime())
 	 */
 	@Raw
 	public void setAttackTime(float attackTime) throws IllegalArgumentException {
@@ -1482,9 +1604,11 @@ public class Unit {
 	 * 
 	 * @param restTime
 	 *            The new rest time for this unit.
-	 * @post The rest time of this new unit is equal to the given rest time. | new.getRestTime() == restTime
+	 * @post The rest time of this new unit is equal to the given rest time. |
+	 *       new.getRestTime() == restTime
 	 * @throws IllegalArgumentException
-	 *             The given rest time is not a valid rest time for any unit. | ! isValidRestTime(getRestTime(),getToughness)
+	 *             The given rest time is not a valid rest time for any unit. |
+	 *             ! isValidRestTime(getRestTime(),getToughness)
 	 */
 	@Raw
 	public void setRestTime(float restTime) throws IllegalArgumentException {
@@ -1527,9 +1651,11 @@ public class Unit {
 	 * 
 	 * @param experience
 	 *            The new experience for this unit.
-	 * @post The experience of this new unit is equal to the given experience. | new.getExperience() == experience
+	 * @post The experience of this new unit is equal to the given experience. |
+	 *       new.getExperience() == experience
 	 * @throws IllegalArgumentException
-	 *             The given experience is not a valid experience for any unit. | ! isValidExperience(getExperience())
+	 *             The given experience is not a valid experience for any unit.
+	 *             | ! isValidExperience(getExperience())
 	 */
 	@Raw
 	public void setExperience(int experience) throws IllegalArgumentException {
@@ -1551,9 +1677,12 @@ public class Unit {
 	 */
 	public void terminate() {
 		System.out.println("terminate");
-		// TODO drop carrying items
+		this.drop();
+		this.getWorld().removeUnit(this);
+		this.getFaction().removeUnit(this);
+		this.setFaction(null);
 		this.isTerminated = true;
-	
+
 	}
 
 	/**
@@ -1604,9 +1733,11 @@ public class Unit {
 	 * 
 	 * @param faction
 	 *            The new faction for this unit.
-	 * @post The faction of this new unit is equal to the given faction. | new.getFaction() == faction
+	 * @post The faction of this new unit is equal to the given faction. |
+	 *       new.getFaction() == faction
 	 * @throws IllegalArgumentException
-	 *             The given faction is not a valid faction for any unit. | ! isValidFaction(getFaction())
+	 *             The given faction is not a valid faction for any unit. | !
+	 *             isValidFaction(getFaction())
 	 */
 	@Raw
 	public void setFaction(Faction faction) throws IllegalArgumentException {
@@ -1630,7 +1761,8 @@ public class Unit {
 	}
 
 	/**
-	 * Check whether the given carryingBoulder is a valid carryingBoulder for any unit.
+	 * Check whether the given carryingBoulder is a valid carryingBoulder for
+	 * any unit.
 	 * 
 	 * @param carryingBoulder
 	 *            The carryingBoulder to check.
@@ -1648,9 +1780,11 @@ public class Unit {
 	 * 
 	 * @param carryingBoulder
 	 *            The new carryingBoulder for this unit.
-	 * @post The carryingBoulder of this new unit is equal to the given carryingBoulder. | new.getCarryingBoulder() == carryingBoulder
+	 * @post The carryingBoulder of this new unit is equal to the given
+	 *       carryingBoulder. | new.getCarryingBoulder() == carryingBoulder
 	 * @throws IllegalArgumentException
-	 *             The given carryingBoulder is not a valid carryingBoulder for any unit. | ! isValidCarryingBoulder(getCarryingBoulder())
+	 *             The given carryingBoulder is not a valid carryingBoulder for
+	 *             any unit. | ! isValidCarryingBoulder(getCarryingBoulder())
 	 */
 	@Raw
 	public void setCarryingBoulder(boolean carryingBoulder) throws IllegalArgumentException {
@@ -1692,9 +1826,11 @@ public class Unit {
 	 * 
 	 * @param carryingLog
 	 *            The new carryingLog for this unit.
-	 * @post The carryingLog of this new unit is equal to the given carryingLog. | new.getCarryingLog() == carryingLog
+	 * @post The carryingLog of this new unit is equal to the given carryingLog.
+	 *       | new.getCarryingLog() == carryingLog
 	 * @throws IllegalArgumentException
-	 *             The given carryingLog is not a valid carryingLog for any unit. | ! isValidCarryingLog(getCarryingLog())
+	 *             The given carryingLog is not a valid carryingLog for any
+	 *             unit. | ! isValidCarryingLog(getCarryingLog())
 	 */
 	@Raw
 	public void setCarryingLog(boolean carryingLog) throws IllegalArgumentException {

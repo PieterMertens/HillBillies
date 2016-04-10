@@ -109,7 +109,7 @@ public class Facade implements IFacade {
 	public void workAt(Unit unit, int x, int y, int z) throws ModelException {
 		
 		//TODO hier funcitee!!!!
-		//unit.workAt(x,y,z);
+		unit.workAt(x,y,z);
 
 	}
 
