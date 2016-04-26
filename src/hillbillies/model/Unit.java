@@ -1131,10 +1131,10 @@ public class Unit {
 		System.out.println(target[0] + target[1] + target[2]);
 		System.out.println(this.getWorld().isPassable(target[0], target[1], target[2]));
 		System.out.println(this.getWorld());
-		if (0 < target[0] && target[0] < this.getWorld().getNbCubesX() && 0 < target[1]
-				&& target[1] < this.getWorld().getNbCubesY() && 0 < target[2]
-				&& target[2] < this.getWorld().getNbCubesZ()
-				&& this.getWorld().isPassable(target[0], target[1], target[2])) {
+		if (0 < target[0] && target[0] < this.getWorld().getNbCubesX() && 
+			0 < target[1] && target[1] < this.getWorld().getNbCubesY() && 
+			0 < target[2] && target[2] < this.getWorld().getNbCubesZ() &&
+			this.getWorld().isPassable(target[0], target[1], target[2])) {
 			return true;
 
 		}
@@ -1376,7 +1376,8 @@ public class Unit {
 	}
 
 	public void work() {
-		setWorkTime(500 / (float) this.getStrength());
+//		setWorkTime(500 / (float) this.getStrength());
+		setWorkTime(5);
 		this.wantToWork = false;
 		this.setIsWorking(true);
 
@@ -1564,7 +1565,7 @@ public class Unit {
 			this.setIsSprinting(Helper.randBoolean());
 
 		} else if (rand == 1) {
-			this.work();
+			this.work(); //TODO work at random VALID position
 
 		} else if (rand == 2) {
 			defender = this;

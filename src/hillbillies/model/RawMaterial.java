@@ -244,33 +244,39 @@ public abstract class RawMaterial {
 	 * Variable registering the isAvailible of this raw material.
 	 */
 	private boolean isAvailible = true;
+	
+	private boolean isFalling;
+	private double[] target;
 
 	public void advanceTime(double dt) {
-
-		if (this.isAvailible && !this.getIsTerminated() && !(this.atPassable() && this.blockBelow())) {
+		System.out.println(this.isAvailible + " " + !this.getIsTerminated()  + !this.blockBelow());
+		System.out.println(this.getPosition()[2]);
+		if (this.isAvailible && !this.getIsTerminated() && !this.isFalling && !this.blockBelow()) {//TODO isAvail & isTerm hetzelfde?
 
 			double[] position = this.getPosition();
+			
+		
+			this.target[0] = this.getPosition()[0];
 			position[2] += dt * fallingSpeed;
 			this.setPosition(position);
-
 		}
 
 	}
 
-	/**
-	 * Return whether the terrain type is passable at the current position.
-	 */
-	public boolean atPassable() {
-		return this.getWorld().isPassable((int) this.getPosition()[0], (int) this.getPosition()[1],
-				(int) this.getPosition()[2]);
-	}
+//	/**
+//	 * Return whether the terrain type is passable at the current position.
+//	 */
+//	public boolean atPassable() {
+//		return this.getWorld().isPassable((int) this.getPosition()[0], (int) this.getPosition()[1],
+//				(int) this.getPosition()[2]);
+//	}
 
 	/**
 	 * Return whether there is an impassable terrain type below the current position.
 	 */
 	public boolean blockBelow() {
-
-		return (this.getPosition()[2] == 0 || this.getWorld().hasImpassableBelow((int) this.getPosition()[0],
+		//if(this.getPosition()[2] - (int) this.getPosition()[2] == 0.5)
+		return (this.getPosition()[2] == 0.5 || this.getWorld().hasImpassableBelow((int) this.getPosition()[0],
 				(int) this.getPosition()[1], (int) this.getPosition()[2]));
 	}
 
