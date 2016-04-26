@@ -6,11 +6,16 @@ import be.kuleuven.cs.som.annotate.*;
 import hillbillies.helper.Helper;
 
 /**
- * @invar The position of each raw material must be a valid position for any raw material. | isValidPosition(getPosition())
- * @invar Each raw material can have its weight as weight. | canHaveAsWeight(this.getWeight())
- * @invar The world of each raw material must be a valid world for any raw material. | isValidWorld(getWorld())*
- * @invar The isCarriedBy of each raw material must be a valid isCarriedBy for any raw material. | isValidIsCarriedBy(getIsCarriedBy())
- * @invar The isAvailible of each raw material must be a valid isAvailible for any raw material. | isValidIsAvailible(getIsAvailible())
+ * @invar The position of each raw material must be a valid position for any raw
+ *        material. | isValidPosition(getPosition())
+ * @invar Each raw material can have its weight as weight. |
+ *        canHaveAsWeight(this.getWeight())
+ * @invar The world of each raw material must be a valid world for any raw
+ *        material. | isValidWorld(getWorld())*
+ * @invar The isCarriedBy of each raw material must be a valid isCarriedBy for
+ *        any raw material. | isValidIsCarriedBy(getIsCarriedBy())
+ * @invar The isAvailible of each raw material must be a valid isAvailible for
+ *        any raw material. | isValidIsAvailible(getIsAvailible())
  */
 public abstract class RawMaterial {
 
@@ -22,9 +27,11 @@ public abstract class RawMaterial {
 	 * 
 	 * @param position
 	 *            The position for this new raw material.
-	 * @effect The world of this new raw material is set to the given world. | this.setWorld(world)
+	 * @effect The world of this new raw material is set to the given world. |
+	 *         this.setWorld(world)
 	 *
-	 * @effect The position of this new raw material is set to the given position. | this.setPosition(position)
+	 * @effect The position of this new raw material is set to the given
+	 *         position. | this.setPosition(position)
 	 * 
 	 */
 	public RawMaterial(World world, double[] position) throws IllegalArgumentException {
@@ -60,9 +67,11 @@ public abstract class RawMaterial {
 	 * 
 	 * @param world
 	 *            The new world for this raw material.
-	 * @post The world of this new raw material is equal to the given world. | new.getWorld() == world
+	 * @post The world of this new raw material is equal to the given world. |
+	 *       new.getWorld() == world
 	 * @throws IllegalArgumentException
-	 *             The given world is not a valid world for any raw material. | ! isValidWorld(getWorld())
+	 *             The given world is not a valid world for any raw material. |
+	 *             ! isValidWorld(getWorld())
 	 */
 	@Raw
 	public void setWorld(World world) throws IllegalArgumentException {
@@ -101,7 +110,8 @@ public abstract class RawMaterial {
 	}
 
 	/**
-	 * Check whether the given position is a valid position for any raw material.
+	 * Check whether the given position is a valid position for any raw
+	 * material.
 	 * 
 	 * @param position
 	 *            The position to check.
@@ -118,9 +128,11 @@ public abstract class RawMaterial {
 	 * 
 	 * @param position
 	 *            The new position for this raw material.
-	 * @post The position of this new raw material is equal to the given position. | new.getPosition() == position
+	 * @post The position of this new raw material is equal to the given
+	 *       position. | new.getPosition() == position
 	 * @throws IllegalArgumentException
-	 *             The given position is not a valid position for any raw material. | ! isValidPosition(getPosition())
+	 *             The given position is not a valid position for any raw
+	 *             material. | ! isValidPosition(getPosition())
 	 */
 	@Raw
 	public void setPosition(double[] position) throws IllegalArgumentException {
@@ -148,9 +160,11 @@ public abstract class RawMaterial {
 	 * 
 	 * @param present
 	 *            The new terminated status for this raw material.
-	 * @post The terminated status of this new raw material is equal to the given terminated status. | new.getIsTerminated() == terminated
+	 * @post The terminated status of this new raw material is equal to the
+	 *       given terminated status. | new.getIsTerminated() == terminated
 	 * @throws IllegalArgumentException
-	 *             The given presence is not a valid presence for any raw material. | ! isValidIsPresent(getIsPresent())
+	 *             The given presence is not a valid presence for any raw
+	 *             material. | ! isValidIsPresent(getIsPresent())
 	 */
 	@Raw
 	public void setIsTerminated(boolean terminated) {
@@ -183,7 +197,8 @@ public abstract class RawMaterial {
 	}
 
 	/**
-	 * Check whether the given isCarriedBy is a valid isCarriedBy for any raw material.
+	 * Check whether the given isCarriedBy is a valid isCarriedBy for any raw
+	 * material.
 	 * 
 	 * @param isCarriedBy
 	 *            The isCarriedBy to check.
@@ -200,9 +215,11 @@ public abstract class RawMaterial {
 	 * 
 	 * @param isCarriedBy
 	 *            The new isCarriedBy for this raw material.
-	 * @post The isCarriedBy of this new raw material is equal to the given isCarriedBy. | new.getIsCarriedBy() == isCarriedBy
+	 * @post The isCarriedBy of this new raw material is equal to the given
+	 *       isCarriedBy. | new.getIsCarriedBy() == isCarriedBy
 	 * @throws IllegalArgumentException
-	 *             The given isCarriedBy is not a valid isCarriedBy for any raw material. | ! isValidIsCarriedBy(getIsCarriedBy())
+	 *             The given isCarriedBy is not a valid isCarriedBy for any raw
+	 *             material. | ! isValidIsCarriedBy(getIsCarriedBy())
 	 */
 	@Raw
 	public void setIsCarriedBy(Unit isCarriedBy) throws IllegalArgumentException {
@@ -231,9 +248,11 @@ public abstract class RawMaterial {
 	 * 
 	 * @param isAvailible
 	 *            The new isAvailible for this raw material.
-	 * @post The isAvailible of this new raw material is equal to the given isAvailible. | new.getIsAvailible() == isAvailible
+	 * @post The isAvailible of this new raw material is equal to the given
+	 *       isAvailible. | new.getIsAvailible() == isAvailible
 	 * @throws IllegalArgumentException
-	 *             The given isAvailible is not a valid isAvailible for any raw material. | ! isValidIsAvailible(getIsAvailible())
+	 *             The given isAvailible is not a valid isAvailible for any raw
+	 *             material. | ! isValidIsAvailible(getIsAvailible())
 	 */
 	@Raw
 	public void setIsAvailible(boolean isAvailible) throws IllegalArgumentException {
@@ -244,38 +263,48 @@ public abstract class RawMaterial {
 	 * Variable registering the isAvailible of this raw material.
 	 */
 	private boolean isAvailible = true;
-	
+
 	private boolean isFalling;
-	private double[] target;
+	private double ztarget;
 
 	public void advanceTime(double dt) {
-		System.out.println(this.isAvailible + " " + !this.getIsTerminated()  + !this.blockBelow());
+	//	System.out.println(this.isAvailible + " " + !this.getIsTerminated() + !this.blockBelow());
 		System.out.println(this.getPosition()[2]);
-		if (this.isAvailible && !this.getIsTerminated() && !this.isFalling && !this.blockBelow()) {//TODO isAvail & isTerm hetzelfde?
-
-			double[] position = this.getPosition();
-			
-		
-			this.target[0] = this.getPosition()[0];
-			position[2] += dt * fallingSpeed;
+		if (this.isFalling) {
+			double z;
+			if (this.getPosition()[2] - this.ztarget > 0) {
+				z = this.getPosition()[2] + dt * fallingSpeed;
+			} else {
+				z = this.ztarget;
+				this.isFalling = false;
+			}
+			double[] position = { this.getPosition()[0], this.getPosition()[1], z };
 			this.setPosition(position);
+		} else {
+		if (this.isAvailible && !this.getIsTerminated() && !this.isFalling && !this.blockBelow()) {// TODO isAvail & isTerm hetzelfde?
+
+			this.ztarget = this.getPosition()[2] - 1;
+			this.isFalling = true;
+
 		}
 
-	}
+	}}
 
-//	/**
-//	 * Return whether the terrain type is passable at the current position.
-//	 */
-//	public boolean atPassable() {
-//		return this.getWorld().isPassable((int) this.getPosition()[0], (int) this.getPosition()[1],
-//				(int) this.getPosition()[2]);
-//	}
+	// /**
+	// * Return whether the terrain type is passable at the current position.
+	// */
+	// public boolean atPassable() {
+	// return this.getWorld().isPassable((int) this.getPosition()[0], (int)
+	// this.getPosition()[1],
+	// (int) this.getPosition()[2]);
+	// }
 
 	/**
-	 * Return whether there is an impassable terrain type below the current position.
+	 * Return whether there is an impassable terrain type below the current
+	 * position.
 	 */
 	public boolean blockBelow() {
-		//if(this.getPosition()[2] - (int) this.getPosition()[2] == 0.5)
+		// if(this.getPosition()[2] - (int) this.getPosition()[2] == 0.5)
 		return (this.getPosition()[2] == 0.5 || this.getWorld().hasImpassableBelow((int) this.getPosition()[0],
 				(int) this.getPosition()[1], (int) this.getPosition()[2]));
 	}
