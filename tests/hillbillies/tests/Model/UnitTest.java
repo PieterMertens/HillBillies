@@ -1,4 +1,4 @@
-package hillbillies.tests.Unit;
+package hillbillies.tests.Model;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -60,5 +60,6 @@ public class UnitTest {
 		unit.setOrientation(10);
 		Assert.assertEquals((float) Math.PI / 2, unit.getOrientation(), Util.DEFAULT_EPSILON);
 	}
+
 
 }
