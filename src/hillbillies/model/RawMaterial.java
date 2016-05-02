@@ -268,8 +268,7 @@ public abstract class RawMaterial {
 	private double ztarget;
 
 	public void advanceTime(double dt) {
-	//	System.out.println(this.isAvailible + " " + !this.getIsTerminated() + !this.blockBelow());
-		System.out.println(this.getPosition()[2]);
+//		System.out.println(this.getPosition()[2]);
 		if (this.isFalling) {
 			double z;
 			if (this.getPosition()[2] - this.ztarget > 0) {

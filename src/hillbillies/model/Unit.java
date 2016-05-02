@@ -1377,7 +1377,7 @@ public class Unit {
 
 	public void work() {
 //		setWorkTime(500 / (float) this.getStrength());
-		setWorkTime(5);
+		setWorkTime(1); //TODO teugzetten
 		this.wantToWork = false;
 		this.setIsWorking(true);
 
@@ -1411,13 +1411,13 @@ public class Unit {
 		if (workPosition != Helper.doubleArrayToIntArray(this.getPosition())) {
 			double dx = x - this.getPosition()[0];
 			double dy = y - this.getPosition()[1];
-			double dz = z - this.getPosition()[2];
 			this.setOrientation((float) Math.atan2(dy, dx));
 		}
 		if (time <= 0) {
 			int experience = 10;
-			
-			if (this.getCarryingBoulder() || this.getCarryingLog()) {
+			System.out.println("boulder: " + this.getCarryingBoulder() +" log: "+ this.getCarryingLog());
+			System.out.println(this.getWorld().getBoulder(workPosition));
+			if (this.getCarryingBoulder() || this.getCarryingLog()) { //TODO terrein moet passable zijn
 				this.drop();
 			} else if (this.getWorld().getCubeType(x, y, z) == 0 && itemsAvailable(workPosition)) {
 				this.setWeight(this.getWeight() + 5);
@@ -1446,7 +1446,7 @@ public class Unit {
 			setWorkTime(time);
 		}
 	}
-
+	
 	private Boulder pickedUpBoulder;
 	private Log pickedUpLog;
 

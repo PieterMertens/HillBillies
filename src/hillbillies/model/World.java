@@ -131,7 +131,6 @@ public class World {
 	public void advanceTime(double dt) throws IllegalArgumentException {
 
 		// System.out.println("--- advance time ---");
-
 		// System.out.println("-- world");
 		for (int[] pos : disconnected) {
 			System.out.println("disconnected cave in" + pos[0] + " " + pos[1] + " " + pos[2]);
@@ -429,7 +428,9 @@ public class World {
 	
 	public Log getLog(int[] position) {
 		for (Log log : this.getLogs()) {
-			if (Helper.doubleArrayToIntArray(log.getPosition()) == position) {
+			if (Helper.doubleArrayToIntArray(log.getPosition())[0] == position[0] &&
+				Helper.doubleArrayToIntArray(log.getPosition())[1] == position[1] &&
+				Helper.doubleArrayToIntArray(log.getPosition())[2] == position[2]) {
 				return log;
 			}
 		}
@@ -467,8 +468,13 @@ public class World {
 //	}
 
 	public Boulder getBoulder(int[] position) {
-		for (Boulder boulder : this.getBoulders()) {
-			if (Helper.doubleArrayToIntArray(boulder.getPosition()) == position) {
+		for (Boulder boulder : this.getBoulders()) { //TODO efficienter
+			System.out.println(Helper.doubleArrayToIntArray(boulder.getPosition())[0]);
+			System.out.println(Helper.doubleArrayToIntArray(boulder.getPosition())[1]);
+			System.out.println(Helper.doubleArrayToIntArray(boulder.getPosition())[2]);
+			if (Helper.doubleArrayToIntArray(boulder.getPosition())[0] == position[0] &&
+				Helper.doubleArrayToIntArray(boulder.getPosition())[1] == position[1] &&
+				Helper.doubleArrayToIntArray(boulder.getPosition())[2] == position[2]) {
 				return boulder;
 			}
 		}
