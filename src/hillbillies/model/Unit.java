@@ -61,6 +61,7 @@ public class Unit {
 		this.setPosition(Helper.getCenterOfPosition(initialPosition));
 		this.setHitpoints(200 * weight * toughness / 10000);
 		this.setStaminapoints(200 * weight * toughness / 10000);
+		System.out.println("staminap: " + this.getStaminapoints());
 		if (enableDefaultBehavior == true) {
 			startDefaultBehavior();
 		}
@@ -573,8 +574,10 @@ public class Unit {
 	 */
 	@Raw
 	public void setStaminapoints(int staminapoints) {
+		System.out.println("staminaset: " + staminapoints);
 		assert isValidStaminapoints(staminapoints, this.getWeight(), this.getToughness());
 		this.staminapoints = staminapoints;
+		System.out.println("staminaset: " + this.staminapoints);
 	}
 
 	/**
@@ -583,8 +586,9 @@ public class Unit {
 	private int staminapoints;
 
 	public void staminadrain(double dt) {
-
+		System.out.println("dt: " + dt);
 		if (dt >= 0.1) {
+			System.out.println("staminadr: "+this.getStaminapoints());
 			this.setStaminapoints(this.getStaminapoints() - 1);
 			dt += -0.1;
 		}
@@ -616,7 +620,7 @@ public class Unit {
 	 * @return | result ==
 	 */
 	public static boolean isValidStaminaTime(float time) {
-		if (time <= 0.1 && time > 0) {
+		if (time <= 0.1f && time > 0) {
 			return true;
 		}
 		return false;
@@ -939,6 +943,7 @@ public class Unit {
 			this.setIsResting(false);
 			this.setIsWorking(false);
 			this.setIsAttacking(false);
+			this.setStaminaTime(0.1f);
 			// this.setIsMoving(true);
 		}
 	}
