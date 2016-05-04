@@ -10,9 +10,11 @@ public class Log extends RawMaterial {
 	 * 
 	 * @param position
 	 *            The position for this new log.
-	 * @effect The world of this new log is set to the given world. | this.setWorld(world)
+	 * @effect The world of this new log is set to the given world. |
+	 *         this.setWorld(world)
 	 *
-	 * @effect The position of this new log is set to the given position. | this.setPosition(position)
+	 * @effect The position of this new log is set to the given position. |
+	 *         this.setPosition(position)
 	 * 
 	 */
 	public Log(World world, double[] position) throws IllegalArgumentException {
@@ -37,21 +39,27 @@ public class Log extends RawMaterial {
 	 * 
 	 * @param isCarriedBy
 	 *            The new isCarriedBy for this log.
-	 * @post The isCarriedBy of this new log is equal to the given isCarriedBy. | new.getIsCarriedBy() == isCarriedBy
+	 * @post The isCarriedBy of this new log is equal to the given isCarriedBy.
+	 *       | new.getIsCarriedBy() == isCarriedBy
 	 * @throws IllegalArgumentException
-	 *             The given isCarriedBy is not a valid isCarriedBy for any log. | ! isValidIsCarriedBy(getIsCarriedBy())
+	 *             The given isCarriedBy is not a valid isCarriedBy for any log.
+	 *             | ! isValidIsCarriedBy(getIsCarriedBy())
 	 */
 	public void setIsCarriedBy(Unit isCarriedBy) {
-		super.setIsCarriedBy(isCarriedBy);
-		this.getIsCarriedBy().setCarryingLog(true);
-		this.getWorld().removeLog(this);
+		if (isCarriedBy != null) {
+			super.setIsCarriedBy(isCarriedBy);
+			this.getIsCarriedBy().setCarryingLog(true);
+			this.getWorld().removeLog(this);
+		}
 	}
 
 	/**
 	 * Set the isCarriedBy of this log to the given isCarriedBy.
 	 * 
-	 * @post The isCarriedBy of this log is set to null. | this.getIsCarriedBy() == null
-	 * @post The log is no longer carried by the unit. | this.getIsCarriedBy().getCarryingLog() == false
+	 * @post The isCarriedBy of this log is set to null. | this.getIsCarriedBy()
+	 *       == null
+	 * @post The log is no longer carried by the unit. |
+	 *       this.getIsCarriedBy().getCarryingLog() == false
 	 */
 	public void stopCarrying() {
 		this.getIsCarriedBy().setCarryingLog(false);
