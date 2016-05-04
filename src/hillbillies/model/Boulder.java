@@ -51,6 +51,8 @@ public class Boulder extends RawMaterial {
 			super.setIsCarriedBy(isCarriedBy);
 			this.getIsCarriedBy().setCarryingBoulder(true);
 			this.getWorld().removeBoulder(this);
+		} else {
+			this.getWorld().addBoulder(this);
 		}
 	}
 

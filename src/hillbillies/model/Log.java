@@ -50,6 +50,8 @@ public class Log extends RawMaterial {
 			super.setIsCarriedBy(isCarriedBy);
 			this.getIsCarriedBy().setCarryingLog(true);
 			this.getWorld().removeLog(this);
+		} else {
+			this.getWorld().addLog(this);
 		}
 	}
 
