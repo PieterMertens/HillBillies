@@ -10,9 +10,11 @@ public class Boulder extends RawMaterial {
 	 * 
 	 * @param position
 	 *            The position for this new boulder.
-	 * @effect The world of this new boulder is set to the given world. | this.setWorld(world)
+	 * @effect The world of this new boulder is set to the given world. |
+	 *         this.setWorld(world)
 	 *
-	 * @effect The position of this new boulder is set to the given position. | this.setPosition(position)
+	 * @effect The position of this new boulder is set to the given position. |
+	 *         this.setPosition(position)
 	 * 
 	 */
 	public Boulder(World world, double[] position) throws IllegalArgumentException {
@@ -38,21 +40,27 @@ public class Boulder extends RawMaterial {
 	 * 
 	 * @param isCarriedBy
 	 *            The new isCarriedBy for this boulder.
-	 * @post The isCarriedBy of this new boulder is equal to the given isCarriedBy. | new.getIsCarriedBy() == isCarriedBy
+	 * @post The isCarriedBy of this new boulder is equal to the given
+	 *       isCarriedBy. | new.getIsCarriedBy() == isCarriedBy
 	 * @throws IllegalArgumentException
-	 *             The given isCarriedBy is not a valid isCarriedBy for any boulder. | ! isValidIsCarriedBy(getIsCarriedBy())
+	 *             The given isCarriedBy is not a valid isCarriedBy for any
+	 *             boulder. | ! isValidIsCarriedBy(getIsCarriedBy())
 	 */
 	public void setIsCarriedBy(Unit isCarriedBy) {
-		super.setIsCarriedBy(isCarriedBy);
-		this.getIsCarriedBy().setCarryingBoulder(true);
-		this.getWorld().removeBoulder(this);
+		if (isCarriedBy != null) {
+			super.setIsCarriedBy(isCarriedBy);
+			this.getIsCarriedBy().setCarryingBoulder(true);
+			this.getWorld().removeBoulder(this);
+		}
 	}
 
 	/**
 	 * Set the isCarriedBy of this boulder to the given isCarriedBy.
 	 * 
-	 * @post The isCarriedBy of this boulder is set to null. | this.getIsCarriedBy() == null
-	 * @post The boulder is no longer carried by the unit. | this.getIsCarriedBy().getCarryingBoulder() == false
+	 * @post The isCarriedBy of this boulder is set to null. |
+	 *       this.getIsCarriedBy() == null
+	 * @post The boulder is no longer carried by the unit. |
+	 *       this.getIsCarriedBy().getCarryingBoulder() == false
 	 */
 	public void stopCarrying() {
 		this.getIsCarriedBy().setCarryingBoulder(false);

@@ -94,7 +94,7 @@ public class Unit {
 	 * @return | result == true if the 3 coordinates are between the given
 	 *         limits.
 	 */
-	public static boolean isValidPosition(double[] position) {
+	public static boolean isValidPosition(double[] position,World world) {
 
 		// TODO check if passable
 
@@ -128,7 +128,7 @@ public class Unit {
 	public void setPosition(double[] position) throws IllegalArgumentException {
 		// System.out.println("set pos:" + position[0]+" "+position[1]+"
 		// "+position[2]);
-		if (!isValidPosition(position))
+		if (!isValidPosition(position,this.getWorld()))
 			throw new IllegalArgumentException();
 		else {
 			// for (int i = 0; i < position.length; ++i) {
@@ -290,6 +290,50 @@ public class Unit {
 	 * Variable registering the weight of this unit.
 	 */
 	private int weight;
+
+	/**
+	 * Return the total weight of this unit.
+	 */
+	@Basic
+	@Raw
+	public int getTotalWeight() {
+		return this.totalWeight;
+	}
+
+	/**
+	 * Check whether the given total weight is a valid total weight for any
+	 * unit.
+	 * 
+	 * @param totalWeight
+	 *            The total weight to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidTotalWeight(int totalWeight, int weight) {
+		if (totalWeight <= weight + 50)
+			return true;
+		return false;
+	}
+
+	/**
+	 * Set the total weight of this unit to the given total weight.
+	 * 
+	 * @param totalWeight
+	 *            The new total weight for this unit.
+	 * @post If the given total weight is a valid total weight for any unit, the
+	 *       total weight of this new unit is equal to the given total weight. |
+	 *       if (isValidTotalWeight(totalWeight)) | then new.getTotalWeight() ==
+	 *       totalWeight
+	 */
+	@Raw
+	public void setTotalWeight(int totalWeight) {
+		if (isValidTotalWeight(totalWeight,this.getWeight()))
+			this.totalWeight = totalWeight;
+	}
+
+	/**
+	 * Variable registering the total weight of this unit.
+	 */
+	private int totalWeight;
 
 	/**
 	 * Return the strength of this unit.
@@ -1128,12 +1172,12 @@ public class Unit {
 
 	private boolean isValidTarget(double[] target) {// TODO lijkt hard op
 													// isvalidPods
-		System.out.println(target[0] + target[1] + target[2]);
-		System.out.println(this.getWorld().isPassable(target[0], target[1], target[2]));
-		System.out.println(this.getWorld());
-		if (0 < target[0] && target[0] < this.getWorld().getNbCubesX() && 
-			0 < target[1] && target[1] < this.getWorld().getNbCubesY() && 
-			0 < target[2] && target[2] < this.getWorld().getNbCubesZ() &&
+		System.out.println("isValidTarget currentpos "+ this.getPosition()[0] + " "+this.getPosition()[1] +" "+ this.getPosition()[2]);
+		System.out.println("isValidTarget "+ target[0] + " "+target[1] +" "+ target[2]);
+		//System.out.println(this.getWorld());
+		System.out.println("isValidTarget withinbound "+this.getWorld().withinBoundaries((int)target[0], (int) target[1], (int) target[2]));
+		System.out.println("isValidTarget isPass "+this.getWorld().isPassable(target[0], target[1], target[2])+" "+this.getWorld().getCubeType((int) target[0],(int) target[1],(int) target[2]));
+		if (this.getWorld().withinBoundaries((int)target[0], (int) target[1], (int) target[2]) &&
 			this.getWorld().isPassable(target[0], target[1], target[2])) {
 			return true;
 
@@ -1363,10 +1407,12 @@ public class Unit {
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
 				for (int k = -1; k <= 1; k++) {
-					if (!(i == 0 && j == 0 && k == 0) && (i + position[0] >= 0) && (j + position[1] >= 0)
-							&& (k + position[2] >= 0)) {// TODO isvalidpositions
+					
+					//System.out.println("getneigbouring within: "+this.getWorld().withinBoundaries(position[0]+i, position[1]+j, position[2]+k)+" "+(position[0]+i)+" "+ (position[1]+j)+" "+ (position[2]+k) );
+					if (!(i == 0 && j == 0 && k == 0) && this.getWorld().withinBoundaries(position[0]+i, position[1]+j, position[2]+k)) {// TODO isvalidpositions
 						int[] newNeighbour = { position[0] + i, position[1] + j, position[2] + k };
 						neighbouringCubes.add(newNeighbour);
+						//System.out.println("new neighbour "+newNeighbour[0]+" "+newNeighbour[1]+" "+newNeighbour[2]);
 					}
 				}
 			}
@@ -1376,11 +1422,10 @@ public class Unit {
 	}
 
 	public void work() {
-//		setWorkTime(500 / (float) this.getStrength());
-		setWorkTime(1); //TODO teugzetten
+		setWorkTime(500 / (float) this.getStrength());
+		//setWorkTime(1); // TODO teugzetten
 		this.wantToWork = false;
 		this.setIsWorking(true);
-
 	}
 
 	public void workAt(int x, int y, int z) {
@@ -1415,24 +1460,24 @@ public class Unit {
 		}
 		if (time <= 0) {
 			int experience = 10;
-			System.out.println("boulder: " + this.getCarryingBoulder() +" log: "+ this.getCarryingLog());
+			System.out.println("boulder: " + this.getCarryingBoulder() + " log: " + this.getCarryingLog());
 			System.out.println(this.getWorld().getBoulder(workPosition));
-			if (this.getCarryingBoulder() || this.getCarryingLog()) { //TODO terrein moet passable zijn
+			if ((this.getCarryingBoulder() || this.getCarryingLog())
+					&& this.getWorld().isPassable(this.workPosition[0], this.workPosition[1], this.workPosition[2])) { 
 				this.drop();
 			} else if (this.getWorld().getCubeType(x, y, z) == 0 && itemsAvailable(workPosition)) {
-				this.setWeight(this.getWeight() + 5);
+				this.setTotalWeight(this.getWeight() + 5);
 				this.setToughness(this.getToughness() + 5);
-
 			} else if (this.getWorld().getBoulder(workPosition) != null) {
 				Boulder boulder = this.getWorld().getBoulder(workPosition);
 				this.pickedUpBoulder = boulder;
 				boulder.setIsCarriedBy(this);
-				this.setWeight(this.getWeight() + boulder.getWeight());
+				this.setTotalWeight(this.getWeight() + boulder.getWeight());
 			} else if (this.getWorld().getLog(workPosition) != null) {
 				Log log = this.getWorld().getLog(workPosition);
 				this.pickedUpLog = log;
 				log.setIsCarriedBy(this);
-				this.setWeight(this.getWeight() + log.getWeight());
+				this.setTotalWeight(this.getWeight() + log.getWeight());
 			} else if (this.getWorld().getCubeType(x, y, z) == 2) {
 				this.getWorld().collapseCube(x, y, z, true);
 			} else if (this.getWorld().getCubeType(x, y, z) == 1) {
@@ -1446,7 +1491,7 @@ public class Unit {
 			setWorkTime(time);
 		}
 	}
-	
+
 	private Boulder pickedUpBoulder;
 	private Log pickedUpLog;
 
@@ -1559,13 +1604,15 @@ public class Unit {
 		defaultBehaviorEnabled = true;
 		int rand = Helper.randInt(0, 3);
 		if (rand == 0) {
-
-			this.moveTo(Helper.getRandomPosition(this.getWorld().getNbCubesX(), this.getWorld().getNbCubesY(),
-					this.getWorld().getNbCubesZ()));
+			int[] randomPosition = Helper.getRandomPosition(this.getWorld().getNbCubesX(), this.getWorld().getNbCubesY(), this.getWorld().getNbCubesZ());
+			while (!this.isValidTarget(Helper.intArrayToDoubleArray(randomPosition))) {
+				randomPosition = Helper.getRandomPosition(this.getWorld().getNbCubesX(), this.getWorld().getNbCubesY(), this.getWorld().getNbCubesZ());
+			}
+			this.moveTo(randomPosition);
 			this.setIsSprinting(Helper.randBoolean());
 
 		} else if (rand == 1) {
-			this.work(); //TODO work at random VALID position
+			this.workAt((int)this.getPosition()[0],(int)this.getPosition()[1],(int)this.getPosition()[2]); // TODO work at random VALID position
 
 		} else if (rand == 2) {
 			defender = this;
@@ -1760,7 +1807,7 @@ public class Unit {
 	 */
 	public static boolean isValidRestTime(float restTime, int toughness) {
 		if (restTime <= (40 / (float) toughness)) {
-			System.out.println("valid");
+			//System.out.println("valid");
 			return true;
 		}
 		return false;
@@ -1880,13 +1927,57 @@ public class Unit {
 	 */
 	private boolean isTerminated = false;
 
+//	public World getWorld() {
+//		try {
+//			return this.getFaction().getWorld();
+//		} catch (NullPointerException e) {
+//			return null;
+//		}
+//	}
+	
+	/**
+	 * Return the world of this unit.
+	 */
+	@Basic
+	@Raw
 	public World getWorld() {
-		try {
-			return this.getFaction().getWorld();
-		} catch (NullPointerException e) {
-			return null;
-		}
+		return this.world;
 	}
+
+	/**
+	 * Check whether the given world is a valid world for any raw material.
+	 * 
+	 * @param world
+	 *            The world to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidWorld(World world) {
+		if (!world.getIsTerminated())
+			return true;
+		return false;
+	}
+
+	/**
+	 * Set the world of this raw material to the given world.
+	 * 
+	 * @param world
+	 *            The new world for this raw material.
+	 * @post The world of this new raw material is equal to the given world. | new.getWorld() == world
+	 * @throws IllegalArgumentException
+	 *             The given world is not a valid world for any raw material. | ! isValidWorld(getWorld())
+	 */
+	@Raw
+	public void setWorld(World world) throws IllegalArgumentException {
+		if (!isValidWorld(world))
+			throw new IllegalArgumentException();
+		this.world = world;
+	}
+
+	/**
+	 * Variable registering the world of this raw material.
+	 */
+	private World world;
+
 
 	/**
 	 * Return the faction of this unit.

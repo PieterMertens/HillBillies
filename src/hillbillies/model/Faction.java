@@ -77,7 +77,7 @@ public class Faction {
 	 * Adds the given unit to this faction.
 	 */
 	public void addUnit(Unit unit) {
-		if (unitsOfFaction.size() < maxUnits && unit.getFaction() == null) {
+		if (unitsOfFaction.size() < maxUnits) {
 			this.unitsOfFaction.add(unit);
 		}
 	}

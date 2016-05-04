@@ -37,7 +37,7 @@ public abstract class RawMaterial {
 	public RawMaterial(World world, double[] position) throws IllegalArgumentException {
 		this.setPosition(position);
 		this.weight = Helper.randInt(10, 50);
-		this.world = world;
+		this.setWorld(world);
 	}
 
 	/**
@@ -205,7 +205,7 @@ public abstract class RawMaterial {
 	 * @return | result ==
 	 */
 	public static boolean isValidIsCarriedBy(Unit isCarriedBy) {
-		if (isCarriedBy != null && !isCarriedBy.isTerminated())
+		if (isCarriedBy == null || !isCarriedBy.isTerminated())
 			return true;
 		return false;
 	}
