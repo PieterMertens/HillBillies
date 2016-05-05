@@ -1,13 +1,11 @@
 package hillbillies.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 import be.kuleuven.cs.som.annotate.*;
 import hillbillies.helper.Helper;
-import ogp.framework.util.Util;
 
 /**
  * 

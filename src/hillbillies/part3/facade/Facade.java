@@ -1,20 +1,98 @@
 package hillbillies.part3.facade;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 import hillbillies.helper.Helper;
 import hillbillies.model.Boulder;
 import hillbillies.model.Faction;
 import hillbillies.model.Log;
+import hillbillies.model.Scheduler;
+import hillbillies.model.Task;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
 import hillbillies.part2.facade.IFacade;
 import hillbillies.part2.listener.TerrainChangeListener;
+import hillbillies.part3.programs.ITaskFactory;
 import ogp.framework.util.ModelException;
 
 public class Facade implements hillbillies.part3.facade.IFacade {
 
-	// TODO exceptions wrappen indien nodig
+	@Override
+	public ITaskFactory<?, ?, Task> createTaskFactory() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isWellFormed(Task task) throws ModelException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Scheduler getScheduler(Faction faction) throws ModelException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void schedule(Scheduler scheduler, Task task) throws ModelException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void replace(Scheduler scheduler, Task original, Task replacement) throws ModelException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean areTasksPartOf(Scheduler scheduler, Collection<Task> tasks) throws ModelException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Iterator<Task> getAllTasksIterator(Scheduler scheduler) throws ModelException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<Scheduler> getSchedulersForTask(Task task) throws ModelException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Unit getAssignedUnit(Task task) throws ModelException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Task getAssignedTask(Unit unit) throws ModelException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getName(Task task) throws ModelException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getPriority(Task task) throws ModelException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	// XXX -------------------------------------- PT2
+	// below------------------------------------
 
 	@Override
 	public World createWorld(int[][][] terrainTypes, TerrainChangeListener modelListener) throws ModelException {
@@ -107,9 +185,7 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 
 	@Override
 	public void workAt(Unit unit, int x, int y, int z) throws ModelException {
-		
-		//TODO hier funcitee!!!!
-		unit.workAt(x,y,z);
+		unit.workAt(x, y, z);
 
 	}
 
@@ -154,7 +230,8 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 		return world.getLogs();
 	}
 
-	// XXX -------------------------------------- PT1 below------------------------------------
+	// XXX -------------------------------------- PT1
+	// below------------------------------------
 
 	public Facade() {
 	};
@@ -179,7 +256,8 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 
 		// try {
 		// Unit newUnit = new Unit(weight, strength, agility, toughness);
-		// newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));//TODO niewe constr ofz mr nr midden vn blokje
+		// newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));//TODO
+		// niewe constr ofz mr nr midden vn blokje
 		// newUnit.setName(name);
 		// newUnit.setOrientation((float) Math.PI/2);
 		//
@@ -193,7 +271,7 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 	public void fight(Unit attacker, Unit defender) throws ModelException {
 
 		attacker.attack(attacker, defender);
-		//defender.defend(attacker, defender);
+		// defender.defend(attacker, defender);
 
 	}
 
