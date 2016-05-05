@@ -81,14 +81,14 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 
 	@Override
 	public String getName(Task task) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return task.getName();
 	}
 
 	@Override
 	public int getPriority(Task task) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return task.getPriority();
 	}
 
 	// XXX -------------------------------------- PT2
