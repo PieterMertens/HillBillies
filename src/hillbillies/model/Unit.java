@@ -574,10 +574,9 @@ public class Unit {
 	 */
 	@Raw
 	public void setStaminapoints(int staminapoints) {
-		System.out.println("staminaset: " + staminapoints);
+		//System.out.println("staminaset: " + staminapoints);
 		assert isValidStaminapoints(staminapoints, this.getWeight(), this.getToughness());
 		this.staminapoints = staminapoints;
-		System.out.println("staminaset: " + this.staminapoints);
 	}
 
 	/**
@@ -586,20 +585,28 @@ public class Unit {
 	private int staminapoints;
 
 	public void staminadrain(double dt) {
-		System.out.println("dt: " + dt);
-		if (dt >= 0.1) {
-			System.out.println("staminadr: "+this.getStaminapoints());
-			this.setStaminapoints(this.getStaminapoints() - 1);
-			dt += -0.1;
+//		System.out.println("dt: " + dt);
+//		if (dt >= 0.1) {
+//			System.out.println("staminadr: "+this.getStaminapoints());
+//			this.setStaminapoints(this.getStaminapoints() - 1);
+//			dt += -0.1;
+//		}
+//		float time = (float) (getStaminaTime() - dt);
+//
+//		if (time <= 0) {
+//			this.setStaminapoints(this.getStaminapoints() - 1);
+//			setStaminaTime(0.1f);
+//		} else {
+//			setStaminaTime(time);
+//		}
+		
+	
+		float time = (float) (getStaminaTime() + dt);
+		while (time>0.1f){
+			this.setStaminapoints(this.getStaminapoints()-1);
+			time -= 0.1f;
 		}
-		float time = (float) (getStaminaTime() - dt);
-
-		if (time <= 0) {
-			this.setStaminapoints(this.getStaminapoints() - 1);
-			setStaminaTime(0.1f);
-		} else {
-			setStaminaTime(time);
-		}
+		setStaminaTime(time);
 	}
 
 	/**
@@ -1219,7 +1226,7 @@ public class Unit {
 		newPosition[0] += dx;
 		newPosition[1] += dy;
 		newPosition[2] += dz;
-		System.out.println("x: " + newPosition[0] + "y: " + newPosition[1] + "z: " + newPosition[2]);
+		//System.out.println("x: " + newPosition[0] + "y: " + newPosition[1] + "z: " + newPosition[2]);
 
 		if (!isValidTarget(newPosition))
 			throw new IllegalArgumentException();
