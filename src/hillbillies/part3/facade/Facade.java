@@ -373,7 +373,7 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 	@Override
 	public boolean isDefaultBehaviorEnabled(Unit unit) throws ModelException {
 
-		return unit.defaultBehaviorEnabled;
+		return unit.getDefaultBehavior();
 	}
 
 	@Override

@@ -27,8 +27,18 @@ import hillbillies.helper.Helper;
  *        unit. | isValidStaminapoints(getStaminapoints())
  * @invar The orientation of each unit must be a valid orientation for any unit.
  *        | isValidOrientation(getOrientation())
- * @invar The isMoving of each unit must be a valid isMoving for any unit. |
+ * @invar The isMoving of each unit must be either true or false for any unit. |
  *        isValidIsMoving(getIsMoving())
+ * @invar The timenotresting of each unit must be a valid timenotresting for any
+ *        unit. | isValidTimeNotResting(getTimeNotResting())
+ * @invar The wantToAttack of each unit must be either true or false for any
+ *        unit. | isValidWantToAttack(getWantToAttack())
+ * @invar The defender of each unit must be a valid defender for any unit. |
+ *        isValidDefender(getDefender())
+ * @invar The pickedUpBoulder of each unit must be a valid pickedUpBoulder for
+ *        any unit. | isValidPickedUpBoulder(getPickedUpBoulder())
+ * @invar The pickedUpLog of each unit must be a valid pickedUpLog for any
+ *        unit. | isValidPickedUpLog(getPickedUpLog())
  * 
  * @author Pieter and Matthias
  *
@@ -178,8 +188,8 @@ public class Unit {
 	 */
 	public static boolean isValidName(String name) {
 
-		if (Pattern.matches("[a-zA-Z.\\s\\'\\\"]*", name) && Character.isUpperCase(name.codePointAt(0))
-				&& name.length() > 1)
+		if (name.length() > 1 && Pattern.matches("[a-zA-Z\\s\\'\\\"]*", name)
+				&& Character.isUpperCase(name.codePointAt(0)))
 			return true;
 
 		return false;
@@ -234,20 +244,25 @@ public class Unit {
 	 */
 	public Unit(int weight, int strength, int agility, int toughness) {
 
-		if (strength < 25 || strength > 100)
+		if (strength < 25 || strength > 100) {
 			strength = 25 + Helper.randInt(0, 75);
+		}
+		System.out.println("strength: " + strength);
 		setStrength(strength);
 
-		if (agility < 25 || agility > 100)
+		if (agility < 25 || agility > 100) {
 			agility = 25 + Helper.randInt(0, 75);
+		}
 		setAgility(agility);
 
-		if (weight < 25 || weight > 100 || weight < (strength + agility) / 2)
+		if (weight < 25 || weight > 100 || weight < (strength + agility) / 2) {
 			weight = ((strength + agility) / 2) + Helper.randInt(0, 100 - ((strength + agility) / 2));
+		}
 		setWeight(weight);
 
-		if (toughness < 25 || toughness > 100)
+		if (toughness < 25 || toughness > 100) {
 			toughness = 25 + Helper.randInt(0, 75);
+		}
 		setToughness(toughness);
 	}
 
@@ -572,7 +587,7 @@ public class Unit {
 	 */
 	@Raw
 	public void setStaminapoints(int staminapoints) {
-		//System.out.println("staminaset: " + staminapoints);
+		// System.out.println("staminaset: " + staminapoints);
 		assert isValidStaminapoints(staminapoints, this.getWeight(), this.getToughness());
 		this.staminapoints = staminapoints;
 	}
@@ -583,25 +598,24 @@ public class Unit {
 	private int staminapoints;
 
 	public void staminadrain(double dt) {
-//		System.out.println("dt: " + dt);
-//		if (dt >= 0.1) {
-//			System.out.println("staminadr: "+this.getStaminapoints());
-//			this.setStaminapoints(this.getStaminapoints() - 1);
-//			dt += -0.1;
-//		}
-//		float time = (float) (getStaminaTime() - dt);
-//
-//		if (time <= 0) {
-//			this.setStaminapoints(this.getStaminapoints() - 1);
-//			setStaminaTime(0.1f);
-//		} else {
-//			setStaminaTime(time);
-//		}
-		
-	
+		// System.out.println("dt: " + dt);
+		// if (dt >= 0.1) {
+		// System.out.println("staminadr: "+this.getStaminapoints());
+		// this.setStaminapoints(this.getStaminapoints() - 1);
+		// dt += -0.1;
+		// }
+		// float time = (float) (getStaminaTime() - dt);
+		//
+		// if (time <= 0) {
+		// this.setStaminapoints(this.getStaminapoints() - 1);
+		// setStaminaTime(0.1f);
+		// } else {
+		// setStaminaTime(time);
+		// }
+
 		float time = (float) (getStaminaTime() + dt);
-		while (time>0.1f){
-			this.setStaminapoints(this.getStaminapoints()-1);
+		while (time > 0.1f) {
+			this.setStaminapoints(this.getStaminapoints() - 1);
 			time -= 0.1f;
 		}
 		setStaminaTime(time);
@@ -717,73 +731,147 @@ public class Unit {
 	 * Variable registering the orientation of this unit.
 	 */
 	private float orientation = (float) Math.PI / 2;
+
+	/**
+	 * Return the timenotresting of this unit.
+	 */
+	@Basic
+	@Raw
+	public double getTimeNotResting() {
+		return this.timenotresting;
+	}
+
+	/**
+	 * Check whether the given timenotresting is a valid timenotresting for any
+	 * unit.
+	 * 
+	 * @param timenotresting
+	 *            The timenotresting to check.
+	 * @return | result == true if timenotresting >= 0 and timenotresting <=
+	 *         180.2.
+	 */
+	public static boolean isValidTimeNotResting(double timenotresting) {
+		if (timenotresting >= 0 && timenotresting <= 180.2) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Set the timenotresting of this unit to the given timenotresting.
+	 * 
+	 * @param timenotresting
+	 *            The new timenotresting for this unit.
+	 * @post The timenotresting of this new unit is equal to the given
+	 *       timenotresting. | new.getTimeNotResting() == timenotresting
+	 * @throws IllegalArgumentException
+	 *             The given timenotresting is not a valid timenotresting for
+	 *             any unit. | ! isValidTimeNotResting(getTimeNotResting())
+	 */
+	@Raw
+	public void setTimeNotResting(double timenotresting) throws IllegalArgumentException {
+		if (!isValidTimeNotResting(timenotresting))
+			throw new IllegalArgumentException();
+		this.timenotresting = timenotresting;
+	}
+
+	/**
+	 * Variable registering the time since the unit last rested.
+	 */
 	private double timenotresting;
 
+	/**
+	 * Update the program dt (<= 0.2) seconds. - Checks whether unit needs to
+	 * fall. If he needs to fall, he starts moving to the cube underneath him. -
+	 * If the unit is resting, he will recover his hitpoints and then his
+	 * staminapoints until he is fully recovered. - If it has been 3 minutes or
+	 * longer since the unit last rested and he isn't falling, he starts
+	 * resting. - If defaultbehavior is enabled for the unit and he isn't doing
+	 * anything, he gets assigned a new task. - If the unit is attacking another
+	 * unit, he will do this for 1 second. - If the unit is working, he will do
+	 * this for 500/strength seconds. - If the unit is moving, his position is
+	 * updated. - If the unit is sprinting and his staminapoints reach 0, the
+	 * unit will stop sprinting. - If the unit is sprinting his staminapoints
+	 * will drain 1 every 0.1 seconds. - If the unit reaches the next cube and
+	 * he wanted to work or attack there, he will do so. - If the unit reaches
+	 * the next cube but it is not his destination, he will move to the next
+	 * cube. - The unit gains 1 experience point per cube he moves. - The unit
+	 * loses 1 hitpoint per z-level he falls.
+	 * 
+	 * @param dt
+	 *            The time the game advances in seconds.
+	 * @throws IllegalArgumentException
+	 *             Thrown if dt is larger than 0.2.
+	 */
 	public void advanceTime(double dt) throws IllegalArgumentException {
 
-		if (!this.getWorld().hasImpassableNeighbour(this.getPosition()[0], this.getPosition()[1], this.getPosition()[2])
-				&& !isFalling) {
-			this.setIsFalling(true);
-			moveToAdjecent(0, 0, -1);
+		if (dt > 0.2) {
+			throw new IllegalArgumentException();
 		} else {
-			if (this.getIsResting()) {
-				doRest(dt);
-				timenotresting = 0;
+			if (!this.getWorld().hasImpassableNeighbour(this.getPosition()[0], this.getPosition()[1],
+					this.getPosition()[2]) && !this.getIsFalling()) {
+				this.setIsFalling(true);
+				moveToAdjecent(0, 0, -1);
 			} else {
-				timenotresting += dt;
-				if (timenotresting >= 180 && !this.getIsFalling()) {
-					rest();
-				}
-				if (defaultBehaviorEnabled && !this.getIsAttacking() && !this.getIsMoving() && !this.getIsResting()
-						&& !this.getIsWorking()) {
-					startDefaultBehavior();
-				}
-				if (this.getIsAttacking()) {
-					doAttack(dt, this.defender);
-				}
-				if (this.getIsWorking()) {
-					doWork(dt);
-				}
-				if (this.getIsMoving()) {
-					if (this.getIsSprinting()) {
-						staminadrain(dt); // TODO functie skryven
-						if (this.getStaminapoints() <= 0) {
-							this.setIsSprinting(false);
-						}
+				if (this.getIsResting()) {
+					doRest(dt);
+					this.setTimeNotResting(0);
+				} else {
+					this.setTimeNotResting(this.getTimeNotResting() + dt);
+					if (this.getTimeNotResting() >= 180 && !this.getIsFalling()) {
+						rest();
 					}
-					this.updatePosition(dt);
-					if (this.moveToAdjecentTargetReached()) {
-						this.setIsMoving(false);
-						if (this.getIsFalling()) {
-							this.setHitpoints(this.getHitpoints() - 10);
-							this.setIsFalling(false);
-						} else {
-							this.setExperience(this.getExperience() + 1);
-							if (isMovingTo) {
-								if (this.moveToTargetReached()) {
-									isMovingTo = false;// TODO setter maken
-									// System.out.println("----------------
-									// moveto
-									// beeindigd ----------------------");
-									if (this.wantToWork) {
-										work();
-									}
-									if (this.wantToAttack) {
-										attack(this, this.defender);
-									}
-								} else {
-					
-									if (inQ(Q, Helper.doubleArrayToIntArray(this.getPosition()))) {
-										this.getNextMoveToAdjecentFromQ(this.getPosition());
-									} else {
-										moveTo(Helper.doubleArrayToIntArray(target));
-									}
-								}
-
+					if (this.getDefaultBehavior() && !this.getIsAttacking() && !this.getIsMoving()
+							&& !this.getIsResting() && !this.getIsWorking()) {
+						startDefaultBehavior();
+					}
+					if (this.getIsAttacking()) {
+						doAttack(dt, this.defender);
+					}
+					if (this.getIsWorking()) {
+						doWork(dt);
+					}
+					if (this.getIsMoving()) {
+						if (this.getIsSprinting()) {
+							staminadrain(dt);
+							if (this.getStaminapoints() <= 0) {
+								this.setIsSprinting(false);
 							}
 						}
-					}
+						this.updatePosition(dt);
+						if (this.moveToAdjecentTargetReached()) {
+							this.setIsMoving(false);
+							if (this.getIsFalling()) {
+								this.setHitpoints(this.getHitpoints() - 10);
+								this.setIsFalling(false);
+							} else {
+								this.setExperience(this.getExperience() + 1);
+								if (isMovingTo) {
+									if (this.moveToTargetReached()) {
+										isMovingTo = false;// TODO setter maken
+										// System.out.println("----------------
+										// moveto
+										// beeindigd ----------------------");
+										if (this.wantToWork) {
+											work();
+										}
+										if (this.getWantToAttack()) {
+											attack(this, this.defender);
+										}
+									} else {
 
+										if (inQ(Q, Helper.doubleArrayToIntArray(this.getPosition()))) {
+											this.getNextMoveToAdjecentFromQ(this.getPosition());
+										} else {
+											moveTo(Helper.doubleArrayToIntArray(target));
+										}
+									}
+
+								}
+							}
+						}
+
+					}
 				}
 			}
 		}
@@ -1121,9 +1209,7 @@ public class Unit {
 	}
 
 	private void doRest(double dt) {
-		// System.out.println("dorest");
 		float time = getRestTime() - (float) dt;
-		// System.out.println("time" + time);
 		if (time <= 0) {
 			if (hitpoints < getMaxPoints()) {
 				hitpoints += 1;
@@ -1224,7 +1310,8 @@ public class Unit {
 		newPosition[0] += dx;
 		newPosition[1] += dy;
 		newPosition[2] += dz;
-		//System.out.println("x: " + newPosition[0] + "y: " + newPosition[1] + "z: " + newPosition[2]);
+		// System.out.println("x: " + newPosition[0] + "y: " + newPosition[1] +
+		// "z: " + newPosition[2]);
 
 		if (!isValidTarget(newPosition))
 			throw new IllegalArgumentException();
@@ -1572,13 +1659,9 @@ public class Unit {
 		if (time <= 0) {
 
 			int experience = 10;
-			System.out.println("boulder: " + this.getCarryingBoulder() + " log: " + this.getCarryingLog());
-			System.out.println("boulder workpos: " + this.getWorld().getBoulder(workPosition));
-			System.out.println("passable: "
-					+ this.getWorld().isPassable(this.workPosition[0], this.workPosition[1], this.workPosition[2]));
+
 			if ((this.getCarryingBoulder() || this.getCarryingLog())
 					&& this.getWorld().isPassable(this.workPosition[0], this.workPosition[1], this.workPosition[2])) {
-				System.out.println("drop");
 				this.drop();
 
 			} else if (this.getWorld().getCubeType(x, y, z) == 0 && itemsAvailable(workPosition)) {
@@ -1589,14 +1672,14 @@ public class Unit {
 			} else if (this.getWorld().getBoulder(workPosition) != null) {
 
 				Boulder boulder = this.getWorld().getBoulder(workPosition);
-				this.pickedUpBoulder = boulder;
+				this.setPickedUpBoulder(boulder);
 				boulder.setIsCarriedBy(this);
 				this.setTotalWeight(this.getWeight() + boulder.getWeight());
 
 			} else if (this.getWorld().getLog(workPosition) != null) {
 
 				Log log = this.getWorld().getLog(workPosition);
-				this.pickedUpLog = log;
+				this.setPickedUpLog(log);
 				log.setIsCarriedBy(this);
 				this.setTotalWeight(this.getWeight() + log.getWeight());
 
@@ -1624,7 +1707,93 @@ public class Unit {
 		}
 	}
 
+	/**
+	 * Return the pickedUpBoulder of this unit.
+	 */
+	@Basic
+	@Raw
+	public Boulder getPickedUpBoulder() {
+		return this.pickedUpBoulder;
+	}
+
+	/**
+	 * Check whether the given pickedUpBoulder is a valid pickedUpBoulder for
+	 * any unit.
+	 * 
+	 * @param pickedUpBoulder
+	 *            The pickedUpBoulder to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidPickedUpBoulder(Boulder pickedUpBoulder) {
+		//TODO isValid
+		return true;
+	}
+
+	/**
+	 * Set the pickedUpBoulder of this unit to the given pickedUpBoulder.
+	 * 
+	 * @param pickedUpBoulder
+	 *            The new pickedUpBoulder for this unit.
+	 * @post The pickedUpBoulder of this new unit is equal to the given
+	 *       pickedUpBoulder. | new.getPickedUpBoulder() == pickedUpBoulder
+	 * @throws IllegalArgumentException
+	 *             The given pickedUpBoulder is not a valid boulder for any
+	 *             unit. | ! isValidPickedUpBoulder(getPickedUpBoulder())
+	 */
+	@Raw
+	public void setPickedUpBoulder(Boulder pickedUpBoulder) throws IllegalArgumentException {
+		if (!isValidPickedUpBoulder(pickedUpBoulder))
+			throw new IllegalArgumentException();
+		this.pickedUpBoulder = pickedUpBoulder;
+	}
+
+	/**
+	 * Variable registering the boulder that the unit has picked up.
+	 */
 	private Boulder pickedUpBoulder;
+
+	/**
+	 * Return the pickedUpLog of this unit.
+	 */
+	@Basic
+	@Raw
+	public Log getPickedUpLog() {
+		return this.pickedUpLog;
+	}
+
+	/**
+	 * Check whether the given pickedUpLog is a valid pickedUpLog for any unit.
+	 * 
+	 * @param pickedUpLog
+	 *            The pickedUpLog to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidPickedUpLog(Log pickedUpLog) {
+		//TODO isValid
+		return true;
+	}
+
+	/**
+	 * Set the pickedUpLog of this unit to the given pickedUpLog.
+	 * 
+	 * @param pickedUpLog
+	 *            The new pickedUpLog for this unit.
+	 * @post The pickedUpLog of this new unit is equal to the given pickedUpLog.
+	 *       | new.getPickedUpLog() == pickedUpLog
+	 * @throws IllegalArgumentException
+	 *             The given pickedUpLog is not a valid log for any
+	 *             unit. | ! isValidPickedUpLog(getPickedUpLog())
+	 */
+	@Raw
+	public void setPickedUpLog(Log pickedUpLog) throws IllegalArgumentException {
+		if (!isValidPickedUpLog(pickedUpLog))
+			throw new IllegalArgumentException();
+		this.pickedUpLog = pickedUpLog;
+	}
+
+	/**
+	 * Variable registering the log that the unit has picked up.
+	 */
 	private Log pickedUpLog;
 
 	/**
@@ -1641,7 +1810,7 @@ public class Unit {
 	 * 
 	 * @param work
 	 *            time The work time to check.
-	 * @return | result ==
+	 * @return | result == true if the given workTime <= 500 / (float) strength)
 	 */
 	public static boolean isValidWorkTime(float workTime, int strength) {
 		if (workTime <= 500 / (float) strength) {
@@ -1673,6 +1842,14 @@ public class Unit {
 	 */
 	private float workTime;
 
+	/**
+	 * Check if there is a boulder and/or a log on the given position
+	 * 
+	 * @param position
+	 *            The position to check
+	 * @return result == true if there is a boulder and/or a log at the given
+	 *         position
+	 */
 	private boolean itemsAvailable(int[] position) {
 		if (this.getWorld().getBoulder(position) != null && this.getWorld().getLog(position) != null) {
 			return true;
@@ -1681,30 +1858,55 @@ public class Unit {
 		}
 	}
 
+	/**
+	 * Drop the log or boulder that the unit is carrying.
+	 */
 	private void drop() {
 		if (this.getCarryingBoulder()) {
 			System.out.println("boulderdrop");
 			this.setCarryingBoulder(false);
-			this.pickedUpBoulder.setPosition(Helper.getCenterOfPosition(this.workPosition));
-			this.pickedUpBoulder.setIsCarriedBy(null);
-			this.setTotalWeight(this.getTotalWeight() - this.pickedUpBoulder.getWeight());
-			this.pickedUpBoulder = null;
+			this.getPickedUpBoulder().setPosition(Helper.getCenterOfPosition(this.workPosition));
+			this.getPickedUpBoulder().setIsCarriedBy(null);
+			this.setTotalWeight(this.getTotalWeight() - this.getPickedUpBoulder().getWeight());
+			this.setPickedUpBoulder(null);
 		}
 		if (this.getCarryingLog()) {
 			this.setCarryingLog(false);
-			this.pickedUpLog.setPosition(Helper.getCenterOfPosition(this.workPosition));
-			this.pickedUpLog.setIsCarriedBy(null);
-			this.setTotalWeight(this.getTotalWeight() - this.pickedUpLog.getWeight());
-			this.pickedUpLog = null;
+			this.getPickedUpLog().setPosition(Helper.getCenterOfPosition(this.workPosition));
+			this.getPickedUpLog().setIsCarriedBy(null);
+			this.setTotalWeight(this.getTotalWeight() - this.getPickedUpLog().getWeight());
+			this.setPickedUpLog(null);
 		}
 	}
 
+	/**
+	 * Return the distance between two positions. (int)
+	 * 
+	 * @param dx
+	 *            Difference between two X coordinates
+	 * @param dy
+	 *            Difference between two Y coordinates
+	 * @param dz
+	 *            Difference between two Z coordinates
+	 * @return The square root of the sum of dx, dy and dz squared
+	 */
 	public double getDistance(int dx, int dy, int dz) {// TODO nr helper
 
 		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
 
 	}
 
+	/**
+	 * Return the distance between two positions. (double)
+	 * 
+	 * @param dx
+	 *            Difference between two X coordinates
+	 * @param dy
+	 *            Difference between two Y coordinates
+	 * @param dz
+	 *            Difference between two Z coordinates
+	 * @return The square root of the sum of dx, dy and dz squared
+	 */
 	public double getDistance(double dx, double dy, double dz) {// TODO nr
 																// helper
 
@@ -1712,8 +1914,21 @@ public class Unit {
 
 	}
 
+	/**
+	 * Variable registering the distance between two positions.
+	 */
 	private double distance;
 
+	/**
+	 * Return the distance between two given positions.
+	 * 
+	 * @param position1
+	 *            The first position
+	 * @param position2
+	 *            The second position
+	 * @return The square root of the sum of the difference between the two x, y
+	 *         and z coordinates squared
+	 */
 	public double getDisctanceBetweenPositions(double[] position1, double[] position2) {// TODO
 																						// nr
 																						// helper
@@ -1723,6 +1938,11 @@ public class Unit {
 
 	}
 
+	/**
+	 * Return the velocity of the unit.
+	 * 
+	 * @return velocity of the unit
+	 */
 	public double[] getVelocity() {
 
 		double[] velocity = new double[3];
@@ -1735,8 +1955,11 @@ public class Unit {
 
 	}
 
+	/**
+	 * Start default behavior and select random activity for the unit to do.
+	 */
 	public void startDefaultBehavior() {
-		defaultBehaviorEnabled = true;
+		this.setDefaultBehavior(true);
 		int rand = Helper.randInt(0, 3);
 		if (rand == 0) {
 			int[] randomPosition = Helper.getRandomPosition(this.getWorld().getNbCubesX(),
@@ -1749,12 +1972,7 @@ public class Unit {
 			this.setIsSprinting(Helper.randBoolean());
 
 		} else if (rand == 1) {
-			this.workAt((int) this.getPosition()[0], (int) this.getPosition()[1], (int) this.getPosition()[2]); // TODO
-																												// work
-																												// at
-																												// random
-																												// VALID
-																												// position
+			this.workAt((int) this.getPosition()[0], (int) this.getPosition()[1], (int) this.getPosition()[2]);
 
 		} else if (rand == 2) {
 			defender = this;
@@ -1769,6 +1987,11 @@ public class Unit {
 
 	}
 
+	/**
+	 * Return a random unit of the unit's world
+	 * 
+	 * @return A random unit of the unit's world
+	 */
 	private Unit selectRandomUnit() {
 		int rand = Helper.randInt(0, this.getWorld().getUnits().size() - 1);
 		int i = 0;
@@ -1781,43 +2004,164 @@ public class Unit {
 		return this;
 	}
 
-	public void stopDefaultBehavior() {
-		defaultBehaviorEnabled = false;
-	}
-
+	/**
+	 * Enable or disable the default behavior of this unit.
+	 * 
+	 * @param defaultBehavior
+	 *            The new state of the default behavior for this unit.
+	 * @post The default behavior state of this new unit is equal to the given
+	 *       state. | new.getDefaultBehavior() == defaultBehavior
+	 */
+	@Raw
 	public void setDefaultBehavior(boolean defaultBehavior) {
 		this.defaultBehaviorEnabled = defaultBehavior;
 	}
 
+	/**
+	 * Return whether default behavior of this unit is enabled.
+	 */
+	@Basic
+	@Raw
+	public boolean getDefaultBehavior() {
+		return this.defaultBehaviorEnabled;
+	}
+
+	/**
+	 * Variable registering whether the default behavior of this unit is
+	 * enabled.
+	 */
 	public boolean defaultBehaviorEnabled = false;
 
+	/**
+	 * Set the defender of the attack and check if he is close enough to attack.
+	 * Otherwise, move to the defender.
+	 * 
+	 * @param attacker
+	 *            The unit that attacks
+	 * @param defender
+	 *            The unit that defends
+	 */
 	public void attack(Unit attacker, Unit defender) {
-		this.wantToAttack = false;
-		if (attacker.getFaction() != defender.getFaction()) {
-			double[] attackerpos = attacker.getPosition();
-			double[] defenderpos = defender.getPosition();
-			// int[] defendercubepos = new int[3];
-			// for (int i = 0; i < 3; ++i)
-			// defendercubepos[i] = (int) defenderpos[i];
-			double dx = attackerpos[0] - defenderpos[0];
-			double dy = attackerpos[1] - defenderpos[1];
-			double dz = attackerpos[2] - defenderpos[2];
-			this.defender = defender;
-			if (getDistance(dx, dy, dz) <= Math.sqrt(2)) {
-				setAttackOrientation(attackerpos, defenderpos, defender);
-				this.setIsAttacking(true);
-			} else {
-				this.moveTo(Helper.doubleArrayToIntArray(defender.getPosition()));
-				this.wantToAttack = true;
-			}
+		this.setWantToAttack(false);
+		this.setDefender(defender);
+		double[] attackerpos = attacker.getPosition();
+		double[] defenderpos = defender.getPosition();
+		double dx = attackerpos[0] - defenderpos[0];
+		double dy = attackerpos[1] - defenderpos[1];
+		double dz = attackerpos[2] - defenderpos[2];
+		if (getDistance(dx, dy, dz) <= Math.sqrt(2)) {
+			setAttackOrientation(attackerpos, defenderpos, defender);
+			this.setIsAttacking(true);
+		} else {
+			this.moveTo(Helper.doubleArrayToIntArray(defender.getPosition()));
+			this.setWantToAttack(true);
 		}
 
 	}
 
+	/**
+	 * Return whether this unit wants to attack.
+	 */
+	@Basic
+	@Raw
+	public boolean getWantToAttack() {
+		return this.wantToAttack;
+	}
+
+	/**
+	 * Check whether the given wanttoattack is a valid wanttoattack for any
+	 * unit.
+	 * 
+	 * @param wanttoattack
+	 *            The wanttoattack to check.
+	 * @return | result == true if wanttoattack is true or false
+	 */
+	public static boolean isValidWantToAttack(boolean wanttoattack) {
+		if (wanttoattack == true || wanttoattack == false) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Set the wanttoattack of this unit to the given wanttoattack.
+	 * 
+	 * @param wanttoattack
+	 *            The new wanttoattack for this unit.
+	 * @post The wanttoattack of this new unit is equal to the given
+	 *       wanttoattack. | new.getWantToAttack() == wanttoattack
+	 * @throws IllegalArgumentException
+	 *             The given wanttoattack is not a valid wanttoattack for any
+	 *             unit. | ! isValidWantToAttack(getWantToAttack())
+	 */
+	@Raw
+	public void setWantToAttack(boolean wanttoattack) throws IllegalArgumentException {
+		if (!isValidWantToAttack(wanttoattack))
+			throw new IllegalArgumentException();
+		this.wantToAttack = wanttoattack;
+	}
+
+	/**
+	 * Variable registering the wanttoattack of this unit.
+	 */
 	private boolean wantToAttack = false;
 
+	/**
+	 * Return the defender of this unit.
+	 */
+	@Basic
+	@Raw
+	public Unit getDefender() {
+		return this.defender;
+	}
+
+	/**
+	 * Check whether the given defender is a valid defender for any unit.
+	 * 
+	 * @param defender
+	 *            The defender to check.
+	 * @return | result == true if the attacker and defender belong to different
+	 *         factions
+	 */
+	public static boolean isValidDefender(Unit attacker, Unit defender) {
+		if (attacker.getFaction() != defender.getFaction()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Set the defender of this unit to the given defender.
+	 * 
+	 * @param defender
+	 *            The new defender of this unit's attack.
+	 * @post The defender of this new unit's attack is equal to the given
+	 *       defender. | new.getDefender() == defender
+	 * @throws IllegalArgumentException
+	 *             The given defender is not a valid defender for any unit. |
+	 *             !isValidDefender(getDefender())
+	 */
+	@Raw
+	public void setDefender(Unit defender) throws IllegalArgumentException {
+		if (!isValidDefender(this, defender))
+			throw new IllegalArgumentException();
+		this.defender = defender;
+	}
+
+	/**
+	 * Variable registering the defender during an attack of this unit.
+	 */
 	private Unit defender;
 
+	/**
+	 * When the attacker has been attacking for 1 second, the defender tries to
+	 * defend himself.
+	 * 
+	 * @param dt
+	 *            The period of time
+	 * @param defender
+	 *            The unit that defends
+	 */
 	private void doAttack(double dt, Unit defender) {
 		float time = getAttackTime() - (float) dt;
 		if (time <= 0) {
@@ -1829,6 +2173,19 @@ public class Unit {
 		}
 	}
 
+	/**
+	 * The orientation of the attacker and defender gets calculated to face each
+	 * other
+	 * 
+	 * @param attackerpos
+	 *            The position of the attacker
+	 * @param defenderpos
+	 *            The position of the defender
+	 * @param defender
+	 *            The unit that defends
+	 * @post The attacker faces the defender.
+	 * @post The defender faces the attacker.
+	 */
 	private void setAttackOrientation(double[] attackerpos, double[] defenderpos, Unit defender) {
 
 		this.setOrientation((float) Math.atan2((defenderpos[1] - attackerpos[1]), (defenderpos[0] - attackerpos[0])));
@@ -1836,6 +2193,11 @@ public class Unit {
 				(float) Math.atan2((attackerpos[1] - defenderpos[1]), (attackerpos[0] - defenderpos[0])));
 	}
 
+	/**
+	 * The attacked unit tries to defend an attack dodging or blocking
+	 * 
+	 * @param attacker
+	 */
 	public void defend(Unit attacker) {
 		System.out.println("defend");
 		Random random = new Random();
@@ -1854,6 +2216,9 @@ public class Unit {
 
 	}
 
+	/**
+	 * The unit moves to a random valid adjecent cube on the same z-level
+	 */
 	public void dodge() {// TODO dit kan eventueel nog aangepast worden als
 							// blijkt dat ge naar achter moet gaan ipv random
 							// beschikbare plek
@@ -1868,16 +2233,46 @@ public class Unit {
 		}
 	}
 
+	/**
+	 * Lower the hitpoints of the attacked unit
+	 * 
+	 * @param attacker
+	 *            The unit that attacks
+	 * @post The hitpoints of the attacked unit are lowered by a tenth of the
+	 *       attacker's strength |new.getHitpoints()= this.getHitpoints() -
+	 *       (int) (attacker.getStrength() / 10
+	 */
 	public void takeDamage(Unit attacker) {
 		System.out.println("take damage");
-		this.setHitpoints(this.getHitpoints() - (int) attacker.getStrength() / 10);
+		this.setHitpoints(this.getHitpoints() - (int) (attacker.getStrength() / 10));
 		System.out.println("hitpoints: " + this.getHitpoints());
 	}
 
+	/**
+	 * Calculate the dodging probability
+	 * 
+	 * @param attacker
+	 *            The unit that attacks
+	 * @param defender
+	 *            The unit that defends
+	 * @return The the probability that the defender dodges the attack | result
+	 *         == 0.20 * defender.getAgility() / attacker.getAgility()
+	 */
 	private double getDodgeProb(Unit attacker, Unit defender) {
 		return 0.20 * defender.getAgility() / attacker.getAgility();
 	}
 
+	/**
+	 * Calculate the blocking probability
+	 * 
+	 * @param attacker
+	 *            The unit that attacks
+	 * @param defender
+	 *            The unit that defends
+	 * @return The the probability that the defender blocks the attack | result
+	 *         == 0.25 * (defender.getStrength() + defender.getAgility()) | /
+	 *         (attacker.getStrength() + attacker.getAgility())
+	 */
 	private double getBlockProb(Unit attacker, Unit defender) {
 		return 0.25 * (defender.getStrength() + defender.getAgility())
 				/ (attacker.getStrength() + attacker.getAgility());
@@ -1949,7 +2344,6 @@ public class Unit {
 	 */
 	public static boolean isValidRestTime(float restTime, int toughness) {
 		if (restTime <= (40 / (float) toughness)) {
-			// System.out.println("valid");
 			return true;
 		}
 		return false;
@@ -1971,7 +2365,6 @@ public class Unit {
 		if (!isValidRestTime(restTime, this.getToughness()))
 			throw new IllegalArgumentException();
 		this.restTime = restTime;
-		// System.out.println(restTime + "rt");
 	}
 
 	/**
@@ -2009,6 +2402,8 @@ public class Unit {
 	 *            The new experience for this unit.
 	 * @post The experience of this new unit is equal to the given experience. |
 	 *       new.getExperience() == experience
+	 * @post Per 10 experience points the unit gains 1 strength, agility or
+	 *       toughness.
 	 * @throws IllegalArgumentException
 	 *             The given experience is not a valid experience for any unit.
 	 *             | ! isValidExperience(getExperience())
@@ -2018,18 +2413,23 @@ public class Unit {
 		if (!isValidExperience(experience))
 			throw new IllegalArgumentException();
 		if (this.getExperience() != experience) {
-			this.experience = experience;
-			if (experience % 10 == 0 && experience != 0) {
-				int rand = Helper.randInt(0, 2);
-				if (rand == 0) {
-					this.setStrength(this.getStrength() + 1);
+			int newExperience = experience - this.getExperience();
+			int i = 0;
+			while (i < newExperience) {
+				this.experience++;
+				if (this.getExperience() % 10 == 0) {
+					int rand = Helper.randInt(0, 2);
+					if (rand == 0) {
+						this.setStrength(this.getStrength() + 1);
+					}
+					if (rand == 1) {
+						this.setAgility(this.getAgility() + 1);
+					}
+					if (rand == 2) {
+						this.setToughness(this.getToughness() + 1);
+					}
 				}
-				if (rand == 1) {
-					this.setAgility(this.getAgility() + 1);
-				}
-				if (rand == 2) {
-					this.setToughness(this.getToughness() + 1);
-				}
+				i++;
 			}
 		}
 	}
@@ -2043,14 +2443,22 @@ public class Unit {
 	 * Terminate this unit.
 	 *
 	 * @post This unit is terminated. | new.isTerminated()
-	 * @post ... | ...
+	 * @post The unit drops the item he is carrying.
+	 * @post If the unit belonged to a world, the unit is removed from that
+	 *       world.
+	 * @post If the unit belonged to a faction, the unit is removed from that
+	 *       faction.
 	 */
 	public void terminate() {
 		System.out.println("terminate");
 		this.drop();
-		this.getWorld().removeUnit(this);
-		this.getFaction().removeUnit(this);
-		this.setFaction(null);
+		if (this.getWorld() != null) {
+			this.getWorld().removeUnit(this);
+		}
+		if (this.getFaction() != null) {
+			this.getFaction().removeUnit(this);
+			this.setFaction(null);
+		}
 		this.isTerminated = true;
 
 	}
@@ -2091,7 +2499,7 @@ public class Unit {
 	 * 
 	 * @param world
 	 *            The world to check.
-	 * @return | result ==
+	 * @return | result == true if the world isn't terminated
 	 */
 	public static boolean isValidWorld(World world) {
 		if (!world.getIsTerminated())
@@ -2181,7 +2589,7 @@ public class Unit {
 	 * 
 	 * @param carryingBoulder
 	 *            The carryingBoulder to check.
-	 * @return | result ==
+	 * @return | result == true if carryingBoulder is either true or false
 	 */
 	public static boolean isValidCarryingBoulder(boolean carryingBoulder) {
 		if (carryingBoulder == true || carryingBoulder == false) {
@@ -2227,7 +2635,7 @@ public class Unit {
 	 * 
 	 * @param carryingLog
 	 *            The carryingLog to check.
-	 * @return | result ==
+	 * @return | result == true if carryingLog is either true or false
 	 */
 	public static boolean isValidCarryingLog(boolean carryingLog) {
 		if (carryingLog == true || carryingLog == false) {

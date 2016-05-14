@@ -149,7 +149,7 @@ public class Facade implements IFacade {
 	@Override
 	public boolean isDefaultBehaviorEnabled(Unit unit) throws ModelException {
 
-		return unit.defaultBehaviorEnabled;
+		return unit.getDefaultBehavior();
 	}
 
 	@Override
