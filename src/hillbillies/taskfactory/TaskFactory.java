@@ -2,213 +2,223 @@ package hillbillies.taskfactory;
 
 import java.util.List;
 
+import expressions.AndExpression;
+import expressions.BooleanExpression;
+import expressions.Expression;
+import expressions.FalseExpression;
+import expressions.NotExpression;
+import expressions.OrExpression;
+import expressions.TrueExpression;
+import hillbillies.expressions.*;
+import hillbillies.model.Task;
 import hillbillies.part3.programs.ITaskFactory;
 import hillbillies.part3.programs.SourceLocation;
+import hillbillies.statements.AssignStatement;
+import hillbillies.statements.IfStatement;
+import hillbillies.statements.WhileStatement;
+import statements.Statement;
 
-public class TaskFactory<E, S, T> implements ITaskFactory<E, S, T> {
+public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task> {
 
 	@Override
-	public List<T> createTasks(String name, int priority, S activity, List<int[]> selectedCubes) {
-		// TODO Auto-generated method stub
+	public List<Task> createTasks(String name, int priority, Statement activity, List<int[]> selectedCubes) {
+
 		return null;
 	}
 
 	@Override
-	public S createAssignment(String variableName, E value, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Statement createAssignment(String variableName, Expression value, SourceLocation sourceLocation) {
+
+		return new AssignStatement(variableName, value, sourceLocation);
+	}
+
+	@Override
+	public Statement createWhile(Expression condition, Statement body, SourceLocation sourceLocation) {
+
+		return new WhileStatement(condition, body, sourceLocation);
+	}
+
+	@Override
+	public Statement createIf(Expression condition, Statement ifBody, Statement elseBody,
+			SourceLocation sourceLocation) {
+
+		return new IfStatement(condition,ifBody,elseBody,sourceLocation);
+	}
+
+	@Override
+	public Statement createBreak(SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public S createWhile(E condition, S body, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Statement createPrint(Expression value, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public S createIf(E condition, S ifBody, S elseBody, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Statement createSequence(List<Statement> statements, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public S createBreak(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Statement createMoveTo(Expression position, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public S createPrint(E value, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Statement createWork(Expression position, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public S createSequence(List<S> statements, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Statement createFollow(Expression unit, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public S createMoveTo(E position, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Statement createAttack(Expression unit, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public S createWork(E position, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createReadVariable(String variableName, SourceLocation sourceLocation) {
+
+		return new ReadExpression(variableName,sourceLocation);
+	}
+
+	@Override
+	public Expression createIsSolid(Expression position, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public S createFollow(E unit, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression createIsPassable(Expression position, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public S createAttack(E unit, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression createIsFriend(Expression unit, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createReadVariable(String variableName, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression createIsEnemy(Expression unit, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createIsSolid(E position, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression createIsAlive(Expression unit, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createIsPassable(E position, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression createCarriesItem(Expression unit, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createIsFriend(E unit, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createNot(Expression expression, SourceLocation sourceLocation) {
+
+		return new NotExpression((BooleanExpression)expression, sourceLocation);
+	}
+
+	@Override
+	public Expression<?> createAnd(Expression left, Expression right, SourceLocation sourceLocation) {
+
+		return new AndExpression((BooleanExpression) left,(BooleanExpression)  right, sourceLocation);
+	}
+
+	@Override
+	public Expression<?> createOr(Expression<?> left, Expression<?> right, SourceLocation sourceLocation) {
+
+		return new OrExpression((BooleanExpression) left,(BooleanExpression) right,sourceLocation);
+	}
+
+	@Override
+	public Expression<?> createHerePosition(SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createIsEnemy(E unit, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createLogPosition(SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createIsAlive(E unit, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createBoulderPosition(SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createCarriesItem(E unit, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createWorkshopPosition(SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createNot(E expression, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createSelectedPosition(SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createAnd(E left, E right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createNextToPosition(Expression position, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createOr(E left, E right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createLiteralPosition(int x, int y, int z, SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createHerePosition(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createThis(SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createLogPosition(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createFriend(SourceLocation sourceLocation) {
+
 		return null;
 	}
 
 	@Override
-	public E createBoulderPosition(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createEnemy(SourceLocation sourceLocation) {
 		return null;
 	}
 
 	@Override
-	public E createWorkshopPosition(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
+	public Expression<?> createAny(SourceLocation sourceLocation) {
 		return null;
 	}
 
 	@Override
-	public E createSelectedPosition(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<?> createTrue(SourceLocation sourceLocation) {
+		return new TrueExpression(sourceLocation);
 	}
 
 	@Override
-	public E createNextToPosition(E position, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public E createLiteralPosition(int x, int y, int z, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public E createThis(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public E createFriend(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public E createEnemy(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public E createAny(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public E createTrue(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public E createFalse(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<?> createFalse(SourceLocation sourceLocation) {
+		return new FalseExpression(sourceLocation);
 	}
 
 

@@ -15,14 +15,17 @@ import hillbillies.model.World;
 import hillbillies.part2.facade.IFacade;
 import hillbillies.part2.listener.TerrainChangeListener;
 import hillbillies.part3.programs.ITaskFactory;
+import hillbillies.taskfactory.TaskFactory;
 import ogp.framework.util.ModelException;
 
 public class Facade implements hillbillies.part3.facade.IFacade {
+	
+	//TODO exc wrappen
 
 	@Override
 	public ITaskFactory<?, ?, Task> createTaskFactory() {
 		// TODO Auto-generated method stub
-		return null;
+		return new TaskFactory();
 	}
 
 	@Override
@@ -34,49 +37,44 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 	@Override
 	public Scheduler getScheduler(Faction faction) throws ModelException {
 		// TODO Auto-generated method stub
-		return null;
+		return faction.getScheduler();
 	}
 
 	@Override
 	public void schedule(Scheduler scheduler, Task task) throws ModelException {
-		// TODO Auto-generated method stub
+		scheduler.addTask(task);
 
 	}
 
 	@Override
 	public void replace(Scheduler scheduler, Task original, Task replacement) throws ModelException {
-		// TODO Auto-generated method stub
+		scheduler.replaceTask(original, replacement);
 
 	}
 
 	@Override
 	public boolean areTasksPartOf(Scheduler scheduler, Collection<Task> tasks) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		return scheduler.areTasksPartOf(tasks);
 	}
 
 	@Override
 	public Iterator<Task> getAllTasksIterator(Scheduler scheduler) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return scheduler.getAllTasksIterator();
 	}
 
 	@Override
 	public Set<Scheduler> getSchedulersForTask(Task task) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return task.getSchedulerSet();
 	}
 
 	@Override
 	public Unit getAssignedUnit(Task task) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return task.getAssignedUnit();
 	}
 
 	@Override
 	public Task getAssignedTask(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return unit.getAssignedTask();
 	}
 
 	@Override

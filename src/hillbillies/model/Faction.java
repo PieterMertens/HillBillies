@@ -96,4 +96,73 @@ public class Faction {
 		this.unitsOfFaction.remove(unit);
 	}
 
+	/** TO BE ADDED TO CLASS HEADING
+	 * @invar  The scheduler of each Faction must be a valid scheduler for any
+	 *         Faction.
+	 *       | isValidScheduler(getScheduler())
+	 */
+
+
+/**
+ * Initialize this new Faction with given scheduler.
+ *
+ * @param  scheduler
+ *         The scheduler for this new Faction.
+ * @effect The scheduler of this new Faction is set to
+ *         the given scheduler.
+ *       | this.setScheduler(scheduler)
+ */
+public Faction(Scheduler scheduler)
+		throws IllegalArgumentException {
+	this.setScheduler(scheduler);
+}
+
+
+/**
+ * Return the scheduler of this Faction.
+ */
+@Basic @Raw
+public Scheduler getScheduler() {
+	return this.scheduler;
+}
+
+/**
+ * Check whether the given scheduler is a valid scheduler for
+ * any Faction.
+ *  
+ * @param  scheduler
+ *         The scheduler to check.
+ * @return 
+ *       | result == 
+*/
+public static boolean isValidScheduler(Scheduler scheduler) {
+	return scheduler != null;
+}
+
+/**
+ * Set the scheduler of this Faction to the given scheduler.
+ * 
+ * @param  scheduler
+ *         The new scheduler for this Faction.
+ * @post   The scheduler of this new Faction is equal to
+ *         the given scheduler.
+ *       | new.getScheduler() == scheduler
+ * @throws IllegalArgumentException
+ *         The given scheduler is not a valid scheduler for any
+ *         Faction.
+ *       | ! isValidScheduler(getScheduler())
+ */
+@Raw
+public void setScheduler(Scheduler scheduler) 
+		throws IllegalArgumentException {
+	if (! isValidScheduler(scheduler))
+		throw new IllegalArgumentException();
+	this.scheduler = scheduler;
+}
+
+/**
+ * Variable registering the scheduler of this Faction.
+ */
+private Scheduler scheduler;
+	
 }

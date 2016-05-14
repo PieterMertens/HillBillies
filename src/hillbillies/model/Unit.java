@@ -45,7 +45,6 @@ import hillbillies.helper.Helper;
  */
 public class Unit {
 
-	// TODO documentatie
 	/**
 	 * Initialize this new unit with given name, position, weight, strength,
 	 * agility and toughness and whether or not default behavior is enabled.

@@ -66,9 +66,9 @@ import org.antlr.v4.runtime.Recognizer;
  * @param T
  *            The type of Task
  */
-public class TaskParser<E, S, T> {
+public class TaskParser<Expression, Statement, Task> {
 
-	private final ITaskFactory<E, S, T> factory;
+	private final ITaskFactory<Expression, Statement, Task> factory;
 
 	private final List<String> errors = new ArrayList<>();
 

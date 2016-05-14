@@ -9,6 +9,21 @@ import ogp.framework.util.Util;
 
 public class UnitTest {
 	
+	/**
+	 * Helper method to advance time for the given unit by some time.
+	 * 
+	 * @param time
+	 *            The time, in seconds, to advance.
+	 * @param step
+	 *            The step size, in seconds, by which to advance.
+	 */
+	private static void advanceTimeFor(Unit unit, double time, double step) throws IllegalArgumentException {
+		int n = (int) (time / step);
+		for (int i = 0; i < n+1; i++)
+			unit.advanceTime(step);
+		unit.advanceTime(time - n * step);
+	}
+	
 	//NAME TESTS
 
 	@Test
@@ -120,6 +135,9 @@ public class UnitTest {
 		Unit unit = new Unit("Homer");
 		world.addUnit(unit);
 		unit.setPosition(new double[]{1.5,1.5,2.5});
+		Assert.assertEquals(1, (int) unit.getPosition()[0]);
+		Assert.assertEquals(1, (int) unit.getPosition()[1]);
+		Assert.assertEquals(2, (int) unit.getPosition()[2]);
 	}
 	
 	@Test (expected=IllegalArgumentException.class)
@@ -146,4 +164,34 @@ public class UnitTest {
 		Unit unit = new Unit("Homer");
 		unit.setPosition(new double[]{-10.5,0.5,0.5});
 	}
+	
+	//FALLING TESTS
+	
+	@Test
+	public void testUnitFallLoseHitpoints() throws IllegalArgumentException {
+		int[][][] types = new int[50][50][50];
+		types[1][1][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit(50,50,50,50);
+		world.addUnit(unit);
+		unit.setPosition(new double[]{1.5,1.5,4.5});
+		unit.setHitpoints(50);
+		advanceTimeFor(unit,100,0.2);
+		Assert.assertEquals(30, unit.getHitpoints());
+	}
+	
+	@Test
+	public void testUnitFallLowerZCoordinate() throws IllegalArgumentException {
+		int[][][] types = new int[50][50][50];
+		types[1][1][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit(50,50,50,50);
+		world.addUnit(unit);
+		unit.setPosition(new double[]{1.5,1.5,4.5});
+		unit.setHitpoints(50);
+		advanceTimeFor(unit,100,0.2);
+		Assert.assertEquals(2, (int) unit.getPosition()[2]);
+	}
+	
+	
 }
