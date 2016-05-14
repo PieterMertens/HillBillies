@@ -56,7 +56,7 @@ public abstract class RawMaterial {
 	 * @return | result ==
 	 */
 	public static boolean isValidWorld(World world) {
-		if (world != null && !world.getIsTerminated())
+		if (world == null || !world.getIsTerminated())
 			return true;
 		return false;
 	}

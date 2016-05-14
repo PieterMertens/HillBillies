@@ -2,6 +2,9 @@ package hillbillies.tests.Model;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import hillbillies.model.Boulder;
+import hillbillies.model.Log;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
 import hillbillies.part2.listener.DefaultTerrainChangeListener;
@@ -193,5 +196,54 @@ public class UnitTest {
 		Assert.assertEquals(2, (int) unit.getPosition()[2]);
 	}
 	
+	//WORK TESTS
+	
+	@Test
+	public void testUnitPickUpBoulder() throws IllegalArgumentException {
+		int[][][] types = new int[50][50][50];
+		types[1][1][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit(50,50,50,50);
+		Boulder boulder = new Boulder(world, new double[]{1.5,1.5,2.5});
+		world.addUnit(unit);
+		unit.setPosition(new double[]{1.5,1.5,2.5});
+		unit.workAt(1, 1, 2);
+		advanceTimeFor(unit,100,0.2);
+		Assert.assertTrue(unit.getCarryingBoulder());
+		Assert.assertEquals(null,world.getBoulder(new int[]{1,1,2}));
+	}
+	
+	@Test
+	public void testUnitPickUpLog() throws IllegalArgumentException {
+		int[][][] types = new int[50][50][50];
+		types[1][1][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit(50,50,50,50);
+		Log log = new Log(world, new double[]{1.5,1.5,2.5});
+		world.addUnit(unit);
+		unit.setPosition(new double[]{1.5,1.5,2.5});
+		unit.workAt(1, 1, 2);
+		advanceTimeFor(unit,100,0.2);
+		Assert.assertTrue(unit.getCarryingLog());
+		Assert.assertEquals(null,world.getLog(new int[]{1,1,2}));
+	}
+	
+	@Test
+	public void testUnitUpgrade() throws IllegalArgumentException {
+		int[][][] types = new int[50][50][50];
+		types[1][1][1] = 1;
+		types[1][1][2] = 3;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit(50,50,50,50);
+		Log log = new Log(world, new double[]{1.5,1.5,2.5});
+		Boulder boulder = new Boulder(world, new double[]{1.5,1.5,2.5});
+		world.addUnit(unit);
+		unit.setPosition(new double[]{1.5,1.5,2.5});
+		unit.workAt(1, 1, 2);
+		advanceTimeFor(unit,100,0.2);
+		Assert.assertEquals(null,world.getBoulder(new int[]{1,1,2}));
+		Assert.assertEquals(null,world.getLog(new int[]{1,1,2}));
+		Assert.assertTrue(110 <= unit.getWeight()+unit.getToughness());
+	}
 	
 }

@@ -64,8 +64,10 @@ public class Log extends RawMaterial {
 	 *       this.getIsCarriedBy().getCarryingLog() == false
 	 */
 	public void stopCarrying() {
-		this.getIsCarriedBy().setCarryingLog(false);
-		this.setIsCarriedBy(null);
+		if (this.getIsCarriedBy() != null) {
+			this.getIsCarriedBy().setCarryingLog(false);
+			this.setIsCarriedBy(null);
+		}
 	}
 
 }

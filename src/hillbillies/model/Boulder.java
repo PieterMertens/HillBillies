@@ -65,8 +65,10 @@ public class Boulder extends RawMaterial {
 	 *       this.getIsCarriedBy().getCarryingBoulder() == false
 	 */
 	public void stopCarrying() {
-		this.getIsCarriedBy().setCarryingBoulder(false);
-		this.setIsCarriedBy(null);
+		if (this.getIsCarriedBy() != null) {
+			this.getIsCarriedBy().setCarryingBoulder(false);
+			this.setIsCarriedBy(null);
+		}
 	}
 
 }

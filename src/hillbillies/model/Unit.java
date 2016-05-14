@@ -1899,8 +1899,13 @@ public class Unit {
 					&& this.getWorld().isPassable(this.workPosition[0], this.workPosition[1], this.workPosition[2])) {
 				this.drop();
 
-			} else if (this.getWorld().getCubeType(x, y, z) == 0 && itemsAvailable(workPosition)) {
-
+			} else if (this.getWorld().getCubeType(x, y, z) == 3 && itemsAvailable(workPosition)) {
+				
+				Boulder boulder = this.getWorld().getBoulder(workPosition);
+				boulder.terminate();
+				Log log = this.getWorld().getLog(workPosition);
+				log.terminate();
+				this.setWeight(this.getWeight() + 5);
 				this.setTotalWeight(this.getWeight() + 5);
 				this.setToughness(this.getToughness() + 5);
 
