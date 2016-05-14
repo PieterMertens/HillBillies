@@ -37,8 +37,8 @@ import hillbillies.helper.Helper;
  *        isValidDefender(getDefender())
  * @invar The pickedUpBoulder of each unit must be a valid pickedUpBoulder for
  *        any unit. | isValidPickedUpBoulder(getPickedUpBoulder())
- * @invar The pickedUpLog of each unit must be a valid pickedUpLog for any
- *        unit. | isValidPickedUpLog(getPickedUpLog())
+ * @invar The pickedUpLog of each unit must be a valid pickedUpLog for any unit.
+ *        | isValidPickedUpLog(getPickedUpLog())
  * 
  * @author Pieter and Matthias
  *
@@ -46,6 +46,55 @@ import hillbillies.helper.Helper;
 public class Unit {
 
 	// TODO documentatie
+	/**
+	 * Initialize this new unit with given name, position, weight, strength,
+	 * agility and toughness and whether or not default behavior is enabled.
+	 * 
+	 * @param name
+	 *            The name for this new unit.
+	 * @param initialPosition
+	 *            The position for this new unit.
+	 * @param weight
+	 *            The weight for this new unit.
+	 * @param strength
+	 *            The strength for this new unit.
+	 * @param agility
+	 *            The agility for this new unit.
+	 * @param toughness
+	 *            The toughness for this new unit.
+	 * @param enableDefaultBehavior
+	 *            Checker if default behavior needs to be enabled.
+	 * @effect The name of this new unit is set to the given name. |
+	 *         this.setName(name)
+	 * @effect The position of this new unit is set to the given position. |
+	 *         this.setPosition(position)
+	 * @post If the given weight is a valid value for any unit, the weight of
+	 *       this new unit is equal to the given weight. Otherwise, the weight
+	 *       of this new unit is equal to its default value. | if
+	 *       (isValidWeight(weight)) | then new.getWeight() == weight | else
+	 *       new.getWeight() == defaultWeight
+	 * @post If the given strength is a valid value for any unit, the strength
+	 *       of this new unit is equal to the given strength. Otherwise, the
+	 *       strength of this new unit is equal to its default value. | if
+	 *       (isValidStrength(strength)) | then new.getStrength() == strength |
+	 *       else new.getStrength() == defaultStrength
+	 * @post If the given agility is a valid value for any unit, the agility of
+	 *       this new unit is equal to the given agility. Otherwise, the agility
+	 *       of this new unit is equal to its default value. | if
+	 *       (isValidAgility(agility)) | then new.getAgility() == agility | else
+	 *       new.getAgility() == defaultAgility
+	 * @post If the given toughness is a valid value for any unit, the toughness
+	 *       of this new unit is equal to the given toughness. Otherwise, the
+	 *       toughness of this new unit is equal to its default value. | if
+	 *       (isValidToughness(toughness)) | then new.getToughness() ==
+	 *       toughness | else new.getToughness() == defaultToughness
+	 * @post The hitpoints are set. |new.getHitpoints() == 200 * weight *
+	 *       toughness / 10000
+	 * @post The staminapoints are set. |new.getHitpoints() == 200 * weight *
+	 *       toughness / 10000
+	 * @post If the given default behavior boolean is true, default behavior is
+	 *       started | if (enableDefaultBehavior) then startDefaultBehavior()
+	 */
 	public Unit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
 			boolean enableDefaultBehavior) {
 
@@ -70,7 +119,7 @@ public class Unit {
 		this.setHitpoints(200 * weight * toughness / 10000);
 		this.setStaminapoints(200 * weight * toughness / 10000);
 		System.out.println("staminap: " + this.getStaminapoints());
-		if (enableDefaultBehavior == true) {
+		if (enableDefaultBehavior) {
 			startDefaultBehavior();
 		}
 	}
@@ -101,9 +150,9 @@ public class Unit {
 	 * 
 	 * @param position
 	 *            The position to check.
-	 * @return | result == true if the given position is between the world
-	 *         borders if there is | a world assigned to the unit. Otherwise,
-	 *         result = true if the 3 coordinates are bigger than 0.
+	 * @return result == true if the given position is passable and between the
+	 *         world borders if there is a world assigned to the unit.
+	 *         Otherwise, result = true if the 3 coordinates are bigger than 0.
 	 */
 	public static boolean isValidPosition(double[] position, World world) {
 
@@ -230,15 +279,24 @@ public class Unit {
 	 *            The agility for this new unit.
 	 * @param toughness
 	 *            The toughness for this new unit.
-	 * @post If the given weight, strength, agility and toughness are valid
-	 *       values for any unit, the attributes of this new unit are equal to
-	 *       the given attributes. Otherwise, the attribute of this new unit is
-	 *       equal to its default value. | if (isValidWeight(weight)) | then
-	 *       new.getWeight() == weight | else new.getWeight() == defaultWeight |
-	 *       if (isValidStrength(strength)) | then new.getStrength() == strength
-	 *       | else new.getStrength() == defaultStrength | if
+	 * @post If the given weight is a valid value for any unit, the weight of
+	 *       this new unit is equal to the given weight. Otherwise, the weight
+	 *       of this new unit is equal to its default value. | if
+	 *       (isValidWeight(weight)) | then new.getWeight() == weight | else
+	 *       new.getWeight() == defaultWeight
+	 * @post If the given strength is a valid value for any unit, the strength
+	 *       of this new unit is equal to the given strength. Otherwise, the
+	 *       strength of this new unit is equal to its default value. | if
+	 *       (isValidStrength(strength)) | then new.getStrength() == strength |
+	 *       else new.getStrength() == defaultStrength
+	 * @post If the given agility is a valid value for any unit, the agility of
+	 *       this new unit is equal to the given agility. Otherwise, the agility
+	 *       of this new unit is equal to its default value. | if
 	 *       (isValidAgility(agility)) | then new.getAgility() == agility | else
-	 *       new.getAgility() == defaultAgility | if
+	 *       new.getAgility() == defaultAgility
+	 * @post If the given toughness is a valid value for any unit, the toughness
+	 *       of this new unit is equal to the given toughness. Otherwise, the
+	 *       toughness of this new unit is equal to its default value. | if
 	 *       (isValidToughness(toughness)) | then new.getToughness() ==
 	 *       toughness | else new.getToughness() == defaultToughness
 	 */
@@ -597,6 +655,12 @@ public class Unit {
 	 */
 	private int staminapoints;
 
+	/**
+	 * Drain the stamina of the unit with one point per 0.1 seconds.
+	 * 
+	 * @param dt
+	 *            The period of time
+	 */
 	public void staminadrain(double dt) {
 		// System.out.println("dt: " + dt);
 		// if (dt >= 0.1) {
@@ -852,7 +916,7 @@ public class Unit {
 										// System.out.println("----------------
 										// moveto
 										// beeindigd ----------------------");
-										if (this.wantToWork) {
+										if (this.getWantToWork()) {
 											work();
 										}
 										if (this.getWantToAttack()) {
@@ -878,8 +942,39 @@ public class Unit {
 
 	}
 
+	/**
+	 * Return whether the unit wants to work.
+	 */
+	@Basic
+	@Raw
+	public boolean getWantToWork() {
+		return this.wantToWork;
+	}
+
+	/**
+	 * Set the will to work of this unit to the given wantToWork.
+	 * 
+	 * @param wantToWork
+	 *            The new wantToWork for this unit.
+	 * @post The wantToWork of this new unit is equal to the given wantToWork. |
+	 *       new.getWantToWork() == wantToWork
+	 */
+	@Raw
+	public void setWantToWork(boolean wantToWork) {
+		this.wantToWork = wantToWork;
+	}
+
+	/**
+	 * Variable registering the wantToWork of this unit.
+	 */
 	private boolean wantToWork = false;
 
+	/**
+	 * Update the unit's position and orientation considering his velocity.
+	 * 
+	 * @param dt
+	 *            The period of time
+	 */
 	public void updatePosition(double dt) {
 
 		velocity = getVelocity();
@@ -896,11 +991,20 @@ public class Unit {
 
 	private int[] adjecentDelta = new int[3];
 
+	/**
+	 * Return the current speed of the unit
+	 * 
+	 * @return result== 3 if the unit is falling
+	 * @return result== basespeed if the unit is moving on the same z level
+	 * @return result== basespeed/2 if the unit is moving to a higher z level
+	 * @return result== basespeed*1.2 if the unit is moving to a lower z level
+	 * @return result== double the speed if the unit is sprinting (and not
+	 *         falling)
+	 */
 	public double getCurrentSpeed() {
 
 		double currentSpeed;
 		double baseSpeed = 1.5 * (this.getStrength() + this.getAgility()) / (200 * this.getWeight() / 100);
-		// TODO weight vn bouldres en logs inrekening brengen
 		if (this.getIsFalling())
 			return 3;
 		if (this.getIsSprinting())
@@ -917,33 +1021,13 @@ public class Unit {
 
 	}
 
+	/**
+	 * Variable registering whether the unit is moving to somewhere.
+	 */
 	public boolean isMovingTo;
 
 	/**
-	 * TO BE ADDED TO CLASS HEADING
-	 * 
-	 * 
-	 */
-
-	/**
-	 * Initialize this new unit with given isMoving.
-	 * 
-	 * @param isMoving
-	 *            The isMoving for this new unit.
-	 * @effect The isMoving of this new unit is set to the given isMoving. |
-	 *         this.setIsMoving(isMoving)
-	 */
-	public Unit(boolean isMoving, boolean isSprinting, boolean isWorking, boolean isAttacking, boolean isResting)
-			throws IllegalArgumentException {
-		this.setIsMoving(isMoving);
-		this.setIsSprinting(isSprinting);
-		this.setIsWorking(isWorking);
-		this.setIsAttacking(isAttacking);
-		this.setIsResting(isResting);
-	}
-
-	/**
-	 * Return the isMoving of this unit.
+	 * Return whether this unit is moving.
 	 */
 	@Basic
 	@Raw
@@ -952,10 +1036,10 @@ public class Unit {
 	}
 
 	/**
-	 * Check whether the given isMoving is a valid isMoving for any unit.
+	 * Check whether the given moving state is a valid state for any unit.
 	 * 
 	 * @param isMoving
-	 *            The isMoving to check.
+	 *            The state to check.
 	 * @return | result == true if given value is boolean
 	 */
 	public static boolean isValidIsMoving(boolean isMoving) {
@@ -965,11 +1049,11 @@ public class Unit {
 	}
 
 	/**
-	 * Set the isMoving of this unit to the given isMoving.
+	 * Set the moving state of this unit to the given isMoving.
 	 * 
 	 * @param isMoving
-	 *            The new isMoving for this unit.
-	 * @post The isMoving of this new unit is equal to the given isMoving. |
+	 *            The new moving state for this unit.
+	 * @post The moving state of this new unit is equal to the given isMoving. |
 	 *       new.getIsMoving() == isMoving
 	 * @throws IllegalArgumentException
 	 *             The given isMoving is not a valid isMoving for any unit. | !
@@ -988,12 +1072,12 @@ public class Unit {
 	}
 
 	/**
-	 * Variable registering the isMoving of this unit.
+	 * Variable registering whether this unit is moving.
 	 */
 	private boolean isMoving;
 
 	/**
-	 * Return the isSprinting of this unit.
+	 * Return whether this unit is sprinting.
 	 */
 	@Basic
 	@Raw
@@ -1002,10 +1086,10 @@ public class Unit {
 	}
 
 	/**
-	 * Check whether the given isSprinting is a valid isSprinting for any unit.
+	 * Check whether the given sprinting state is a valid state
 	 * 
 	 * @param isSprinting
-	 *            The isSprinting to check.
+	 *            The state to check.
 	 * @return | result == true if given value is boolean
 	 */
 	public static boolean isValidIsSprinting(boolean isSprinting) {
@@ -1015,14 +1099,16 @@ public class Unit {
 	}
 
 	/**
-	 * Set the isSprinting of this unit to the given isSprinting.
+	 * Set the sprinting state of this unit to the given isSprinting.
 	 * 
 	 * @param isSprinting
-	 *            The new isSprinting for this unit.
-	 * @post The isSprinting of this new unit is equal to the given isSprinting.
-	 *       | new.getIsSprinting() == isSprinting
-	 * @post If unit was resting, working or attacking, that activity stopped.
-	 * @post If he wasn't already, the unit started moving.
+	 *            The new sprinting state for this unit.
+	 * @post The sprinting state of this new unit is equal to the given
+	 *       isSprinting. | new.getIsSprinting() == isSprinting
+	 * @post If isSprinting is true and if the unit was resting, working or
+	 *       attacking, that activity stopped.
+	 * @post If isSprinting is true and if he wasn't already, the unit started
+	 *       moving.
 	 * @throws IllegalArgumentException
 	 *             The given isSprinting is not a valid isSprinting for any
 	 *             unit. | ! isValidIsSprinting(getIsSprinting())
@@ -1042,12 +1128,12 @@ public class Unit {
 	}
 
 	/**
-	 * Variable registering the isSprinting of this unit.
+	 * Variable registering whether this unit is sprinting or not.
 	 */
 	private boolean isSprinting;
 
 	/**
-	 * Return the isWorking of this unit.
+	 * Return whether this unit is working.
 	 */
 	@Basic
 	@Raw
@@ -1056,7 +1142,7 @@ public class Unit {
 	}
 
 	/**
-	 * Check whether the given isWorking is a valid isWorking for any unit.
+	 * Check whether the given working state is a valid state for any unit.
 	 * 
 	 * @param isWorking
 	 *            The isWorking to check.
@@ -1069,13 +1155,13 @@ public class Unit {
 	}
 
 	/**
-	 * Set the isWorking of this unit to the given isWorking.
+	 * Set the working state of this unit to the given isWorking.
 	 * 
 	 * @param isWorking
-	 *            The new isWorking for this unit.
-	 * @post The isWorking of this new unit is equal to the given isWorking. |
-	 *       new.getIsWorking() == isWorking
-	 * @post If any other activities are running they are stopped.
+	 *            The new working state for this unit.
+	 * @post The working state of this new unit is equal to the given isWorking.
+	 *       | new.getIsWorking() == isWorking
+	 * @post If isWorking is true any other running activities are stopped.
 	 * @throws IllegalArgumentException
 	 *             The given isWorking is not a valid isWorking for any unit. |
 	 *             ! isValidIsWorking(getIsWorking())
@@ -1094,12 +1180,12 @@ public class Unit {
 	}
 
 	/**
-	 * Variable registering the isWorking of this unit.
+	 * Variable registering the working state of this unit.
 	 */
 	private boolean isWorking;
 
 	/**
-	 * Return the isAttacking of this unit.
+	 * Return the whether this unit is attacking.
 	 */
 	@Basic
 	@Raw
@@ -1108,7 +1194,7 @@ public class Unit {
 	}
 
 	/**
-	 * Check whether the given isAttacking is a valid isAttacking for any unit.
+	 * Check whether the given attacking state is a valid state for any unit.
 	 * 
 	 * @param isAttacking
 	 *            The isAttacking to check.
@@ -1121,13 +1207,13 @@ public class Unit {
 	}
 
 	/**
-	 * Set the isAttacking of this unit to the given isAttacking.
+	 * Set the the attacking state of this unit to the given isAttacking.
 	 * 
 	 * @param isAttacking
-	 *            The new isAttacking for this unit.
-	 * @post The isAttacking of this new unit is equal to the given isAttacking.
-	 *       | new.getisAttacking() == isAttacking
-	 * @post If any other activities are running they are stopped.
+	 *            The new attacking state for this unit.
+	 * @post The attacking state of this new unit is equal to the given
+	 *       isAttacking. | new.getisAttacking() == isAttacking
+	 * @post If isAttacking is true any other running activities are stopped.
 	 * @throws IllegalArgumentException
 	 *             The given isAttacking is not a valid isAttacking for any
 	 *             unit. | ! isValidIsAttacking(getisAttacking())
@@ -1146,12 +1232,12 @@ public class Unit {
 	}
 
 	/**
-	 * Variable registering the isAttacking of this unit.
+	 * Variable registering whether this unit is attacking or not.
 	 */
 	private boolean isAttacking;
 
 	/**
-	 * Return the isResting of this unit.
+	 * Return whether this unit is resting or not.
 	 */
 	@Basic
 	@Raw
@@ -1164,7 +1250,7 @@ public class Unit {
 	 * 
 	 * @param isResting
 	 *            The isResting to check.
-	 * @return | result == true if given value is boolean
+	 * @return | result == true if given value is either true or false
 	 */
 	public static boolean isValidIsResting(boolean isResting) {
 		if (isResting || isResting == false)
@@ -1173,12 +1259,12 @@ public class Unit {
 	}
 
 	/**
-	 * Set the isResting of this unit to the given isResting.
+	 * Set whether this unit is resting or not.
 	 * 
 	 * @param isResting
-	 *            The new isResting for this unit.
-	 * @post The isResting of this new unit is equal to the given isResting. |
-	 *       new.getIsResting() == isResting
+	 *            The new resting state for this unit.
+	 * @post The resting state of this new unit is equal to the given isResting.
+	 *       | new.getIsResting() == isResting
 	 * @post If any other activities are running they are stopped.
 	 * @throws IllegalArgumentException
 	 *             The given isResting is not a valid isResting for any unit. |
@@ -1202,12 +1288,21 @@ public class Unit {
 	 */
 	private boolean isResting;
 
+	/**
+	 * Reset the rest time and start resting
+	 */
 	public void rest() {
 		setRestTime((40 / (float) this.getToughness()));
 		setIsResting(true);
 
 	}
 
+	/**
+	 * Regain hitpoints first, staminapoints second when the rest time is 0.
+	 * 
+	 * @param dt
+	 *            The period of time
+	 */
 	private void doRest(double dt) {
 		float time = getRestTime() - (float) dt;
 		if (time <= 0) {
@@ -1230,7 +1325,7 @@ public class Unit {
 	}
 
 	/**
-	 * Return the isFalling of this unit.
+	 * Return whether this unit is falling or not.
 	 */
 	@Basic
 	@Raw
@@ -1243,7 +1338,7 @@ public class Unit {
 	 * 
 	 * @param isFalling
 	 *            The isFalling to check.
-	 * @return | result ==
+	 * @return | result == true if isFalling is either true or false
 	 */
 	public static boolean isValidIsFalling(boolean isFalling) {
 		if (isFalling || isFalling == false)
@@ -1252,12 +1347,12 @@ public class Unit {
 	}
 
 	/**
-	 * Set the isFalling of this unit to the given isFalling.
+	 * Set whether this unit is falling to the given isFalling.
 	 * 
 	 * @param isFalling
-	 *            The new isFalling for this unit.
-	 * @post The isFalling of this new unit is equal to the given isFalling. |
-	 *       new.getIsFalling() == isFalling
+	 *            The new falling state for this unit.
+	 * @post The falling state of this new unit is equal to the given isFalling.
+	 *       | new.getIsFalling() == isFalling
 	 * @throws IllegalArgumentException
 	 *             The given isFalling is not a valid isFalling for any unit. |
 	 *             ! isValidIsFalling(getIsFalling())
@@ -1281,19 +1376,48 @@ public class Unit {
 	 */
 	private boolean isFalling;
 
+	/**
+	 * Return the maximum hitpoints and staminapoints a unit can have
+	 * 
+	 * @return result == 200 * weight * toughness / 10000
+	 */
 	public int getMaxPoints() {
-		return 200 * weight * toughness / 10000;
+		return 200 * this.getWeight() * this.getToughness() / 10000;
 	}
 
+	/**
+	 * Variable registering the velocity of the unit
+	 */
 	public double[] velocity = new double[3];
 	// keeps the position from where the last movetoadjecent started.
+	/**
+	 * Variable registering the start position of moveToAdjecent
+	 */
 	public static double[] adjecentStart = new double[3];// TODO moet deze
 															// statiic zijn?
 	// keeps the postion of the targeted position from the last movetoadjecent.
+	/**
+	 * Variable registering the targeted position of moveToAdjecent
+	 */
 	public double[] adjecentTarget = new double[3];
 	// keeps the postion of the targeted position from the last moveto.
+	/**
+	 * Variable registering the targeted position of moveTo
+	 */
 	public double[] target = new double[3];
 
+	/**
+	 * Move the unit to an adjacent cube
+	 * 
+	 * @param dx
+	 *            The difference between unit target and unit on the x axis
+	 * @param dy
+	 *            The difference between unit target and unit on the y axis
+	 * @param dz
+	 *            The difference between unit target and unit on the z axis
+	 * @throws IllegalArgumentException
+	 *             thrown if the target position is invalid
+	 */
 	public void moveToAdjecent(int dx, int dy, int dz) throws IllegalArgumentException {
 
 		// System.out.println("start movetoadj");
@@ -1338,6 +1462,15 @@ public class Unit {
 
 	}
 
+	/**
+	 * Check if the given target is valid
+	 * 
+	 * @param target
+	 *            The target to check
+	 * @return result == true if the unit has no world
+	 * @return result == true if the target is a passable block within the
+	 *         world's boundaries
+	 */
 	private boolean isValidTarget(double[] target) {// TODO lijkt hard op
 													// isvalidPods
 		// System.out.println("isValidTarget currentpos "+ this.getPosition()[0]
@@ -1378,6 +1511,14 @@ public class Unit {
 
 	}
 
+	/**
+	 * Check if the unit has reached its adjacent target
+	 * 
+	 * @return result == true if the position between the unit and the target <
+	 *         1
+	 * @throws IllegalArgumentException
+	 *             thrown if the adjecentTarget is an invalid position
+	 */
 	public boolean moveToAdjecentTargetReached() throws IllegalArgumentException {
 
 		if (getDisctanceBetweenPositions(adjecentStart, adjecentTarget) <= getDisctanceBetweenPositions(adjecentStart,
@@ -1393,6 +1534,14 @@ public class Unit {
 
 	}
 
+	/**
+	 * Move the unit to the center of the given target cube
+	 * 
+	 * @param targetPosition
+	 *            The target cube
+	 * @throws IllegalArgumentException
+	 *             thrown if the target is invalid
+	 */
 	public void moveTo(int[] targetPosition) throws IllegalArgumentException { // FIXME
 																				// 2
 																				// keer
@@ -1432,21 +1581,53 @@ public class Unit {
 		findPath();
 	}
 
+	/**
+	 * Return the direction of the target along the X axis
+	 * 
+	 * @return result == 0 if the coordinates are the same
+	 * @return result == -1 if the target coordinate is smaller
+	 * @return result == 1 if the target coordinate is bigger
+	 */
 	public int getMoveToDirectionX() {
 
 		return getMoveToDirection((int) this.getPosition()[0], (int) target[0]);
 	}
 
+	/**
+	 * Return the direction of the target along the Y axis
+	 * 
+	 * @return result == 0 if the coordinates are the same
+	 * @return result == -1 if the target coordinate is smaller
+	 * @return result == 1 if the target coordinate is bigger
+	 */
 	public int getMoveToDirectionY() {
 
 		return getMoveToDirection((int) this.getPosition()[1], (int) target[1]);
 	}
 
+	/**
+	 * Return the direction of the target along the Z axis
+	 * 
+	 * @return result == 0 if the coordinates are the same
+	 * @return result == -1 if the target coordinate is smaller
+	 * @return result == 1 if the target coordinate is bigger
+	 */
 	public int getMoveToDirectionZ() {
 
 		return getMoveToDirection((int) this.getPosition()[2], (int) target[2]);
 	}
 
+	/**
+	 * Return the direction of the target along one axis
+	 * 
+	 * @param currentPosition
+	 *            The coordinate of the unit along the axis
+	 * @param targetPosition
+	 *            The coordinate of the target along the axis
+	 * @return result == 0 if the coordinates are the same
+	 * @return result == -1 if the target coordinate is smaller
+	 * @return result == 1 if the target coordinate is bigger
+	 */
 	public int getMoveToDirection(int currentPosition, int targetPosition) {
 
 		int direction;
@@ -1462,18 +1643,32 @@ public class Unit {
 		return direction;
 	}
 
+	/**
+	 * Check if the unit has reached its target
+	 * 
+	 * @return result == true if the position between the unit and the target <
+	 *         1
+	 * @throws IllegalArgumentException
+	 */
+	// TODO waarom IllegalArgumentException?
 	public boolean moveToTargetReached() throws IllegalArgumentException {
 
 		if (getDisctanceBetweenPositions(this.getPosition(), target) < 1) {
 			return true;
 		}
-
 		return false;
 
 	}
 
 	private List<Object[]> Q = new ArrayList<>();
 
+	/**
+	 * Find a path from the unit's current position to the target
+	 * 
+	 * @throws IllegalStateException
+	 *             if the target cannot be reached
+	 * 
+	 */
 	public void findPath() throws IllegalStateException {
 
 		// System.out.println("------ findPath start ------");
@@ -1516,6 +1711,7 @@ public class Unit {
 
 	}
 
+	// TODO docu
 	public void getNextMoveToAdjecentFromQ(double[] currentposition) {
 		int[] currentPosition = Helper.doubleArrayToIntArray(this.getPosition());
 
@@ -1544,6 +1740,7 @@ public class Unit {
 		}
 	}
 
+	// TODO docu
 	public void search(int[] position, int n, List<Object[]> Q) {
 
 		// System.out.println("-- search(" + position[0] + " " + position[1] + "
@@ -1564,6 +1761,7 @@ public class Unit {
 		}
 	}
 
+	// TODO docu
 	public int getNumberQ(List<Object[]> Q, int[] position) {
 
 		try {
@@ -1578,6 +1776,15 @@ public class Unit {
 
 	}
 
+	/**
+	 * Check if a given position is in list Q
+	 * 
+	 * @param Q
+	 *            The list of positions to check
+	 * @param position
+	 *            The position to check
+	 * @return result == true if the position is in the list
+	 */
 	public boolean inQ(List<Object[]> Q, int[] position) {
 
 		for (int i = 0; i < Q.size(); i++) {
@@ -1588,6 +1795,13 @@ public class Unit {
 		return false;
 	}
 
+	/**
+	 * Return a list of the cubes neighboring the given position
+	 * 
+	 * @param position
+	 *            The position to find the neighbors of
+	 * @return a list of the cubes neighboring the given position
+	 */
 	public List<int[]> getNeighbouringCubes(int[] position) {
 
 		List<int[]> neighbouringCubes = new ArrayList<>();
@@ -1614,13 +1828,26 @@ public class Unit {
 
 	}
 
+	/**
+	 * Reset the work time and start working
+	 */
 	public void work() {
 		setWorkTime(500 / (float) this.getStrength());
-		// setWorkTime(1); // TODO teugzetten
-		this.wantToWork = false;
+		this.setWantToWork(false);
 		this.setIsWorking(true);
 	}
 
+	/**
+	 * Work at the work position if the unit is there or move to a cube next to
+	 * the work position
+	 * 
+	 * @param x
+	 *            X coordinate of the target location
+	 * @param y
+	 *            Y coordinate of the target location
+	 * @param z
+	 *            Z coordinate of the target location
+	 */
 	public void workAt(int x, int y, int z) {
 		this.workPosition[0] = x;
 		this.workPosition[1] = y;
@@ -1630,7 +1857,7 @@ public class Unit {
 				&& Helper.doubleArrayToIntArray(this.getPosition())[2] == workPosition[2])) {
 			for (int[] pos : this.getNeighbouringCubes(workPosition)) {
 				if (this.isValidTarget(Helper.intArrayToDoubleArray(pos))) {
-					this.wantToWork = true;
+					this.setWantToWork(true);
 					this.moveTo(pos);
 				}
 			}
@@ -1639,8 +1866,17 @@ public class Unit {
 		}
 	}
 
+	/**
+	 * Variable registering the position where the unit works.
+	 */
 	private int[] workPosition = { 0, 0, 0 };
 
+	/**
+	 * Try to work at the work position when the work time is 0.
+	 * 
+	 * @param dt
+	 *            The period of time
+	 */
 	private void doWork(double dt) {
 
 		float time = getWorkTime() - (float) dt;
@@ -1725,7 +1961,7 @@ public class Unit {
 	 * @return | result ==
 	 */
 	public static boolean isValidPickedUpBoulder(Boulder pickedUpBoulder) {
-		//TODO isValid
+		// TODO isValid
 		return true;
 	}
 
@@ -1769,7 +2005,7 @@ public class Unit {
 	 * @return | result ==
 	 */
 	public static boolean isValidPickedUpLog(Log pickedUpLog) {
-		//TODO isValid
+		// TODO isValid
 		return true;
 	}
 
@@ -1781,8 +2017,8 @@ public class Unit {
 	 * @post The pickedUpLog of this new unit is equal to the given pickedUpLog.
 	 *       | new.getPickedUpLog() == pickedUpLog
 	 * @throws IllegalArgumentException
-	 *             The given pickedUpLog is not a valid log for any
-	 *             unit. | ! isValidPickedUpLog(getPickedUpLog())
+	 *             The given pickedUpLog is not a valid log for any unit. | !
+	 *             isValidPickedUpLog(getPickedUpLog())
 	 */
 	@Raw
 	public void setPickedUpLog(Log pickedUpLog) throws IllegalArgumentException {
