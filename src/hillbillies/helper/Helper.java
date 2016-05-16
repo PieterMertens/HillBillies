@@ -1,5 +1,6 @@
 package hillbillies.helper;
 
+
 public class Helper {
 
 	public static int[] doubleArrayToIntArray(double[] array) {
@@ -74,4 +75,17 @@ public class Helper {
 
 	}
 
+	public static boolean getIsSamePosition(double[] position1, double[] position2) {
+		if (position1[0] == position2[0] && position1[1] == position2[1] && position1[2] == position2[2]) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean getIsSamePosition(int[] position1, int[] position2) {
+		if (position1[0] == position2[0] && position1[1] == position2[1] && position1[2] == position2[2]) {
+			return true;
+		}
+		return false;
+	}
 }

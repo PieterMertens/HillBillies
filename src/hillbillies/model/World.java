@@ -16,25 +16,30 @@ import hillbillies.util.ConnectedToBorder;
  */
 public class World {
 
-	public static final int air = 0;
-	public static final int rock = 1;
-	public static final int tree = 2;
-	public static final int workshop = 3;
+	public static final int AIR = 0;
+	public static final int ROCK = 1;
+	public static final int TREE = 2;
+	public static final int WORKSHOP = 3;
 
 	/**
 	 * Initialize this new World with given terrain.
 	 *
-	 * @param terrain
+	 * @param terrainTypes
 	 *            The terrain for this new World.
+	 * @param modelListener
+	 *            The terrain change listener for this new World.
 	 * @effect The terrain of this new World is set to the given terrain. |
 	 *         this.setTerrain(terrain)
+	 * @effect The terrain change listener of this new World is set to the given
+	 *         terrain change listener. |
+	 *         this.setTerrainChangeListener(modelListener)
 	 */
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener) throws IllegalArgumentException {
 
 		this.setTerrain(terrainTypes);
 		this.setTerrainChangeListener(modelListener);
 		this.connectedToBorder = new ConnectedToBorder(this.getNbCubesX(), this.getNbCubesY(), this.getNbCubesZ());
-
+		makeListWorkshops();
 	}
 
 	/**
@@ -137,34 +142,46 @@ public class World {
 				&& this.getNbCubesZ() > z);
 	}
 
+	/**
+	 * Update the program dt (<= 0.2) seconds. - Collapse the cubes disconnected
+	 * from the border. - Update the units, boulders and logs.
+	 * 
+	 * @param dt
+	 *            The time the game advances in seconds.
+	 * @throws IllegalArgumentException
+	 *             Thrown if dt is larger than 0.2.
+	 */
 	public void advanceTime(double dt) throws IllegalArgumentException {
 
-		// System.out.println("--- advance time ---");
-		// System.out.println("-- world");
-		for (int[] pos : disconnected) {
-			System.out.println("disconnected cave in" + pos[0] + " " + pos[1] + " " + pos[2]);
-			this.collapseCube(pos[0], pos[1], pos[2], false);
+		if (dt > 0.2) {
+			throw new IllegalArgumentException();
+		} else {
+			// System.out.println("--- advance time ---");
+			// System.out.println("-- world");
+			for (int[] pos : disconnected) {
+				System.out.println("disconnected cave in" + pos[0] + " " + pos[1] + " " + pos[2]);
+				this.collapseCube(pos[0], pos[1], pos[2], false);
+			}
+			disconnected.clear();
+			this.getDisconnectedCubes();
+
+			// System.out.println("-- unit");
+			for (Unit unit : this.getUnits()) {
+				unit.advanceTime(dt);
+			}
+
+			// System.out.println("-- boulder");
+			for (Boulder boulder : this.getBoulders()) {
+				boulder.advanceTime(dt);
+			}
+
+			// System.out.println("-- log");
+			for (Log log : this.getLogs()) {
+				log.advanceTime(dt);
+			}
+
+			// System.out.println("--- --- --- --- ---");
 		}
-		disconnected.clear();
-		this.getDisconnectedCubes();
-
-		// System.out.println("-- unit");
-		for (Unit unit : this.getUnits()) {
-			unit.advanceTime(dt);
-		}
-
-		// System.out.println("-- boulder");
-		for (Boulder boulder : this.getBoulders()) {
-			boulder.advanceTime(dt);
-		}
-
-		// System.out.println("-- log");
-		for (Log log : this.getLogs()) {
-			log.advanceTime(dt);
-		}
-
-		// System.out.println("--- --- --- --- ---");
-
 	}
 
 	/**
@@ -177,19 +194,19 @@ public class World {
 	}
 
 	/**
-	 * Return if the terrain type of the cube at the given coordinates is
+	 * Return whether the terrain type of the cube at the given coordinates is
 	 * passable.
 	 */
 	public boolean isPassable(double x, double y, double z) {
 		int terraintype = getCubeType((int) x, (int) y, (int) z);
-		if (terraintype == air || terraintype == workshop)
+		if (terraintype == AIR || terraintype == WORKSHOP)
 			return true;
 
 		return false;
 	}
 
 	/**
-	 * Return if any of the neighbouring cubes at the given coordinates are
+	 * Return whether any of the neighbouring cubes at the given coordinates are
 	 * impassable.
 	 */
 	public boolean hasImpassableNeighbour(double x, double y, double z) {
@@ -200,7 +217,8 @@ public class World {
 					if (!withinBoundaries((int) x + i, (int) y + j, (int) z + k)) {
 						return true;
 					}
-					//System.out.println("hasimp ng "+(x+i)+" "+(y+j)+" "+(z+k));
+					// System.out.println("hasimp ng "+(x+i)+" "+(y+j)+"
+					// "+(z+k));
 					if (!isPassable(x + i, y + j, z + k)) {
 						return true;
 					}
@@ -212,8 +230,8 @@ public class World {
 	}
 
 	/**
-	 * Return if the terrain type of the cube below the given coordinates is
-	 * impassable.
+	 * Return whether the terrain type of the cube below the given coordinates
+	 * is impassable.
 	 */
 	public boolean hasImpassableBelow(double x, double y, double z) {
 		if (z > 0)
@@ -259,14 +277,14 @@ public class World {
 	public void collapseCube(int x, int y, int z, boolean certainDrop) {
 
 		int cubeType = this.getCubeType(x, y, z);
-		this.setCubeType(x, y, z, air);
+		this.setCubeType(x, y, z, AIR);
 
 		if (certainDrop || Helper.randInt(1, 4) == 1) {
 			int[] pos = { x, y, z };
 			double[] position = Helper.getCenterOfPosition(pos);
-			if (cubeType == rock)
+			if (cubeType == ROCK)
 				new Boulder(this, position);
-			if (cubeType == tree)
+			if (cubeType == TREE)
 				new Log(this, position);
 
 		}
@@ -383,7 +401,7 @@ public class World {
 		return units;
 	}
 
-	private void addFaction(Faction faction) {
+	public void addFaction(Faction faction) {
 		this.factions.add(faction);
 	}
 
@@ -396,7 +414,6 @@ public class World {
 	private Faction getSmallestFaction() {
 		if (this.getActiveFactions().size() < 5) {
 			Faction faction = new Faction(this);
-			this.addFaction(faction);
 			return faction;
 		} else {
 			int smallestSize = 51;
@@ -495,11 +512,99 @@ public class World {
 		this.isTerminated = true;
 	}
 
+	/**
+	 * Return whether the world is terminated
+	 */
 	public boolean getIsTerminated() {
 		return this.isTerminated;
 	}
 
+	/**
+	 * Variable registering whether the world is terminated.
+	 */
 	private boolean isTerminated;
-	
 
+	
+	private Set<double[]> workshops = new HashSet<>();
+
+	/**
+	 * Make a set of double arrays with the positions of all the workshops in the world
+	 * 
+	 * @post workshops contains double arrays with the positions of all the workshops in the world
+	 */
+	private void makeListWorkshops() {
+		for (int x = 0; x < this.getNbCubesX(); x++) {
+			for (int y = 0; y < this.getNbCubesY(); y++) {
+				for (int z = 0; z < this.getNbCubesZ(); z++) {
+					if (getCubeType(x, y, z) == WORKSHOP) {
+						workshops.add(new double[] { x + .5, y + .5, z + .5 });
+					}
+				}
+			}
+		}
+	}
+
+	public Set<double[]> getWorkshops() {
+		return this.workshops;
+	}
+
+	/**
+	 * Return the boulder that is closest to the given unit in distance.
+	 * 
+	 * @param unit
+	 * 			The observed unit. 
+	 * @return result == boulder nearest to the given unit
+	 */
+	public Boulder getNearestBoulder(Unit unit) {
+		double distance = Double.POSITIVE_INFINITY;
+		Boulder nearestBoulder = null;
+		for (Boulder boulder : this.getBoulders()) {
+			double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), boulder.getPosition());
+			if (newDistance < distance) {
+				distance = newDistance;
+				nearestBoulder = boulder;
+			}
+		}
+		return nearestBoulder;
+	}
+
+	/**
+	 * Return the log that is closest to the given unit in distance.
+	 * 
+	 * @param unit
+	 * 			The observed unit. 
+	 * @return result == log nearest to the given unit
+	 */
+	public Log getNearestLog(Unit unit) {
+		double distance = Double.POSITIVE_INFINITY;
+		Log nearestLog = null;
+		for (Log log : this.getLogs()) {
+			double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), log.getPosition());
+			if (newDistance < distance) {
+				distance = newDistance;
+				nearestLog = log;
+			}
+		}
+		return nearestLog;
+	}
+
+	/**
+	 * Return the position of the workshop that is closest to the given unit in distance.
+	 * 
+	 * @param unit
+	 * 			The observed unit. 
+	 * @return result == int array with coordinates of workshop nearest to the given unit
+	 */
+	public int[] getNearestWorkhop(Unit unit) {
+		double distance = Double.POSITIVE_INFINITY;
+		double[] nearestWorkshop = null;
+		for (double[] workshop : this.getWorkshops()) {
+			double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), workshop);
+			if (newDistance < distance) {
+				distance = newDistance;
+				nearestWorkshop = workshop;
+			}
+		}
+		return Helper.doubleArrayToIntArray(nearestWorkshop);
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
+import hillbillies.statements.Statement;
 
 public class Task {
 
@@ -33,11 +34,14 @@ public class Task {
 	 * @effect The priority of this new Task is set to the given priority. |
 	 *         this.setPriority(priority)
 	 */
-	public Task(String name, int priority) throws IllegalArgumentException {
+	public Task(String name, int priority, List<Statement> activities, int[] cube) throws IllegalArgumentException {
 		if (!canHaveAsName(name))
 			throw new IllegalArgumentException();
 		this.name = name;
 		this.setPriority(priority);
+		if(!canHaveAsActivities(activities))
+			throw new IllegalArgumentException();
+		this.activities = activities;
 	}
 
 	/**
@@ -135,7 +139,7 @@ public class Task {
 	 *             This new Task cannot have the given activities as its
 	 *             activities. | ! canHaveAsActivities(this.getActivities())
 	 */
-	public Task(List<> activities) throws IllegalArgumentException {
+	public Task(List<Statement> activities) throws IllegalArgumentException {
 		if (!canHaveAsActivities(activities))
 			throw new IllegalArgumentException();
 		this.activities = activities;
@@ -147,7 +151,7 @@ public class Task {
 	@Basic
 	@Raw
 	@Immutable
-	public List<> getActivities() {
+	public List<Statement> getActivities() {
 		return this.activities;
 	}
 
@@ -159,14 +163,14 @@ public class Task {
 	 * @return | result ==
 	 */
 	@Raw
-	public boolean canHaveAsActivities(List<> activities) {
-		return false;
+	public boolean canHaveAsActivities(List<Statement> activities) {
+		return (activities.size()>0);
 	}
 
 	/**
 	 * Variable registering the activities of this Task.
 	 */
-	private final List<> activities;
+	private final List<Statement> activities;
 
 	/**
 	 * TO BE ADDED TO CLASS HEADING

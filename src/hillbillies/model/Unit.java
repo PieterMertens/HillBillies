@@ -304,7 +304,6 @@ public class Unit {
 		if (strength < 25 || strength > 100) {
 			strength = 25 + Helper.randInt(0, 75);
 		}
-		System.out.println("strength: " + strength);
 		setStrength(strength);
 
 		if (agility < 25 || agility > 100) {
@@ -903,6 +902,9 @@ public class Unit {
 						}
 						this.updatePosition(dt);
 						if (this.moveToAdjecentTargetReached()) {
+
+							System.out.println(
+									"unit" + this + " x: " + this.getPosition()[0] + " y: " + this.getPosition()[1]);
 							this.setIsMoving(false);
 							if (this.getIsFalling()) {
 								this.setHitpoints(this.getHitpoints() - 10);
@@ -932,6 +934,9 @@ public class Unit {
 
 								}
 							}
+						}
+						if (this.getIsFollowing()) {
+							followUnit(getLeader());
 						}
 
 					}
@@ -1001,9 +1006,9 @@ public class Unit {
 	 *         falling)
 	 */
 	public double getCurrentSpeed() {
-
 		double currentSpeed;
 		double baseSpeed = 1.5 * (this.getStrength() + this.getAgility()) / (200 * this.getWeight() / 100);
+
 		if (this.getIsFalling())
 			return 3;
 		if (this.getIsSprinting())
@@ -1016,6 +1021,7 @@ public class Unit {
 		} else {
 			currentSpeed = baseSpeed;
 		}
+
 		return currentSpeed;
 
 	}
@@ -1520,7 +1526,7 @@ public class Unit {
 	 */
 	public boolean moveToAdjecentTargetReached() throws IllegalArgumentException {
 
-		if (getDisctanceBetweenPositions(adjecentStart, adjecentTarget) <= getDisctanceBetweenPositions(adjecentStart,
+		if (getDistanceBetweenPositions(adjecentStart, adjecentTarget) <= getDistanceBetweenPositions(adjecentStart,
 				this.getPosition())) {
 
 			// System.out.println("moveToAdjecentTargetReached ");
@@ -1652,7 +1658,7 @@ public class Unit {
 	// TODO waarom IllegalArgumentException?
 	public boolean moveToTargetReached() throws IllegalArgumentException {
 
-		if (getDisctanceBetweenPositions(this.getPosition(), target) < 1) {
+		if (getDistanceBetweenPositions(this.getPosition(), target) < 1) {
 			return true;
 		}
 		return false;
@@ -1673,7 +1679,23 @@ public class Unit {
 		// System.out.println("------ findPath start ------");
 
 		int[] moveToTarget = Helper.doubleArrayToIntArray(this.target);
-		int[] currentPosition = Helper.doubleArrayToIntArray(this.getPosition());
+		int[] currentPosition = Helper.doubleArrayToIntArray(this.getPosition()); // TODO
+																					// dit
+																					// als
+																					// argumenten
+																					// meegeven
+																					// ipv
+																					// hier
+																					// zetten
+																					// zodat
+																					// findpath
+																					// ook
+																					// voor
+																					// boulders
+																					// enz
+																					// gebruikt
+																					// kan
+																					// worden
 
 		Q = new ArrayList<>();
 
@@ -1851,9 +1873,7 @@ public class Unit {
 		this.workPosition[0] = x;
 		this.workPosition[1] = y;
 		this.workPosition[2] = z;
-		if (!(Helper.doubleArrayToIntArray(this.getPosition())[0] == workPosition[0]
-				&& Helper.doubleArrayToIntArray(this.getPosition())[1] == workPosition[1]
-				&& Helper.doubleArrayToIntArray(this.getPosition())[2] == workPosition[2])) {
+		if (!Helper.getIsSamePosition(Helper.doubleArrayToIntArray(this.getPosition()), workPosition)) {
 			for (int[] pos : this.getNeighbouringCubes(workPosition)) {
 				if (this.isValidTarget(Helper.intArrayToDoubleArray(pos))) {
 					this.setWantToWork(true);
@@ -1884,7 +1904,7 @@ public class Unit {
 		int y = this.workPosition[1];
 		int z = this.workPosition[2];
 
-		if (workPosition != Helper.doubleArrayToIntArray(this.getPosition())) {
+		if (Helper.getIsSamePosition(workPosition, Helper.doubleArrayToIntArray(this.getPosition()))) {
 
 			double dx = x - this.getPosition()[0];
 			double dy = y - this.getPosition()[1];
@@ -1899,8 +1919,8 @@ public class Unit {
 					&& this.getWorld().isPassable(this.workPosition[0], this.workPosition[1], this.workPosition[2])) {
 				this.drop();
 
-			} else if (this.getWorld().getCubeType(x, y, z) == 3 && itemsAvailable(workPosition)) {
-				
+			} else if (this.getWorld().getCubeType(x, y, z) == World.WORKSHOP && itemsAvailable(workPosition)) {
+
 				Boulder boulder = this.getWorld().getBoulder(workPosition);
 				boulder.terminate();
 				Log log = this.getWorld().getLog(workPosition);
@@ -1923,11 +1943,11 @@ public class Unit {
 				log.setIsCarriedBy(this);
 				this.setTotalWeight(this.getWeight() + log.getWeight());
 
-			} else if (this.getWorld().getCubeType(x, y, z) == 2) {
+			} else if (this.getWorld().getCubeType(x, y, z) == World.TREE) {
 
 				this.getWorld().collapseCube(x, y, z, true);
 
-			} else if (this.getWorld().getCubeType(x, y, z) == 1) {
+			} else if (this.getWorld().getCubeType(x, y, z) == World.ROCK) {
 
 				this.getWorld().collapseCube(x, y, z, true);
 
@@ -2103,7 +2123,6 @@ public class Unit {
 	 */
 	private void drop() {
 		if (this.getCarryingBoulder()) {
-			System.out.println("boulderdrop");
 			this.setCarryingBoulder(false);
 			this.getPickedUpBoulder().setPosition(Helper.getCenterOfPosition(this.workPosition));
 			this.getPickedUpBoulder().setIsCarriedBy(null);
@@ -2169,7 +2188,7 @@ public class Unit {
 	 * @return The square root of the sum of the difference between the two x, y
 	 *         and z coordinates squared
 	 */
-	public double getDisctanceBetweenPositions(double[] position1, double[] position2) {// TODO
+	public double getDistanceBetweenPositions(double[] position1, double[] position2) {// TODO
 																						// nr
 																						// helper
 
@@ -2215,11 +2234,8 @@ public class Unit {
 			this.workAt((int) this.getPosition()[0], (int) this.getPosition()[1], (int) this.getPosition()[2]);
 
 		} else if (rand == 2) {
-			defender = this;
-			while (defender.getFaction() == this.getFaction()) {
-				defender = this.selectRandomUnit();
-			}
-			attack(this, this.selectRandomUnit());
+
+			attack(this, this.getRandomEnemy());
 
 		} else {
 			this.rest();
@@ -2228,21 +2244,53 @@ public class Unit {
 	}
 
 	/**
-	 * Return a random unit of the unit's world
+	 * Return a random unit that is not in the same faction as the unit
 	 * 
-	 * @return A random unit of the unit's world
+	 * @return A random unit not in the same faction as the unit
 	 */
-	private Unit selectRandomUnit() {
-		int rand = Helper.randInt(0, this.getWorld().getUnits().size() - 1);
-		int i = 0;
-		for (Unit unit : this.getWorld().getUnits()) {
-			if (i == rand) {
-				return unit;
-			}
-			i = +1;
+	public Unit getRandomEnemy() {
+		Unit enemy = this;
+		while (enemy.getFaction() == this.getFaction()) {
+			enemy = this.getRandomUnit();
 		}
-		return this;
+		return enemy;
 	}
+
+	/**
+	 * Return a random unit of the same faction as the unit that's not the unit
+	 * 
+	 * @return A random unit of the same faction as the unit that's not the unit
+	 */
+	public Unit getRandomFriend() {
+		Unit friend = null;
+		while (friend.getFaction() != this.getFaction()) {
+			friend = this.getRandomUnit();
+		}
+		return friend;
+	}
+
+	/**
+	 * Return a random unit of the unit's world that's not the unit
+	 * 
+	 * @return A random unit of the unit's world that's not the unit
+	 */
+	private Unit getRandomUnit() {
+		if (this.getWorld().getUnits().size() > 1) {
+			int rand = Helper.randInt(0, this.getWorld().getUnits().size() - 1);
+			int i = 0;
+			for (Unit unit : this.getWorld().getUnits()) {
+				if (i == rand) {
+					if (unit == this) {
+						getRandomUnit();
+					}
+					return unit;
+				}
+				i = +1;
+			}
+		} 
+		return null;
+	}
+
 
 	/**
 	 * Enable or disable the default behavior of this unit.
@@ -2907,4 +2955,98 @@ public class Unit {
 	 */
 	private boolean carryingLog;
 
+	/**
+	 * Return the isFollowing of this unit.
+	 */
+	@Basic
+	@Raw
+	public boolean getIsFollowing() {
+		return this.isFollowing;
+	}
+
+	/**
+	 * Set the isFollowing of this unit to the given isFollowing.
+	 * 
+	 * @param isFollowing
+	 *            The new isFollowing for this unit.
+	 * @post The isFollowing of this new unit is equal to the given isFollowing.
+	 *       | new.getIsFollowing() == isFollowing
+	 */
+	@Raw
+	public void setIsFollowing(boolean isFollowing) {
+		this.isFollowing = isFollowing;
+	}
+
+	/**
+	 * Variable registering the isFollowing of this unit.
+	 */
+	private boolean isFollowing;
+
+	/**
+	 * Return the leader of this unit.
+	 */
+	@Basic
+	@Raw
+	public Unit getLeader() {
+		return this.leader;
+	}
+
+	/**
+	 * Check whether the given leader is a valid leader for any unit.
+	 * 
+	 * @param leader
+	 *            The leader to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidLeader(Unit leader) {
+		return true;
+	}
+
+	/**
+	 * Set the leader of this unit to the given leader.
+	 * 
+	 * @param leader
+	 *            The new leader for this unit.
+	 * @post The leader of this new unit is equal to the given leader. |
+	 *       new.getLeader() == leader
+	 * @throws IllegalArgumentException
+	 *             The given leader is not a valid leader for any unit. | !
+	 *             isValidLeader(getLeader())
+	 */
+	@Raw
+	public void setLeader(Unit leader) throws IllegalArgumentException {
+		if (!isValidLeader(leader))
+			throw new IllegalArgumentException();
+		this.leader = leader;
+	}
+
+	/**
+	 * Variable registering the leader of this unit.
+	 */
+	private Unit leader;
+
+	public void followUnit(Unit unit) {
+		this.setIsFollowing(true);
+		this.setLeader(unit);
+		boolean arrived = false;
+		if (Helper.getIsSamePosition(this.getPosition(), unit.getPosition()) || unit.isTerminated()) {
+			System.out.println("Follow terminate");
+			this.setIsFollowing(false);
+			this.setIsMoving(false);
+			arrived = true;
+		} else {
+			for (int[] neighbour : this.getNeighbouringCubes(Helper.doubleArrayToIntArray(this.getPosition()))) {
+				if (Helper.getIsSamePosition(neighbour, Helper.doubleArrayToIntArray(this.getPosition()))) {
+					this.setIsFollowing(false);
+					this.setIsMoving(false);
+					arrived = true;
+					break;
+				}
+			}
+		}
+		if (!arrived) {
+			this.moveTo(Helper.doubleArrayToIntArray(unit.getPosition()));
+		}
+
+	}
 }

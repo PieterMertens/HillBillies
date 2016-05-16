@@ -16,6 +16,7 @@ public class Faction {
 	 *         this.setWorld(world)
 	 */
 	public Faction(World world) throws IllegalArgumentException {
+		world.addFaction(this);
 		this.setWorld(world);
 	}
 

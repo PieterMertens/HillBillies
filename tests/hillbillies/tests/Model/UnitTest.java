@@ -27,6 +27,21 @@ public class UnitTest {
 		unit.advanceTime(time - n * step);
 	}
 	
+	/**
+	 * Helper method to advance time for the given world by some time.
+	 * 
+	 * @param time
+	 *            The time, in seconds, to advance.
+	 * @param step
+	 *            The step size, in seconds, by which to advance.
+	 */
+	private static void advanceTimeFor(World world, double time, double step) throws IllegalArgumentException {
+		int n = (int) (time / step);
+		for (int i = 0; i < n + 1; i++)
+			world.advanceTime(step);
+		world.advanceTime(time - n * step);
+	}
+	
 	//NAME TESTS
 
 	@Test
@@ -246,4 +261,44 @@ public class UnitTest {
 		Assert.assertTrue(110 <= unit.getWeight()+unit.getToughness());
 	}
 	
+	//FOLLOW TEST
+	
+	@Test
+	public void testUnitFollow() throws IllegalArgumentException {
+		int[][][] types = new int[20][20][1];
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit(50, 50, 50, 50);
+		Unit leader = new Unit(50, 50, 50, 50);
+		world.addUnit(unit);
+		world.addUnit(leader);
+		unit.setPosition(new double[] { 1.5, 1.5, 0.5 });
+		leader.setPosition(new double[] { 10.5, 10.5, 0.5 });
+		leader.moveTo(new int[] { 19, 19, 0 });
+		unit.followUnit(leader);
+		advanceTimeFor(world, 50, 0.1);
+		
+		Assert.assertTrue(Math.abs(unit.getPosition()[0] - leader.getPosition()[0]) <= 1d);
+		Assert.assertTrue(Math.abs(unit.getPosition()[1] - leader.getPosition()[1]) <= 1d);
+		Assert.assertTrue(Math.abs(unit.getPosition()[2] - leader.getPosition()[2]) <= 1d);
+	}
+	
+	@Test
+	public void testUnitFollowTerminate() throws IllegalArgumentException {
+		int[][][] types = new int[15][15][1];
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit(50, 50, 50, 50);
+		Unit leader = new Unit(50, 50, 50, 50);
+		world.addUnit(unit);
+		world.addUnit(leader);
+		unit.setPosition(new double[] { 1.5, 1.5, 0.5 });
+		leader.setPosition(new double[] { 10.5, 10.5, 0.5 });
+		unit.followUnit(leader);
+		leader.terminate();
+		advanceTimeFor(world, 50, 0.1);
+		Assert.assertTrue(unit.getPosition()[0] - 1.5 < 1);
+		Assert.assertTrue(unit.getPosition()[1] - 1.5 < 1);
+		Assert.assertTrue(unit.getPosition()[2] - 0.5 < 1);
+	}
+	
+
 }

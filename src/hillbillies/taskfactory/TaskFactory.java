@@ -1,29 +1,50 @@
 package hillbillies.taskfactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import expressions.AndExpression;
-import expressions.BooleanExpression;
-import expressions.Expression;
-import expressions.FalseExpression;
-import expressions.NotExpression;
-import expressions.OrExpression;
-import expressions.TrueExpression;
 import hillbillies.expressions.*;
 import hillbillies.model.Task;
 import hillbillies.part3.programs.ITaskFactory;
 import hillbillies.part3.programs.SourceLocation;
 import hillbillies.statements.AssignStatement;
+import hillbillies.statements.AttackStatement;
+import hillbillies.statements.FollowStatement;
 import hillbillies.statements.IfStatement;
+import hillbillies.statements.MoveToStatement;
+import hillbillies.statements.PrintStatement;
+import hillbillies.statements.SequenceStatement;
+import hillbillies.statements.Statement;
 import hillbillies.statements.WhileStatement;
-import statements.Statement;
+import hillbillies.statements.WorkStatement;
 
 public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task> {
 
 	@Override
 	public List<Task> createTasks(String name, int priority, Statement activity, List<int[]> selectedCubes) {
 
-		return null;
+		List<Task> tasks = new ArrayList<>();
+		List<Statement> activities = new ArrayList<>();
+
+		if (selectedCubes != null) {
+			for (int[] cube : selectedCubes) {
+				if (activity instanceof SequenceStatement) {
+					activities = ((SequenceStatement) activity).getStatements();
+				} else {
+					activities.add(activity);
+				}
+				Task task = new Task(name, priority, activities, cube);
+				tasks.add(task);
+			}
+
+		} else {
+			activities.add(activity);
+			Task task = new Task(name, priority, activities, null);
+			tasks.add(task);
+		}
+
+		return tasks;
+
 	}
 
 	@Override
@@ -35,14 +56,14 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 	@Override
 	public Statement createWhile(Expression condition, Statement body, SourceLocation sourceLocation) {
 
-		return new WhileStatement(condition, body, sourceLocation);
+		 return new WhileStatement((BooleanExpression) condition, body, sourceLocation);
 	}
 
 	@Override
 	public Statement createIf(Expression condition, Statement ifBody, Statement elseBody,
 			SourceLocation sourceLocation) {
 
-		return new IfStatement(condition,ifBody,elseBody,sourceLocation);
+		 return new IfStatement(condition, ifBody, elseBody, sourceLocation);
 	}
 
 	@Override
@@ -52,49 +73,49 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 	}
 
 	@Override
-	public Statement createPrint(Expression value, SourceLocation sourceLocation) {
+	public Statement createPrint(Expression<?> value, SourceLocation sourceLocation) {
 
-		return null;
+		return new PrintStatement(value, sourceLocation);
 	}
 
 	@Override
 	public Statement createSequence(List<Statement> statements, SourceLocation sourceLocation) {
 
-		return null;
+		return new SequenceStatement(statements, sourceLocation);
 	}
 
 	@Override
-	public Statement createMoveTo(Expression position, SourceLocation sourceLocation) {
-
-		return null;
+	public Statement createMoveTo(Expression<?> position, SourceLocation sourceLocation) {
+		System.out.println("New MoveToStatement");
+		return new MoveToStatement((PositionExpression) position, sourceLocation);
 	}
 
 	@Override
-	public Statement createWork(Expression position, SourceLocation sourceLocation) {
-
-		return null;
+	public Statement createWork(Expression<?> position, SourceLocation sourceLocation) {
+		System.out.println("New WorkStatement");
+		return new WorkStatement((PositionExpression) position, sourceLocation);
 	}
 
 	@Override
-	public Statement createFollow(Expression unit, SourceLocation sourceLocation) {
+	public Statement createFollow(Expression<?> unit, SourceLocation sourceLocation) {
 
-		return null;
+		return new FollowStatement((UnitExpression) unit, sourceLocation);
 	}
 
 	@Override
-	public Statement createAttack(Expression unit, SourceLocation sourceLocation) {
+	public Statement createAttack(Expression<?> unit, SourceLocation sourceLocation) {
 
-		return null;
+		return new AttackStatement((UnitExpression) unit, sourceLocation);
 	}
 
 	@Override
 	public Expression<?> createReadVariable(String variableName, SourceLocation sourceLocation) {
 
-		return new ReadExpression(variableName,sourceLocation);
+		return new ReadExpression(variableName, sourceLocation);
 	}
 
 	@Override
-	public Expression createIsSolid(Expression position, SourceLocation sourceLocation) {
+	public Expression<?> createIsSolid(Expression<?> position, SourceLocation sourceLocation) {
 
 		return null;
 	}
@@ -130,21 +151,21 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 	}
 
 	@Override
-	public Expression<?> createNot(Expression expression, SourceLocation sourceLocation) {
+	public Expression<Boolean> createNot(Expression<?> expression, SourceLocation sourceLocation) {
 
-		return new NotExpression((BooleanExpression)expression, sourceLocation);
+		return new NotExpression((BooleanExpression) expression, sourceLocation);
 	}
 
 	@Override
 	public Expression<?> createAnd(Expression left, Expression right, SourceLocation sourceLocation) {
 
-		return new AndExpression((BooleanExpression) left,(BooleanExpression)  right, sourceLocation);
+		return new AndExpression((BooleanExpression) left, (BooleanExpression) right, sourceLocation);
 	}
 
 	@Override
 	public Expression<?> createOr(Expression<?> left, Expression<?> right, SourceLocation sourceLocation) {
 
-		return new OrExpression((BooleanExpression) left,(BooleanExpression) right,sourceLocation);
+		return new OrExpression((BooleanExpression) left, (BooleanExpression) right, sourceLocation);
 	}
 
 	@Override
@@ -220,6 +241,5 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 	public Expression<?> createFalse(SourceLocation sourceLocation) {
 		return new FalseExpression(sourceLocation);
 	}
-
 
 }

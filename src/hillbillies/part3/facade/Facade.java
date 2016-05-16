@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import hillbillies.expressions.Expression;
 import hillbillies.helper.Helper;
 import hillbillies.model.Boulder;
 import hillbillies.model.Faction;
@@ -15,8 +16,10 @@ import hillbillies.model.World;
 import hillbillies.part2.facade.IFacade;
 import hillbillies.part2.listener.TerrainChangeListener;
 import hillbillies.part3.programs.ITaskFactory;
-import hillbillies.taskfactory.TaskFactory;
-import ogp.framework.util.ModelException;
+import hillbillies.statements.Statement;
+import hillbillies.taskfactory.TaskFactory;import ogp.framework.util.ModelException;
+
+
 
 public class Facade implements hillbillies.part3.facade.IFacade {
 	
@@ -31,7 +34,8 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 	@Override
 	public boolean isWellFormed(Task task) throws ModelException {
 		// TODO Auto-generated method stub
-		return false;
+		// TODO nakijken
+		return true;
 	}
 
 	@Override
