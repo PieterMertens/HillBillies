@@ -27,7 +27,7 @@ public class AssignStatement extends Statement{
 	@Override
 	public void execute() {
 
-		getValue().setVariableName(getVariableName());
+		getValue().addVariable(variableName, value);
 		
 	}
 

@@ -5,16 +5,16 @@ import java.util.NoSuchElementException;
 import hillbillies.model.Unit;
 import hillbillies.part3.programs.SourceLocation;
 
-public class AnyExpression extends UnitExpression {
+public class FriendExpression extends UnitExpression {
 
-	public AnyExpression(SourceLocation sourceLocation) {
+	public FriendExpression(SourceLocation sourceLocation) {
 		super(sourceLocation);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Unit evaluate() {
-		return getUnit().getWorld().getNearestUnit();
+		return getUnit().getWorld().getNearestFriend();
 	}
 
 }

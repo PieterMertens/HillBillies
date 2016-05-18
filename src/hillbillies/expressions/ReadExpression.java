@@ -16,31 +16,11 @@ public class ReadExpression extends Expression<Expression<?>> {
 		return this.variableName;
 	}
 
-	private Task task;
-
-	public void setTask(Task task) {
-		this.task = task;
-	}
-
-	public Task getTask() {
-		return this.task;
-	}
-
-	public boolean isAssigned() {
-		return (getTask() != null);
-	}
-
 	@Override
-	public Expression<?> evaluate() throws IllegalArgumentException {//TODO andere exceoption kiezen wnt gn argument
+	public Expression<?> evaluate() throws IllegalArgumentException {
 
-		if (isAssigned()) {
-			Expression<?> expression = ;
-			expression.setVariableName(this.getVariablename());
-			
-			return expression;
-		} else {
-			throw new IllegalArgumentException("There is no task assigned to this variable.");
-		}
+		if (isVariable(variableName)) {
+			return getVariable(variableName);
 	}
 
 }

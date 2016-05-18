@@ -1,19 +1,18 @@
 package hillbillies.expressions;
 
-import hillbillies.model.Unit;
 import hillbillies.part3.programs.SourceLocation;
 
-public class ThisExpression extends UnitExpression {
+public class WorkshopPositionExpression extends PositionExpression {
 
-	public ThisExpression(SourceLocation sourceLocation) {
+	public WorkshopPositionExpression(SourceLocation sourceLocation) {
 		super(sourceLocation);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public Unit evaluate() {
+	public int[] evaluate() {
 		// TODO Auto-generated method stub
-		return getUnit();
+		return getWorld().getNearestWorkhop(getUnit());
 	}
 
 }

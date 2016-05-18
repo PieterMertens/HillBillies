@@ -6,7 +6,7 @@ import hillbillies.part3.programs.SourceLocation;
 
 public class WhileStatement extends Statement {
 
-	// TODO tests toevoegen voor valid condition, body enz
+	// TODO tests toevoegen voor valid condition, body enz?
 
 	private BooleanExpression condition;
 	private Statement body;
@@ -29,7 +29,7 @@ public class WhileStatement extends Statement {
 	public void execute() {
 		
 		if(getCondition().evaluate()&&!isExecuted()){
-			
+			//TODO juist maken
 			getBody().execute();
 			
 			

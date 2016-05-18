@@ -34,7 +34,7 @@ public class Task {
 	 * @effect The priority of this new Task is set to the given priority. |
 	 *         this.setPriority(priority)
 	 */
-	public Task(String name, int priority, List<Statement> activities, int[] cube) throws IllegalArgumentException {
+	public Task(String name, int priority, List<Statement> activities, int[] selectedPosition) throws IllegalArgumentException {
 		if (!canHaveAsName(name))
 			throw new IllegalArgumentException();
 		this.name = name;
@@ -42,6 +42,9 @@ public class Task {
 		if(!canHaveAsActivities(activities))
 			throw new IllegalArgumentException();
 		this.activities = activities;
+		if (! canHaveAsSelectedPosition(selectedPosition))
+			throw new IllegalArgumentException();
+		this.selectedPosition = selectedPosition;
 	}
 
 	/**
@@ -139,11 +142,11 @@ public class Task {
 	 *             This new Task cannot have the given activities as its
 	 *             activities. | ! canHaveAsActivities(this.getActivities())
 	 */
-	public Task(List<Statement> activities) throws IllegalArgumentException {
-		if (!canHaveAsActivities(activities))
-			throw new IllegalArgumentException();
-		this.activities = activities;
-	}
+//	public Task(List<Statement> activities) throws IllegalArgumentException {
+//		if (!canHaveAsActivities(activities))
+//			throw new IllegalArgumentException();
+//		this.activities = activities;
+//	}
 
 	/**
 	 * Return the activities of this Task.
@@ -171,6 +174,54 @@ public class Task {
 	 * Variable registering the activities of this Task.
 	 */
 	private final List<Statement> activities;
+	
+	/** TO BE ADDED TO CLASS HEADING
+	 * @invar  Each task can have its selected position as selected position.
+	 *       | canHaveAsSelectedPosition(this.getSelectedPosition())
+	 */
+
+/**
+ * Initialize this new task with given selected position.
+ * 
+ * @param  selectedPosition
+ *         The selected position for this new task.
+ * @post   The selected position of this new task is equal to the given
+ *         selected position.
+ *       | new.getSelectedPosition() == selectedPosition
+ * @throws IllegalArgumentException
+ *         This new task cannot have the given selected position as its selected position.
+ *       | ! canHaveAsSelectedPosition(this.getSelectedPosition())
+ */
+//public Task(int[] selectedPosition) throws IllegalArgumentException {
+	
+//}
+
+/**
+ * Return the selected position of this task.
+ */
+@Basic @Raw @Immutable
+public int[] getSelectedPosition() {
+	return this.selectedPosition;
+}
+
+/**
+ * Check whether this task can have the given selected position as its selected position.
+ *  
+ * @param  selectedPosition
+ *         The selected position to check.
+ * @return 
+ *       | result == 
+*/
+@Raw
+public boolean canHaveAsSelectedPosition(int[] selectedPosition) {
+	//TODO checken of vali pos
+	return true;
+}
+
+/**
+ * Variable registering the selected position of this task.
+ */
+private final int[] selectedPosition;
 
 	/**
 	 * TO BE ADDED TO CLASS HEADING

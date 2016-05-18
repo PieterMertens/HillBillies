@@ -1,5 +1,6 @@
 package hillbillies.statements;
 
+import hillbillies.model.Task;
 import hillbillies.model.Unit;
 import hillbillies.part3.programs.SourceLocation;
 
@@ -23,14 +24,19 @@ public abstract class Statement {
 
 	private SourceLocation sourceLocation;
 	private Unit unit;
-
-	public void setUnit(Unit unit) {// TODO unit moet mss niet in hoofdklasse vn
-									// statement...
-		this.unit = unit;
+	private Task task;
+	
+	public void setTask(Task task){
+		this.task = task;
+	}
+	
+	public Task getTask(){
+		return this.task;
 	}
 
+
 	public Unit getUnit() {
-		return this.unit;
+		return getTask().getAssignedUnit();
 	}
 
 	public boolean isAssignedToUnit() {
