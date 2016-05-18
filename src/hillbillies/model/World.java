@@ -524,13 +524,14 @@ public class World {
 	 */
 	private boolean isTerminated;
 
-	
 	private Set<double[]> workshops = new HashSet<>();
 
 	/**
-	 * Make a set of double arrays with the positions of all the workshops in the world
+	 * Make a set of double arrays with the positions of all the workshops in
+	 * the world
 	 * 
-	 * @post workshops contains double arrays with the positions of all the workshops in the world
+	 * @post workshops contains double arrays with the positions of all the
+	 *       workshops in the world
 	 */
 	private void makeListWorkshops() {
 		for (int x = 0; x < this.getNbCubesX(); x++) {
@@ -552,7 +553,7 @@ public class World {
 	 * Return the boulder that is closest to the given unit in distance.
 	 * 
 	 * @param unit
-	 * 			The observed unit. 
+	 *            The observed unit.
 	 * @return result == boulder nearest to the given unit
 	 */
 	public Boulder getNearestBoulder(Unit unit) {
@@ -572,7 +573,7 @@ public class World {
 	 * Return the log that is closest to the given unit in distance.
 	 * 
 	 * @param unit
-	 * 			The observed unit. 
+	 *            The observed unit.
 	 * @return result == log nearest to the given unit
 	 */
 	public Log getNearestLog(Unit unit) {
@@ -589,11 +590,13 @@ public class World {
 	}
 
 	/**
-	 * Return the position of the workshop that is closest to the given unit in distance.
+	 * Return the position of the workshop that is closest to the given unit in
+	 * distance.
 	 * 
 	 * @param unit
-	 * 			The observed unit. 
-	 * @return result == int array with coordinates of workshop nearest to the given unit
+	 *            The observed unit.
+	 * @return result == int array with coordinates of workshop nearest to the
+	 *         given unit
 	 */
 	public int[] getNearestWorkhop(Unit unit) {
 		double distance = Double.POSITIVE_INFINITY;
@@ -606,5 +609,75 @@ public class World {
 			}
 		}
 		return Helper.doubleArrayToIntArray(nearestWorkshop);
+	}
+
+	/**
+	 * Return the position of the enemy that is closest to the given unit in
+	 * distance.
+	 * 
+	 * @param unit
+	 *            The observed unit.
+	 * @return result == unit nearest to the given unit who's from a different
+	 *         faction
+	 */
+	public Unit getNearestEnemy(Unit unit) {
+		double distance = Double.POSITIVE_INFINITY;
+		Unit nearestEnemy = null;
+		for (Unit enemy : this.getUnits()) {
+			if (enemy.getFaction() != unit.getFaction()) {
+				double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), enemy.getPosition());
+				if (newDistance < distance) {
+					distance = newDistance;
+					nearestEnemy = enemy;
+				}
+			}
+		}
+		return nearestEnemy;
+	}
+	
+	/**
+	 * Return the position of the friend that is closest to the given unit in
+	 * distance.
+	 * 
+	 * @param unit
+	 *            The observed unit.
+	 * @return result == unit nearest to the given unit who's from the same faction
+	 */
+	public Unit getNearestFriend(Unit unit) {
+		double distance = Double.POSITIVE_INFINITY;
+		Unit nearestFriend = null;
+		for (Unit friend : this.getUnits()) {
+			if (friend.getFaction() == unit.getFaction() && unit != friend) {
+				double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), friend.getPosition());
+				if (newDistance < distance) {
+					distance = newDistance;
+					nearestFriend = friend;
+				}
+			}
+		}
+		return nearestFriend;
+	}
+	
+	/**
+	 * Return the position of the unit that is closest to the given unit in
+	 * distance.
+	 * 
+	 * @param unit
+	 *            The observed unit.
+	 * @return result == unit nearest to the given unit
+	 */
+	public Unit getNearestUnit(Unit unit) {
+		double distance = Double.POSITIVE_INFINITY;
+		Unit nearestUnit = null;
+		for (Unit other : this.getUnits()) {
+			if (unit != other) {
+				double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), other.getPosition());
+				if (newDistance < distance) {
+					distance = newDistance;
+					nearestUnit = other;
+				}
+			}
+		}
+		return nearestUnit;
 	}
 }

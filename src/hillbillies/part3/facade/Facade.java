@@ -414,7 +414,7 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 	@Override
 	public void moveToAdjacent(Unit unit, int dx, int dy, int dz) throws ModelException {
 
-		unit.moveToAdjecent(dx, dy, dz);
+		unit.moveToAdjacent(dx, dy, dz);
 	}
 
 	@Override

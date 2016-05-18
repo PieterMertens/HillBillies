@@ -153,7 +153,7 @@ public class Unit {
 	 *         world borders if there is a world assigned to the unit.
 	 *         Otherwise, result = true if the 3 coordinates are bigger than 0.
 	 */
-	public static boolean isValidPosition(double[] position, World world) {
+	private static boolean isValidPosition(double[] position, World world) {
 
 		if (position.length == 3) {
 			for (int k = 0; k < position.length; k++) {
@@ -234,7 +234,7 @@ public class Unit {
 	 * @return | result == true if first letter is uppercase and no symbols
 	 *         except ' and " are used.
 	 */
-	public static boolean isValidName(String name) {
+	private static boolean isValidName(String name) {
 
 		if (name.length() > 1 && Pattern.matches("[a-zA-Z\\s\\'\\\"]*", name)
 				&& Character.isUpperCase(name.codePointAt(0)))
@@ -339,7 +339,7 @@ public class Unit {
 	 * @return | result == true if weight >= 1 and weight <= 200 && weight >=
 	 *         (strength + agility) / 2
 	 */
-	public static boolean isValidWeight(int weight, int strength, int agility) {
+	private static boolean isValidWeight(int weight, int strength, int agility) {
 		if (weight >= 1 && weight <= 200 && weight >= (strength + agility) / 2)
 			return true;
 		return false;
@@ -382,7 +382,7 @@ public class Unit {
 	 *            The total weight to check.
 	 * @return | result ==
 	 */
-	public static boolean isValidTotalWeight(int totalWeight, int weight) {
+	private static boolean isValidTotalWeight(int totalWeight, int weight) {
 		if (totalWeight <= weight + 50)
 			return true;
 		return false;
@@ -399,7 +399,7 @@ public class Unit {
 	 *       totalWeight
 	 */
 	@Raw
-	public void setTotalWeight(int totalWeight) {
+	private void setTotalWeight(int totalWeight) {
 		if (isValidTotalWeight(totalWeight, this.getWeight()))
 			this.totalWeight = totalWeight;
 	}
@@ -425,7 +425,7 @@ public class Unit {
 	 *            The strength to check.
 	 * @return | result == true if strength >= 1 and strength <= 200
 	 */
-	public static boolean isValidStrength(int strength) {
+	private static boolean isValidStrength(int strength) {
 		if (strength >= 1 && strength <= 200)
 			return true;
 		return false;
@@ -467,7 +467,7 @@ public class Unit {
 	 *            The agility to check.
 	 * @return | result == true if agility >= 1 and agility <= 200
 	 */
-	public static boolean isValidAgility(int agility) {
+	private static boolean isValidAgility(int agility) {
 		if (agility >= 1 && agility <= 200)
 			return true;
 		return false;
@@ -509,7 +509,7 @@ public class Unit {
 	 *            The toughness to check.
 	 * @return | result == if toughness >= 1 and toughness <= 200
 	 */
-	public static boolean isValidToughness(int toughness) {
+	private static boolean isValidToughness(int toughness) {
 		if (toughness >= 1 && toughness <= 200)
 			return true;
 		return false;
@@ -573,7 +573,7 @@ public class Unit {
 	 *            The hitpoints to check.
 	 * @return | result == hitpoints <= (200 * weight * toughness / 10000)
 	 */
-	public static boolean isValidHitpoints(int hitpoints, int weight, int toughness) {
+	private static boolean isValidHitpoints(int hitpoints, int weight, int toughness) {
 		if (hitpoints <= (200 * weight * toughness / 10000))
 			return true;
 		return false;
@@ -625,7 +625,7 @@ public class Unit {
 	 * @return | result == true if staminapoints <= (200 * weight * toughness /
 	 *         10000) && staminapoints >= 0)
 	 */
-	public static boolean isValidStaminapoints(int staminapoints, int weight, int toughness) {
+	private static boolean isValidStaminapoints(int staminapoints, int weight, int toughness) {
 		if (staminapoints <= (200 * weight * toughness / 10000) && staminapoints >= 0)
 			return true;
 		return false;
@@ -659,7 +659,7 @@ public class Unit {
 	 * @param dt
 	 *            The period of time
 	 */
-	public void staminadrain(double dt) {
+	private void staminadrain(double dt) {
 		// System.out.println("dt: " + dt);
 		// if (dt >= 0.1) {
 		// System.out.println("staminadr: "+this.getStaminapoints());
@@ -688,7 +688,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public float getStaminaTime() {
+	private float getStaminaTime() {
 		return this.time;
 	}
 
@@ -700,7 +700,7 @@ public class Unit {
 	 *            time The stamina time to check.
 	 * @return | result ==
 	 */
-	public static boolean isValidStaminaTime(float time) {
+	private static boolean isValidStaminaTime(float time) {
 		if (time <= 0.1f && time > 0) {
 			return true;
 		}
@@ -719,7 +719,7 @@ public class Unit {
 	 *             unit. | ! isValidStaminaTime(getStaminaTime())
 	 */
 	@Raw
-	public void setStaminaTime(float time) throws IllegalArgumentException {
+	private void setStaminaTime(float time) throws IllegalArgumentException {
 		if (!isValidStaminaTime(time))
 			throw new IllegalArgumentException();
 		this.time = time;
@@ -765,7 +765,7 @@ public class Unit {
 	 *         returns true. | result == true if (orientation >= 0 &&
 	 *         orientation <= Math.PI * 2)
 	 */
-	public static boolean isValidOrientation(float orientation) {
+	private static boolean isValidOrientation(float orientation) {
 		if (orientation >= (float) -Math.PI && orientation <= (float) Math.PI)
 			return true;
 		return false;
@@ -799,7 +799,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public double getTimeNotResting() {
+	private double getTimeNotResting() {
 		return this.timenotresting;
 	}
 
@@ -812,7 +812,7 @@ public class Unit {
 	 * @return | result == true if timenotresting >= 0 and timenotresting <=
 	 *         180.2.
 	 */
-	public static boolean isValidTimeNotResting(double timenotresting) {
+	private static boolean isValidTimeNotResting(double timenotresting) {
 		if (timenotresting >= 0 && timenotresting <= 180.2) {
 			return true;
 		}
@@ -831,7 +831,7 @@ public class Unit {
 	 *             any unit. | ! isValidTimeNotResting(getTimeNotResting())
 	 */
 	@Raw
-	public void setTimeNotResting(double timenotresting) throws IllegalArgumentException {
+	private void setTimeNotResting(double timenotresting) throws IllegalArgumentException {
 		if (!isValidTimeNotResting(timenotresting))
 			throw new IllegalArgumentException();
 		this.timenotresting = timenotresting;
@@ -873,7 +873,7 @@ public class Unit {
 			if (!this.getWorld().hasImpassableNeighbour(this.getPosition()[0], this.getPosition()[1],
 					this.getPosition()[2]) && !this.getIsFalling()) {
 				this.setIsFalling(true);
-				moveToAdjecent(0, 0, -1);
+				moveToAdjacent(0, 0, -1);
 			} else {
 				if (this.getIsResting()) {
 					doRest(dt);
@@ -901,7 +901,7 @@ public class Unit {
 							}
 						}
 						this.updatePosition(dt);
-						if (this.moveToAdjecentTargetReached()) {
+						if (this.moveToAdjacentTargetReached()) {
 
 							System.out.println(
 									"unit" + this + " x: " + this.getPosition()[0] + " y: " + this.getPosition()[1]);
@@ -926,7 +926,7 @@ public class Unit {
 									} else {
 
 										if (inQ(Q, Helper.doubleArrayToIntArray(this.getPosition()))) {
-											this.getNextMoveToAdjecentFromQ(this.getPosition());
+											this.nextMoveToAdjacentFromQ();
 										} else {
 											moveTo(Helper.doubleArrayToIntArray(target));
 										}
@@ -951,7 +951,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public boolean getWantToWork() {
+	private boolean getWantToWork() {
 		return this.wantToWork;
 	}
 
@@ -964,7 +964,7 @@ public class Unit {
 	 *       new.getWantToWork() == wantToWork
 	 */
 	@Raw
-	public void setWantToWork(boolean wantToWork) {
+	private void setWantToWork(boolean wantToWork) {
 		this.wantToWork = wantToWork;
 	}
 
@@ -979,7 +979,7 @@ public class Unit {
 	 * @param dt
 	 *            The period of time
 	 */
-	public void updatePosition(double dt) {
+	private void updatePosition(double dt) {
 
 		velocity = getVelocity();
 
@@ -993,7 +993,7 @@ public class Unit {
 
 	}
 
-	private int[] adjecentDelta = new int[3];
+	private int[] adjacentDelta = new int[3];
 
 	/**
 	 * Return the current speed of the unit
@@ -1014,9 +1014,9 @@ public class Unit {
 		if (this.getIsSprinting())
 			baseSpeed *= 2;
 
-		if (adjecentDelta[2] == 1) {
+		if (adjacentDelta[2] == 1) {
 			currentSpeed = baseSpeed * 0.5;
-		} else if (adjecentDelta[2] == -1) {
+		} else if (adjacentDelta[2] == -1) {
 			currentSpeed = baseSpeed * 1.2;
 		} else {
 			currentSpeed = baseSpeed;
@@ -1029,7 +1029,7 @@ public class Unit {
 	/**
 	 * Variable registering whether the unit is moving to somewhere.
 	 */
-	public boolean isMovingTo;
+	private boolean isMovingTo;
 
 	/**
 	 * Return whether this unit is moving.
@@ -1047,7 +1047,7 @@ public class Unit {
 	 *            The state to check.
 	 * @return | result == true if given value is boolean
 	 */
-	public static boolean isValidIsMoving(boolean isMoving) {
+	private static boolean isValidIsMoving(boolean isMoving) {
 		if (isMoving || isMoving == false)
 			return true;
 		return false;
@@ -1065,7 +1065,7 @@ public class Unit {
 	 *             isValidIsMoving(getIsMoving())
 	 */
 	@Raw
-	public void setIsMoving(boolean isMoving) throws IllegalArgumentException {
+	private void setIsMoving(boolean isMoving) throws IllegalArgumentException {
 		if (!isValidIsMoving(isMoving))
 			throw new IllegalArgumentException();
 		this.isMoving = isMoving;
@@ -1097,7 +1097,7 @@ public class Unit {
 	 *            The state to check.
 	 * @return | result == true if given value is boolean
 	 */
-	public static boolean isValidIsSprinting(boolean isSprinting) {
+	private static boolean isValidIsSprinting(boolean isSprinting) {
 		if (isSprinting || isSprinting == false)
 			return true;
 		return false;
@@ -1153,7 +1153,7 @@ public class Unit {
 	 *            The isWorking to check.
 	 * @return | result == true if given value is boolean
 	 */
-	public static boolean isValidIsWorking(boolean isWorking) {
+	private static boolean isValidIsWorking(boolean isWorking) {
 		if (isWorking || isWorking == false)
 			return true;
 		return false;
@@ -1172,7 +1172,7 @@ public class Unit {
 	 *             ! isValidIsWorking(getIsWorking())
 	 */
 	@Raw
-	public void setIsWorking(boolean isWorking) throws IllegalArgumentException {
+	private void setIsWorking(boolean isWorking) throws IllegalArgumentException {
 		if (!isValidIsWorking(isWorking))
 			throw new IllegalArgumentException();
 		this.isWorking = isWorking;
@@ -1205,7 +1205,7 @@ public class Unit {
 	 *            The isAttacking to check.
 	 * @return | result == true if given value is boolean
 	 */
-	public static boolean isValidIsAttacking(boolean isAttacking) {
+	private static boolean isValidIsAttacking(boolean isAttacking) {
 		if (isAttacking || isAttacking == false)
 			return true;
 		return false;
@@ -1224,7 +1224,7 @@ public class Unit {
 	 *             unit. | ! isValidIsAttacking(getisAttacking())
 	 */
 	@Raw
-	public void setIsAttacking(boolean isAttacking) throws IllegalArgumentException {
+	private void setIsAttacking(boolean isAttacking) throws IllegalArgumentException {
 		if (!isValidIsAttacking(isAttacking))
 			throw new IllegalArgumentException();
 		this.isAttacking = isAttacking;
@@ -1257,7 +1257,7 @@ public class Unit {
 	 *            The isResting to check.
 	 * @return | result == true if given value is either true or false
 	 */
-	public static boolean isValidIsResting(boolean isResting) {
+	private static boolean isValidIsResting(boolean isResting) {
 		if (isResting || isResting == false)
 			return true;
 		return false;
@@ -1276,7 +1276,7 @@ public class Unit {
 	 *             ! isValidIsResting(getIsResting())
 	 */
 	@Raw
-	public void setIsResting(boolean isResting) throws IllegalArgumentException {
+	private void setIsResting(boolean isResting) throws IllegalArgumentException {
 		if (!isValidIsResting(isResting))
 			throw new IllegalArgumentException();
 		this.isResting = isResting;
@@ -1334,7 +1334,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public boolean getIsFalling() {
+	private boolean getIsFalling() {
 		return this.isFalling;
 	}
 
@@ -1345,7 +1345,7 @@ public class Unit {
 	 *            The isFalling to check.
 	 * @return | result == true if isFalling is either true or false
 	 */
-	public static boolean isValidIsFalling(boolean isFalling) {
+	private static boolean isValidIsFalling(boolean isFalling) {
 		if (isFalling || isFalling == false)
 			return true;
 		return false;
@@ -1363,7 +1363,7 @@ public class Unit {
 	 *             ! isValidIsFalling(getIsFalling())
 	 */
 	@Raw
-	public void setIsFalling(boolean isFalling) throws IllegalArgumentException {
+	private void setIsFalling(boolean isFalling) throws IllegalArgumentException {
 		if (!isValidIsFalling(isFalling))
 			throw new IllegalArgumentException();
 		this.isFalling = isFalling;
@@ -1393,23 +1393,23 @@ public class Unit {
 	/**
 	 * Variable registering the velocity of the unit
 	 */
-	public double[] velocity = new double[3];
-	// keeps the position from where the last movetoadjecent started.
+	private double[] velocity = new double[3];
+	// keeps the position from where the last movetoadjacent started.
 	/**
-	 * Variable registering the start position of moveToAdjecent
+	 * Variable registering the start position of moveToAdjacent
 	 */
-	public static double[] adjecentStart = new double[3];// TODO moet deze
+	private static double[] adjacentStart = new double[3];// TODO moet deze
 															// statiic zijn?
-	// keeps the postion of the targeted position from the last movetoadjecent.
+	// keeps the postion of the targeted position from the last movetoadjacent.
 	/**
-	 * Variable registering the targeted position of moveToAdjecent
+	 * Variable registering the targeted position of moveToAdjacent
 	 */
-	public double[] adjecentTarget = new double[3];
+	private double[] adjacentTarget = new double[3];
 	// keeps the postion of the targeted position from the last moveto.
 	/**
 	 * Variable registering the targeted position of moveTo
 	 */
-	public double[] target = new double[3];
+	private double[] target = new double[3];
 
 	/**
 	 * Move the unit to an adjacent cube
@@ -1423,17 +1423,17 @@ public class Unit {
 	 * @throws IllegalArgumentException
 	 *             thrown if the target position is invalid
 	 */
-	public void moveToAdjecent(int dx, int dy, int dz) throws IllegalArgumentException {
+	public void moveToAdjacent(int dx, int dy, int dz) throws IllegalArgumentException {
 
 		// System.out.println("start movetoadj");
 
-		adjecentStart = this.getPosition().clone();
-		// System.out.println("adjecentStart:" + adjecentStart[0] + " " +
-		// adjecentStart[1] + " " + adjecentStart[2]);
+		adjacentStart = this.getPosition().clone();
+		// System.out.println("adjacentStart:" + adjacentStart[0] + " " +
+		// adjacentStart[1] + " " + adjacentStart[2]);
 
 		double[] newPosition = new double[3];// TODO functie gebruiken
-		for (int k = 0; k < adjecentStart.length; k++) {
-			newPosition[k] = Math.floor(adjecentStart[k]) + 0.5d;
+		for (int k = 0; k < adjacentStart.length; k++) {
+			newPosition[k] = Math.floor(adjacentStart[k]) + 0.5d;
 		}
 
 		newPosition[0] += dx;
@@ -1446,16 +1446,16 @@ public class Unit {
 			throw new IllegalArgumentException();
 		else {
 
-			adjecentTarget = newPosition;
+			adjacentTarget = newPosition;
 
-			// System.out.println("new AdjTarget: " + adjecentTarget[0] + " " +
-			// adjecentTarget[1] + " " + adjecentTarget[2]);
+			// System.out.println("new AdjTarget: " + adjacentTarget[0] + " " +
+			// adjacentTarget[1] + " " + adjacentTarget[2]);
 
 			this.setIsMoving(true);
 
-			adjecentDelta[0] = dx;
-			adjecentDelta[1] = dy;
-			adjecentDelta[2] = dz;
+			adjacentDelta[0] = dx;
+			adjacentDelta[1] = dy;
+			adjacentDelta[2] = dz;
 
 			distance = getDistance(dx, dy, dz);// in principe overbodig mr beter
 												// in variabel -> minder
@@ -1504,7 +1504,7 @@ public class Unit {
 		// for (int k = 0; k < target.length; k++) {
 		// if (target[k] > upperlimit || target[k] < lowerlimit)
 		// return false;
-		// if (target[k] != adjecentStart[k]) {
+		// if (target[k] != adjacentStart[k]) {
 		// differentPos = true;
 		// }
 		// }
@@ -1522,15 +1522,15 @@ public class Unit {
 	 * @return result == true if the position between the unit and the target <
 	 *         1
 	 * @throws IllegalArgumentException
-	 *             thrown if the adjecentTarget is an invalid position
+	 *             thrown if the adjacentTarget is an invalid position
 	 */
-	public boolean moveToAdjecentTargetReached() throws IllegalArgumentException {
+	private boolean moveToAdjacentTargetReached() throws IllegalArgumentException {
 
-		if (getDistanceBetweenPositions(adjecentStart, adjecentTarget) <= getDistanceBetweenPositions(adjecentStart,
+		if (getDistanceBetweenPositions(adjacentStart, adjacentTarget) <= getDistanceBetweenPositions(adjacentStart,
 				this.getPosition())) {
 
-			// System.out.println("moveToAdjecentTargetReached ");
-			this.setPosition(adjecentTarget);
+			// System.out.println("moveToAdjacentTargetReached ");
+			this.setPosition(adjacentTarget);
 			return true;
 
 		}
@@ -1569,7 +1569,7 @@ public class Unit {
 		// target[2] = targetPosition[2] + 0.5d;
 		// System.out.println("new target: " + target[0] + " " + target[1] +
 		// " " + target[2]);
-		// moveToAdjecent(getMoveToDirectionX(), getMoveToDirectionY(),
+		// moveToAdjacent(getMoveToDirectionX(), getMoveToDirectionY(),
 		// getMoveToDirectionZ());
 
 		// }
@@ -1587,68 +1587,6 @@ public class Unit {
 	}
 
 	/**
-	 * Return the direction of the target along the X axis
-	 * 
-	 * @return result == 0 if the coordinates are the same
-	 * @return result == -1 if the target coordinate is smaller
-	 * @return result == 1 if the target coordinate is bigger
-	 */
-	public int getMoveToDirectionX() {
-
-		return getMoveToDirection((int) this.getPosition()[0], (int) target[0]);
-	}
-
-	/**
-	 * Return the direction of the target along the Y axis
-	 * 
-	 * @return result == 0 if the coordinates are the same
-	 * @return result == -1 if the target coordinate is smaller
-	 * @return result == 1 if the target coordinate is bigger
-	 */
-	public int getMoveToDirectionY() {
-
-		return getMoveToDirection((int) this.getPosition()[1], (int) target[1]);
-	}
-
-	/**
-	 * Return the direction of the target along the Z axis
-	 * 
-	 * @return result == 0 if the coordinates are the same
-	 * @return result == -1 if the target coordinate is smaller
-	 * @return result == 1 if the target coordinate is bigger
-	 */
-	public int getMoveToDirectionZ() {
-
-		return getMoveToDirection((int) this.getPosition()[2], (int) target[2]);
-	}
-
-	/**
-	 * Return the direction of the target along one axis
-	 * 
-	 * @param currentPosition
-	 *            The coordinate of the unit along the axis
-	 * @param targetPosition
-	 *            The coordinate of the target along the axis
-	 * @return result == 0 if the coordinates are the same
-	 * @return result == -1 if the target coordinate is smaller
-	 * @return result == 1 if the target coordinate is bigger
-	 */
-	public int getMoveToDirection(int currentPosition, int targetPosition) {
-
-		int direction;
-
-		if (currentPosition == targetPosition) {
-			direction = 0;
-		} else if (currentPosition < targetPosition) {
-			direction = 1;
-		} else {
-			direction = -1;
-		}
-
-		return direction;
-	}
-
-	/**
 	 * Check if the unit has reached its target
 	 * 
 	 * @return result == true if the position between the unit and the target <
@@ -1656,7 +1594,7 @@ public class Unit {
 	 * @throws IllegalArgumentException
 	 */
 	// TODO waarom IllegalArgumentException?
-	public boolean moveToTargetReached() throws IllegalArgumentException {
+	private boolean moveToTargetReached() throws IllegalArgumentException {
 
 		if (getDistanceBetweenPositions(this.getPosition(), target) < 1) {
 			return true;
@@ -1674,7 +1612,7 @@ public class Unit {
 	 *             if the target cannot be reached
 	 * 
 	 */
-	public void findPath() throws IllegalStateException {
+	private void findPath() throws IllegalStateException {
 
 		// System.out.println("------ findPath start ------");
 
@@ -1701,43 +1639,34 @@ public class Unit {
 
 		if (currentPosition != moveToTarget) {
 
-			// System.out.println("-- currentPosition != moveToTarget");
-
 			Object[] initialEntry = { moveToTarget, 0 };
 			Q.add(initialEntry);
 
 			int i = 0;
-			// System.out.println("--- voor while ----");
 			while (!inQ(Q, currentPosition) && i < Q.size()) {
-
-				// System.out.println("-- !inQ(Q, currentPosition) && i <
-				// Q.size()");
 
 				Object[] newEntry = ((Object[]) Q.get(i));
 				search((int[]) newEntry[0], (int) newEntry[1], Q);
 				i++;
 
 			}
-			// System.out.println("--- na while ----");
 			if (inQ(Q, currentPosition)) {
-				this.getNextMoveToAdjecentFromQ(this.getPosition());
+				
+				this.nextMoveToAdjacentFromQ();
+				
 			} else {
 
 				throw new IllegalStateException("The target cannot be reached.");
 			}
-
 		}
-
-		// System.out.println("------ findPath stop ------");
-
 	}
 
 	// TODO docu
-	public void getNextMoveToAdjecentFromQ(double[] currentposition) {
+	/**
+	 * Move to the adjacent cube that has the shortest path to the target.
+	 */
+	private void nextMoveToAdjacentFromQ() {
 		int[] currentPosition = Helper.doubleArrayToIntArray(this.getPosition());
-
-		// System.out.println("-- inQ(Q, currentPosition)");
-
 		List<int[]> possibilities = getNeighbouringCubes(currentPosition);
 		int[] nextPosition = null;
 		int nextN = Integer.MAX_VALUE;
@@ -1753,8 +1682,8 @@ public class Unit {
 
 			}
 			if (nextPosition != null) {
-				// System.out.println("-- moveToAdjecent");
-				moveToAdjecent(nextPosition[0] - currentPosition[0], nextPosition[1] - currentPosition[1],
+				// System.out.println("-- moveToAdjacent");
+				moveToAdjacent(nextPosition[0] - currentPosition[0], nextPosition[1] - currentPosition[1],
 						nextPosition[2] - currentPosition[2]);
 			}
 
@@ -1762,7 +1691,7 @@ public class Unit {
 	}
 
 	// TODO docu
-	public void search(int[] position, int n, List<Object[]> Q) {
+	private void search(int[] position, int n, List<Object[]> Q) {
 
 		// System.out.println("-- search(" + position[0] + " " + position[1] + "
 		// " + position[2] + " , " + n + ")");
@@ -1782,8 +1711,17 @@ public class Unit {
 		}
 	}
 
-	// TODO docu
-	public int getNumberQ(List<Object[]> Q, int[] position) {
+	/**
+	 * Return the  number of steps from given position to the target.
+	 * 
+	 * @param Q
+	 * 			The list with positions of cubes on paths with the number of steps to the target
+	 * @param position
+	 * 			The position to examine
+	 * @return result == int indicating number of steps to the target if the given position is in Q
+	 * @return result == the biggest possible int if the given position is not in Q
+	 */
+	private int getNumberQ(List<Object[]> Q, int[] position) {
 
 		try {
 			for (int i = 0; i < Q.size(); i++) {
@@ -1806,7 +1744,7 @@ public class Unit {
 	 *            The position to check
 	 * @return result == true if the position is in the list
 	 */
-	public boolean inQ(List<Object[]> Q, int[] position) {
+	private boolean inQ(List<Object[]> Q, int[] position) {
 
 		for (int i = 0; i < Q.size(); i++) {
 			int[] positionQ = (int[]) Q.get(i)[0];
@@ -1821,32 +1759,25 @@ public class Unit {
 	 * 
 	 * @param position
 	 *            The position to find the neighbors of
-	 * @return a list of the cubes neighboring the given position
+	 * @return a list of the positions of the cubes neighboring the given position
 	 */
-	public List<int[]> getNeighbouringCubes(int[] position) {
+	private List<int[]> getNeighbouringCubes(int[] position) {
 
 		List<int[]> neighbouringCubes = new ArrayList<>();
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
 				for (int k = -1; k <= 1; k++) {
 
-					// System.out.println("getneigbouring within:
-					// "+this.getWorld().withinBoundaries(position[0]+i,
-					// position[1]+j, position[2]+k)+" "+(position[0]+i)+" "+
-					// (position[1]+j)+" "+ (position[2]+k) );
 					if (!(i == 0 && j == 0 && k == 0)
 							&& this.getWorld().withinBoundaries(position[0] + i, position[1] + j, position[2] + k)) {// TODO
 																														// isvalidpositions
 						int[] newNeighbour = { position[0] + i, position[1] + j, position[2] + k };
 						neighbouringCubes.add(newNeighbour);
-						// System.out.println("new neighbour "+newNeighbour[0]+"
-						// "+newNeighbour[1]+" "+newNeighbour[2]);
 					}
 				}
 			}
 		}
 		return neighbouringCubes;
-
 	}
 
 	/**
@@ -2206,9 +2137,9 @@ public class Unit {
 
 		double[] velocity = new double[3];
 
-		velocity[0] = this.getCurrentSpeed() * adjecentDelta[0] / distance;
-		velocity[1] = this.getCurrentSpeed() * adjecentDelta[1] / distance;
-		velocity[2] = this.getCurrentSpeed() * adjecentDelta[2] / distance;
+		velocity[0] = this.getCurrentSpeed() * adjacentDelta[0] / distance;
+		velocity[1] = this.getCurrentSpeed() * adjacentDelta[1] / distance;
+		velocity[2] = this.getCurrentSpeed() * adjacentDelta[2] / distance;
 
 		return velocity;
 
@@ -2505,7 +2436,7 @@ public class Unit {
 	}
 
 	/**
-	 * The unit moves to a random valid adjecent cube on the same z-level
+	 * The unit moves to a random valid adjacent cube on the same z-level
 	 */
 	public void dodge() {// TODO dit kan eventueel nog aangepast worden als
 							// blijkt dat ge naar achter moet gaan ipv random
@@ -2515,7 +2446,7 @@ public class Unit {
 		int xdirection = random.nextInt(3) - 1;
 		int ydirection = random.nextInt(3) - 1;
 		double[] oldPosition = this.getPosition();
-		moveToAdjecent(xdirection, ydirection, 0);
+		moveToAdjacent(xdirection, ydirection, 0);
 		if (oldPosition == this.getPosition()) {
 			dodge();
 		}
