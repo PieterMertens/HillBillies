@@ -28,6 +28,7 @@ public class AssignStatement extends Statement{
 	public void execute() {
 
 		getValue().addVariable(variableName, value);
+		setIsExecuted();
 		
 	}
 

@@ -14,7 +14,7 @@ public class FriendExpression extends UnitExpression {
 
 	@Override
 	public Unit evaluate() {
-		return getUnit().getWorld().getNearestFriend();
+		return getUnit().getWorld().getNearestFriend(getUnit());
 	}
 
 }

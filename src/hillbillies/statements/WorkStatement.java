@@ -10,7 +10,7 @@ public class WorkStatement extends Statement {
 
 	private PositionExpression position;
 
-	public WorkStatement(PositionExpression position,SourceLocation sourceLocation) {
+	public WorkStatement(PositionExpression position, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.position = position;
 	}
@@ -21,13 +21,19 @@ public class WorkStatement extends Statement {
 
 	@Override
 	public void execute() {
-		if (isAssignedToUnit()){
-			getUnit().workAt(getPosition().evaluate()[0], getPosition().evaluate()[1], getPosition().evaluate()[2]);
-		}else{
+		System.out.println("execute Workst");
+		if (isAssignedToUnit()) {
+			if (getStarted() && !getUnit().getIsWorking()) {
+				setIsExecuted();
+				setStarted(false);
+			} else {
+				getUnit().workAt(getPosition().evaluate()[0], getPosition().evaluate()[1], getPosition().evaluate()[2]);
+				setStarted(true);
+			}
+		} else {
 			throw new NoSuchElementException("No unit found.");
 		}
-		
-		
+
 	}
 
 }

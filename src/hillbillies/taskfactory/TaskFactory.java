@@ -26,25 +26,20 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 		// TODO functie hiervan maken en kijken of beter kan
 
 		List<Task> tasks = new ArrayList<>();
-		List<Statement> activities = new ArrayList<>();
 
 		if (selectedCubes != null) {
 			for (int[] cube : selectedCubes) {
-				if (activity instanceof SequenceStatement) {
-					activities = ((SequenceStatement) activity).getStatements();
-				} else {
-					activities.add(activity);
-				}
-				Task task = new Task(name, priority, activities, cube);
+				Task task = new Task(name, priority, activity, cube);
 				tasks.add(task);
 			}
 
 		} else {
-			activities.add(activity);
-			Task task = new Task(name, priority, activities, null);
+			Task task = new Task(name, priority, activity, null);
 			tasks.add(task);
 		}
 
+		
+		System.out.println(tasks.size()+" taken aangemaakt");
 		return tasks;
 
 	}
@@ -65,7 +60,7 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 	public Statement createIf(Expression<?> condition, Statement ifBody, Statement elseBody,
 			SourceLocation sourceLocation) {
 
-		return new IfStatement((BooleanExpression)condition, ifBody, elseBody, sourceLocation);
+		return new IfStatement((BooleanExpression) condition, ifBody, elseBody, sourceLocation);
 	}
 
 	@Override
@@ -85,13 +80,13 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 
 	@Override
 	public Statement createMoveTo(Expression<?> position, SourceLocation sourceLocation) {
-		System.out.println("New MoveToStatement");
+		//System.out.println("New MoveToStatement");
 		return new MoveToStatement((PositionExpression) position, sourceLocation);
 	}
 
 	@Override
 	public Statement createWork(Expression<?> position, SourceLocation sourceLocation) {
-		System.out.println("New WorkStatement");
+		//System.out.println("New WorkStatement");
 		return new WorkStatement((PositionExpression) position, sourceLocation);
 	}
 

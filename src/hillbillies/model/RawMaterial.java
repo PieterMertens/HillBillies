@@ -1,6 +1,5 @@
 package hillbillies.model;
 
-
 import be.kuleuven.cs.som.annotate.*;
 import hillbillies.helper.Helper;
 
@@ -114,12 +113,14 @@ public abstract class RawMaterial {
 	 * 
 	 * @param position
 	 *            The position to check.
-	 * @return | result ==
+	 * @return | result == true if the raw material has no world or if the
+	 *         position is within the world boundaries
 	 */
-	public static boolean isValidPosition(double[] position) {
-
-		return true;
-		// TODO kijken f geldige pos is
+	private static boolean isValidPosition(double[] position, World world) {
+		if (world == null || world.withinBoundaries((int) position[0], (int) position[1], (int) position[2])) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -135,7 +136,7 @@ public abstract class RawMaterial {
 	 */
 	@Raw
 	public void setPosition(double[] position) throws IllegalArgumentException {
-		if (!isValidPosition(Helper.getCenterOfPosition(position)))
+		if (!isValidPosition(position, this.getWorld()))
 			throw new IllegalArgumentException();
 		this.position = position;
 	}
@@ -177,7 +178,8 @@ public abstract class RawMaterial {
 	 */
 	public void terminate() {
 		this.setIsTerminated(true);
-		this.setIsAvailible(false);
+		this.setIsAvailable(false);
+		this.setWorld(null);
 
 	}
 
@@ -187,7 +189,7 @@ public abstract class RawMaterial {
 	private boolean terminated;
 
 	/**
-	 * Return the isCarriedBy of this raw material.
+	 * Return the unit that is carrying this raw material.
 	 */
 	@Basic
 	@Raw
@@ -196,12 +198,12 @@ public abstract class RawMaterial {
 	}
 
 	/**
-	 * Check whether the given isCarriedBy is a valid isCarriedBy for any raw
-	 * material.
+	 * Check whether the given carrier is a valid carrier for any raw material.
 	 * 
 	 * @param isCarriedBy
-	 *            The isCarriedBy to check.
-	 * @return | result ==
+	 *            The carrier to check.
+	 * @return | result == true if the unit isn't terminated or if no-one is
+	 *         carrying it
 	 */
 	public static boolean isValidIsCarriedBy(Unit isCarriedBy) {
 		if (isCarriedBy == null || !isCarriedBy.isTerminated())
@@ -210,83 +212,120 @@ public abstract class RawMaterial {
 	}
 
 	/**
-	 * Set the isCarriedBy of this raw material to the given isCarriedBy.
+	 * Set the carrier of this raw material to the given carrier.
 	 * 
 	 * @param isCarriedBy
-	 *            The new isCarriedBy for this raw material.
-	 * @post The isCarriedBy of this new raw material is equal to the given
-	 *       isCarriedBy. | new.getIsCarriedBy() == isCarriedBy
+	 *            The new carrier for this raw material.
+	 * @post The carrier of this new raw material is equal to the given carrier.
+	 *       | new.getIsCarriedBy() == isCarriedBy
 	 * @throws IllegalArgumentException
-	 *             The given isCarriedBy is not a valid isCarriedBy for any raw
+	 *             The given carrier is not a valid carrier for any raw
 	 *             material. | ! isValidIsCarriedBy(getIsCarriedBy())
 	 */
 	@Raw
 	public void setIsCarriedBy(Unit isCarriedBy) throws IllegalArgumentException {
 		if (!isValidIsCarriedBy(isCarriedBy))
 			throw new IllegalArgumentException();
-		this.setIsAvailible(false);
+		this.setIsAvailable(false);
 		this.isCarriedBy = isCarriedBy;
 	}
 
 	/**
-	 * Variable registering the isCarriedBy of this raw material.
+	 * Variable registering the carrier of this raw material.
 	 */
 	private Unit isCarriedBy;
 
 	/**
-	 * Return the isAvailible of this raw material.
+	 * Return whether this raw material is available.
 	 */
 	@Basic
 	@Raw
-	public boolean getIsAvailible() {
-		return this.isAvailible;
+	public boolean getIsAvailable() {
+		return this.isAvailable;
 	}
 
 	/**
-	 * Set the isAvailible of this raw material to the given isAvailible.
+	 * Set the availability of this raw material to the given boolean.
 	 * 
-	 * @param isAvailible
-	 *            The new isAvailible for this raw material.
-	 * @post The isAvailible of this new raw material is equal to the given
-	 *       isAvailible. | new.getIsAvailible() == isAvailible
+	 * @param isAvailable
+	 *            The new availability for this raw material.
+	 * @post The availability of this new raw material is equal to the given
+	 *       availability. | new.getIsAvailible() == isAvailible
 	 * @throws IllegalArgumentException
-	 *             The given isAvailible is not a valid isAvailible for any raw
-	 *             material. | ! isValidIsAvailible(getIsAvailible())
+	 *             The given availability is not a valid availability for any
+	 *             raw material. | ! isValidIsAvailible(getIsAvailible())
 	 */
 	@Raw
-	public void setIsAvailible(boolean isAvailible) throws IllegalArgumentException {
-		this.isAvailible = isAvailible;
+	public void setIsAvailable(boolean isAvailable) throws IllegalArgumentException {
+		this.isAvailable = isAvailable;
 	}
 
 	/**
-	 * Variable registering the isAvailible of this raw material.
+	 * Variable registering the availability of this raw material.
 	 */
-	private boolean isAvailible = true;
+	private boolean isAvailable = true;
 
+	/**
+	 * Return the falling state of this unit.
+	 */
+	@Basic
+	@Raw
+	public boolean getIsFalling() {
+		return this.isFalling;
+	}
+
+	/**
+	 * Set the falling state of this unit to the given falling state.
+	 * 
+	 * @param isFalling
+	 *            The new falling state for this unit.
+	 * @post The falling state of this new unit is equal to the given falling
+	 *       state. | new.getIsFalling() == isFalling
+	 * @throws IllegalArgumentException
+	 *             The given falling state is not a valid falling state for any
+	 *             unit. | ! isValidIsFalling(getIsFalling())
+	 */
+	@Raw
+	public void setIsFalling(boolean isFalling) {
+		this.isFalling = isFalling;
+	}
+
+	/**
+	 * Variable registering whether the raw material is falling.
+	 */
 	private boolean isFalling;
+
+	/**
+	 * 
+	 */
 	private double ztarget;
 
 	public void advanceTime(double dt) {
-//		System.out.println(this.getPosition()[2]);
-		if (this.isFalling) {
+		// System.out.println(this.getPosition()[2]);
+		if (this.getIsFalling()) {
 			double z;
 			if (this.getPosition()[2] - this.ztarget > 0) {
 				z = this.getPosition()[2] + dt * fallingSpeed;
 			} else {
 				z = this.ztarget;
-				this.isFalling = false;
+				this.setIsFalling(false);
 			}
 			double[] position = { this.getPosition()[0], this.getPosition()[1], z };
 			this.setPosition(position);
 		} else {
-		if (this.isAvailible && !this.getIsTerminated() && !this.isFalling && !this.blockBelow()) {// TODO isAvail & isTerm hetzelfde?
+			if (this.getIsAvailable() && !this.getIsTerminated() && !this.getIsFalling() && !this.blockBelow()) {// TODO
+				// isAvail
+				// &
+				// isTerm
+				// hetzelfde?
 
-			this.ztarget = this.getPosition()[2] - 1;
-			this.isFalling = true;
+				this.ztarget = this.getPosition()[2] - 1;
+				this.setIsFalling(true);
+
+			}
 
 		}
-
-	}}
+	}
 
 	// /**
 	// * Return whether the terrain type is passable at the current position.

@@ -40,7 +40,6 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 
 	@Override
 	public Scheduler getScheduler(Faction faction) throws ModelException {
-		// TODO Auto-generated method stub
 		return faction.getScheduler();
 	}
 
@@ -78,7 +77,7 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 
 	@Override
 	public Task getAssignedTask(Unit unit) throws ModelException {
-		return unit.getAssignedTask();
+		return unit.getTask();
 	}
 
 	@Override

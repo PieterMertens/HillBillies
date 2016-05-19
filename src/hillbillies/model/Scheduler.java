@@ -17,12 +17,7 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public class Scheduler {
 
-	/**
-	 * Initialize this new Scheduler.
-	 *
-	 */
-	public Scheduler() {// TODO wordt deze gebruikt?
-	}
+
 
 	/**
 	 * Return the task list of this Scheduler.
@@ -41,6 +36,7 @@ public class Scheduler {
 	public void addTask(Task task) {
 		getTaskList().add(task);
 		task.addScheduler(this);
+		//System.out.println("Taak toegevoegd tasklistsize="+getTaskList().size()+" scheduler="+this);
 	}
 
 	public void addTasks(Collection<Task> tasks) {
@@ -69,13 +65,20 @@ public class Scheduler {
 		addTask(replacement);
 
 	}
+
+	public void startTaskOfUnit(Unit unit, Task task) {
+		unit.setTask(task);
+		unit.getTask().setAssignedUnit(unit);
+
+	}
+
 	public void stopTaskOfUnit(Unit unit) {
 		// TODO hier checken of task deel is vn scheduler? -> nrml wel want is
 		// gechecked bij toekenning, en als het niet zo is is het stopzetten van
 		// task niet erg?
 
-		unit.getAssignedTask().setAssignedUnit(null);
-		unit.setAssignedTask(null);
+		unit.getTask().setAssignedUnit(null);
+		unit.setTask(null);
 
 	}
 
@@ -101,11 +104,11 @@ public class Scheduler {
 	}
 
 	public Iterator<Task> getAllTasksIterator() throws NoSuchElementException {
-		System.out.println("--- test vn tasklist sizes " + getTaskList().size());
+		//System.out.println("--- test vn tasklist sizes " + getTaskList().size());
 
 		Iterator<Task> iterator = new Iterator<Task>() {
 
-			List<Task> remainingTaskList = getTaskList();
+			List<Task> remainingTaskList = new ArrayList<>(getTaskList());
 
 			@Override
 			public boolean hasNext() {
@@ -131,7 +134,7 @@ public class Scheduler {
 			}
 		};
 
-		System.out.println("- test vn tasklist sizes " + getTaskList().size());
+		//System.out.println("- test vn tasklist sizes " + getTaskList().size());
 		return iterator;
 	}
 
@@ -149,7 +152,7 @@ public class Scheduler {
 
 	public void scheduleTaskForUnit(Unit unit, Task task) throws IllegalStateException {
 		if (getTaskList().contains(task) && !task.isBeingExecuted()) {
-			unit.setAssignedTask(task);
+			unit.setTask(task);
 			task.setAssignedUnit(unit);
 		} else {
 			throw new IllegalStateException();
@@ -160,6 +163,53 @@ public class Scheduler {
 		scheduleTaskForUnit(unit, getUnexecutedTaskWithHighestPriority());
 	}
 
+	/** TO BE ADDED TO CLASS HEADING
+	 * @invar  Each scheduler can have its faction as faction.
+	 *       | canHaveAsFaction(this.getFaction())
+	 */
 
+/**
+ * Initialize this new scheduler with given faction.
+ * 
+ * @param  faction
+ *         The faction for this new scheduler.
+ * @post   The faction of this new scheduler is equal to the given
+ *         faction.
+ *       | new.getFaction() == faction
+ * @throws IllegalArgumentException
+ *         This new scheduler cannot have the given faction as its faction.
+ *       | ! canHaveAsFaction(this.getFaction())
+ */
+public Scheduler(Faction faction) throws IllegalArgumentException {
+	if (! canHaveAsFaction(faction))
+		throw new IllegalArgumentException();
+	this.faction = faction;
+}
 
+/**
+ * Return the faction of this scheduler.
+ */
+@Basic @Raw @Immutable
+public Faction getFaction() {
+	return this.faction;
+}
+
+/**
+ * Check whether this scheduler can have the given faction as its faction.
+ *  
+ * @param  faction
+ *         The faction to check.
+ * @return 
+ *       | result == 
+*/
+@Raw
+public boolean canHaveAsFaction(Faction faction) {
+	return true;
+}
+
+/**
+ * Variable registering the faction of this scheduler.
+ */
+private final Faction faction;
+	
 }

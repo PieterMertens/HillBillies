@@ -20,13 +20,16 @@ public class MoveToStatement extends Statement {
 
 	@Override
 	public void execute() {
-		if (isAssignedToUnit()){
-			getUnit().moveTo(getPosition().evaluate());
-		}else{
+		if (isAssignedToUnit()) {
+			if (getUnit().moveToTargetReached()) {
+				setIsExecuted();
+			} else {
+				getUnit().moveTo(getPosition().evaluate());
+			}
+		} else {
 			throw new NoSuchElementException("No unit found.");
 		}
-		
-		
+
 	}
 
 }

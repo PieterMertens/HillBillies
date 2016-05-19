@@ -1,5 +1,7 @@
 package hillbillies.expressions;
 
+import java.util.NoSuchElementException;
+
 import hillbillies.model.Task;
 import hillbillies.part3.programs.SourceLocation;
 
@@ -21,6 +23,10 @@ public class ReadExpression extends Expression<Expression<?>> {
 
 		if (isVariable(variableName)) {
 			return getVariable(variableName);
+		} else {
+			throw new NoSuchElementException("No variable found.");
+		}
+
 	}
 
 }

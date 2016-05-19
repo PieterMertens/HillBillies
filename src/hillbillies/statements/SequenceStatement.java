@@ -1,7 +1,10 @@
 package hillbillies.statements;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import hillbillies.model.Task;
 import hillbillies.part3.programs.SourceLocation;
 
 public class SequenceStatement extends Statement {
@@ -16,13 +19,31 @@ public class SequenceStatement extends Statement {
 
 	public List<Statement> getStatements() {
 		return this.statements;
+	}
 
+	public Statement getNextUnexecutedStatement() {
+
+		for (Statement statement : getStatements()) {
+			if (!statement.isExecuted()) {
+				return statement;
+			}
+		}
+
+		return null;
+
+	}
+
+	public boolean allStatementsExecuted() {
+		return (getNextUnexecutedStatement() == null) ? true : false;
 	}
 
 	@Override
 	public void execute() {
-		for (Statement statement : getStatements()) {
-			statement.execute();
+		System.out.println("execute sequencest");
+		if (allStatementsExecuted()) {
+			setIsExecuted();
+		} else {
+			getNextUnexecutedStatement().execute();
 		}
 
 	}

@@ -40,6 +40,7 @@ public class World {
 		this.setTerrainChangeListener(modelListener);
 		this.connectedToBorder = new ConnectedToBorder(this.getNbCubesX(), this.getNbCubesY(), this.getNbCubesZ());
 		makeListWorkshops();
+
 	}
 
 	/**
@@ -47,7 +48,7 @@ public class World {
 	 */
 	@Basic
 	@Raw
-	public int[][][] getTerrain() {
+	private int[][][] getTerrain() {
 		return this.terrain;
 	}
 
@@ -58,7 +59,7 @@ public class World {
 	 *            The terrain to check.
 	 * @return | result ==
 	 */
-	public static boolean isValidTerrain(int[][][] terrain) {
+	private static boolean isValidTerrain(int[][][] terrain) {
 		return true;// TODO vereisten checken
 	}
 
@@ -74,7 +75,7 @@ public class World {
 	 *             isValidTerrain(getTerrain())
 	 */
 	@Raw
-	public void setTerrain(int[][][] terrain) throws IllegalArgumentException {
+	private void setTerrain(int[][][] terrain) throws IllegalArgumentException {
 		if (!isValidTerrain(terrain))
 			throw new IllegalArgumentException();
 		this.terrain = terrain;
@@ -96,9 +97,8 @@ public class World {
 	 *       terrainChangeListener.
 	 */
 	@Raw
-	public void setTerrainChangeListener(TerrainChangeListener modelListener) {
+	private void setTerrainChangeListener(TerrainChangeListener modelListener) {
 		this.modelListener = modelListener;
-
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class World {
 	}
 
 	/**
-	 * Return whether any of the neighbouring cubes at the given coordinates are
+	 * Return whether any of the neighboring cubes at the given coordinates are
 	 * impassable.
 	 */
 	public boolean hasImpassableNeighbour(double x, double y, double z) {
@@ -214,13 +214,10 @@ public class World {
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
 				for (int k = -1; k <= 1; k++) {
-					if (!withinBoundaries((int) x + i, (int) y + j, (int) z + k)) {
-						return true;
-					}
-					// System.out.println("hasimp ng "+(x+i)+" "+(y+j)+"
-					// "+(z+k));
-					if (!isPassable(x + i, y + j, z + k)) {
-						return true;
+					if (withinBoundaries((int) x + i, (int) y + j, (int) z + k)) {
+						if (!isPassable(x + i, y + j, z + k)) {
+							return true;
+						}
 					}
 				}
 			}
@@ -246,7 +243,7 @@ public class World {
 	 *            The terrain to check.
 	 * @return | result ==
 	 */
-	public static boolean isValidCubeType(int value) {
+	private static boolean isValidCubeType(int value) {
 		return true;// TODO vereisten checken
 	}
 
@@ -304,7 +301,8 @@ public class World {
 		return connectedToBorder.isSolidConnectedToBorder(x, y, z);
 	}
 
-	public void getDisconnectedCubes() {
+	// TODO docu
+	private void getDisconnectedCubes() {
 		// XXX kan effecienter wrschnlk
 		for (int x = 0; x < this.getNbCubesX(); x++) {
 			for (int y = 0; y < this.getNbCubesY(); y++) {
@@ -339,7 +337,18 @@ public class World {
 		return unit;
 	}
 
-	public Unit createUnit(boolean enableDefaultBehavior) {
+	/**
+	 * Create a unit with a random name on a random valid position.
+	 * 
+	 * @param enableDefaultBehavior
+	 *            Indicates whether default behavior of the new unit should be
+	 *            enabled.
+	 * @return result== a unit a random 3 letter name, a random valid initial
+	 *         position, random attributes and default behavior state set to the
+	 *         given boolean | Unit(name, initialPosition, 0, 0, 0, 0,
+	 *         enableDefaultBehavior)
+	 */
+	private Unit createUnit(boolean enableDefaultBehavior) {
 
 		String name = Character.toString((char) Helper.randInt(65, 90))
 				+ Character.toString((char) Helper.randInt(97, 122))
@@ -347,21 +356,21 @@ public class World {
 
 		int[] initialPosition = Helper.getRandomPosition(this.getNbCubesX(), this.getNbCubesY(), this.getNbCubesZ());
 
-		// System.out.println("voor while: " + initialPosition[0] + " " +
-		// initialPosition[1] + " " + initialPosition[2]);
-
 		while (!isValidInitialPosition(initialPosition)) {
 			initialPosition = Helper.getRandomPosition(getNbCubesX(), getNbCubesY(), getNbCubesZ());
-			// System.out.println("in while" + initialPosition[0] +
-			// initialPosition[1] + initialPosition[2]);
 		}
-		// System.out.println("na while: " + initialPosition[0] + " " +
-		// initialPosition[1] + " " + initialPosition[2]);
 
 		return new Unit(name, initialPosition, 0, 0, 0, 0, enableDefaultBehavior);
 	}
 
-	public boolean isValidInitialPosition(int[] position) {
+	/**
+	 * Check whether the given position is a valid spawn position.
+	 * 
+	 * @param position
+	 *            The position to examine
+	 * @return result == true if the given position is a valid spawn position
+	 */
+	private boolean isValidInitialPosition(int[] position) {
 
 		if (isPassable(position[0], position[1], position[2])) {
 			if (position[2] == 0)
@@ -375,42 +384,88 @@ public class World {
 	}
 
 	/**
-	 * Adds the given unit to the given world.
+	 * Add the given unit to this world.
+	 * 
+	 * @param unit
+	 *            The unit to add to the world.
+	 * @post the unit is added to the set of units of this world |
+	 *       this.units.add(unit)
+	 * @throws IllegalArgumentException
+	 *             The maximum number of units in this world is reached. |
+	 *             units.size() >= 100
 	 */
 	public void addUnit(Unit unit) throws IllegalArgumentException {
 
-		if ((units.size() < 100) // &&
-		// unit.inFaction() && unit.getFactionSize <= 50//TODO inFaction
-		// toevoegen aan Unit
-		)
+		if (units.size() >= 100) {
+			throw new IllegalArgumentException("The maximum number of units in this world is reached.");
+		} else {
 			this.units.add(unit);
-		unit.setWorld(this);
+			unit.setWorld(this);
+		}
 
 	}
 
-	public void removeUnit(Unit unit) {
-		this.units.remove(unit);
+	/**
+	 * Remove the given unit from this world.
+	 * 
+	 * @param unit
+	 *            The unit to remove from this world.
+	 * @post the given unit is removed from the set of units of this world |
+	 *       this.units.remove(unit)
+	 * @throws IllegalArgumentException
+	 *             The unit is not in this world. | !units.contains(unit)
+	 */
+	public void removeUnit(Unit unit) throws IllegalArgumentException {
+		if (!this.getUnits().contains(unit)) {
+			throw new IllegalArgumentException("The unit is not in this world.");
+		} else {
+			this.units.remove(unit);
+		}
 	}
 
+	/**
+	 * A set containing all the units of this world.
+	 */
 	private Set<Unit> units = new HashSet<>();
 
 	/**
 	 * Return all units that are currently part of the world.
 	 */
-	public Set<Unit> getUnits() throws IllegalArgumentException {
+	public Set<Unit> getUnits() {
 		return units;
 	}
 
+	/**
+	 * Add the given faction to this world.
+	 * 
+	 * @param faction
+	 *            The faction to add
+	 * @post the given faction is added to the set of factions of this world |
+	 *       this.factions.add(faction)
+	 */
 	public void addFaction(Faction faction) {
 		this.factions.add(faction);
 	}
 
+	/**
+	 * Return a set of all the factions active in this world.
+	 */
 	public Set<Faction> getActiveFactions() {
 		return this.factions;
 	}
 
+	/**
+	 * A set containing all the factions active in this world.
+	 */
 	private Set<Faction> factions = new HashSet<>();
 
+	/**
+	 * Return the faction with the smallest number of members.
+	 * 
+	 * @return a new faction if the max amount of factions in the world isn't
+	 *         reached
+	 * @return the faction with the smallest amount of members in this world
+	 */
 	private Faction getSmallestFaction() {
 		if (this.getActiveFactions().size() < 5) {
 			Faction faction = new Faction(this);
@@ -428,92 +483,136 @@ public class World {
 		}
 	}
 
+	/**
+	 * Return a set of all the logs in this world.
+	 */
 	public Set<Log> getLogs() {
 		return this.logs;
 	}
 
-	public void addLog(Log log) throws IllegalArgumentException {
-
-		logs.add(log);
+	/**
+	 * Add the given log to this world.
+	 * 
+	 * @param log
+	 *            The log to add
+	 * @post the given log is added to the set of logs of this world |
+	 *       this.logs.add(log)
+	 */
+	public void addLog(Log log) {
+		this.logs.add(log);
 
 	}
 
+	/**
+	 * Remove the given log from this world.
+	 * 
+	 * @param log
+	 *            The log to remove from this world.
+	 * @post the given log is removed from the set of logs of this world |
+	 *       this.logs.remove(log)
+	 * @throws IllegalArgumentException
+	 *             The log is not in this world. | !logs.contains(log)
+	 */
 	public void removeLog(Log log) throws IllegalArgumentException {
-
-		logs.remove(log);
-
+		if (!this.getLogs().contains(log)) {
+			throw new IllegalArgumentException("The log is not in this world.");
+		} else {
+			this.logs.remove(log);
+		}
 	}
 
-	// public boolean logAtCube(int[] position) {
-	//
-	// for (Log log : this.getLogs()) {
-	// if (Helper.doubleArrayToIntArray(log.getPosition()) == position)
-	// return true;
-	// }
-	//
-	// return false;
-	//
-	// }
-
+	/**
+	 * Return the log at the given position.
+	 * 
+	 * @param position
+	 *            The position to examine.
+	 * @return a log on the given position if there is at least one
+	 * @return null if there is no log on that position
+	 */
 	public Log getLog(int[] position) {
 		for (Log log : this.getLogs()) {
-			if (Helper.doubleArrayToIntArray(log.getPosition())[0] == position[0]
-					&& Helper.doubleArrayToIntArray(log.getPosition())[1] == position[1]
-					&& Helper.doubleArrayToIntArray(log.getPosition())[2] == position[2]) {
+			if (Helper.getIsSamePosition(Helper.doubleArrayToIntArray(log.getPosition()), position)) {
 				return log;
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * A set containing all the logs in this world.
+	 */
 	private Set<Log> logs = new HashSet<>();
 
+	/**
+	 * Return a set of all the logs in this world.
+	 */
 	public Set<Boulder> getBoulders() {
 		return this.boulders;
 	}
 
-	public void addBoulder(Boulder boulder) throws IllegalArgumentException {
-
-		boulders.add(boulder);
+	/**
+	 * Add the given boulder to this world.
+	 * 
+	 * @param boulder
+	 *            The boulder to add
+	 * @post the given boulder is added to the set of boulders of this world |
+	 *       this.boulders.add(boulder)
+	 */
+	public void addBoulder(Boulder boulder) {
+		this.boulders.add(boulder);
 
 	}
 
+	/**
+	 * Remove the given boulder from this world.
+	 * 
+	 * @param boulder
+	 *            The boulder to remove from this world.
+	 * @post the given boulder is removed from the set of boulders of this world
+	 *       | this.boulders.remove(boulder)
+	 * @throws IllegalArgumentException
+	 *             The boulder is not in this world. |
+	 *             !boulders.contains(boulder)
+	 */
 	public void removeBoulder(Boulder boulder) throws IllegalArgumentException {
-
-		boulders.remove(boulder);
-
+		if (!this.getBoulders().contains(boulder)) {
+			throw new IllegalArgumentException("The boulder is not in this world.");
+		} else {
+			boulders.remove(boulder);
+		}
 	}
 
-	// public boolean boulderAtCube(int[] position) {
-	//
-	// for (Boulder boulder : this.getBoulders()) {
-	// if (Helper.doubleArrayToIntArray(boulder.getPosition()) == position)
-	// return true;
-	// }
-	//
-	// return false;
-	//
-	// }
-
+	/**
+	 * Return the boulder at the given position.
+	 * 
+	 * @param position
+	 *            The position to examine.
+	 * @return a boulder on the given position if there is at least one
+	 * @return null if there is no boulder on that position
+	 */
 	public Boulder getBoulder(int[] position) {
-		for (Boulder boulder : this.getBoulders()) { // TODO efficienter
-			if (Helper.doubleArrayToIntArray(boulder.getPosition())[0] == position[0]
-					&& Helper.doubleArrayToIntArray(boulder.getPosition())[1] == position[1]
-					&& Helper.doubleArrayToIntArray(boulder.getPosition())[2] == position[2]) {
+		for (Boulder boulder : this.getBoulders()) {
+			if (Helper.getIsSamePosition(Helper.doubleArrayToIntArray(boulder.getPosition()), position)) {
 				return boulder;
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * A set containing all the boulders in this world.
+	 */
 	private Set<Boulder> boulders = new HashSet<>();
 
+	/**
+	 * Terminate this world.
+	 */
 	public void terminate() {
 		this.isTerminated = true;
 	}
 
 	/**
-	 * Return whether the world is terminated
+	 * Return whether the world is terminated.
 	 */
 	public boolean getIsTerminated() {
 		return this.isTerminated;
@@ -524,6 +623,9 @@ public class World {
 	 */
 	private boolean isTerminated;
 
+	/**
+	 * A set containing the positions of all the workshops in this world.
+	 */
 	private Set<double[]> workshops = new HashSet<>();
 
 	/**
@@ -545,7 +647,12 @@ public class World {
 		}
 	}
 
-	public Set<double[]> getWorkshops() {
+	/**
+	 * Return all the workshops in this world.
+	 *  
+	 * @return a set of the positions of all the workshops in this world
+	 */
+	private Set<double[]> getWorkshops() {
 		return this.workshops;
 	}
 
@@ -560,7 +667,7 @@ public class World {
 		double distance = Double.POSITIVE_INFINITY;
 		Boulder nearestBoulder = null;
 		for (Boulder boulder : this.getBoulders()) {
-			double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), boulder.getPosition());
+			double newDistance = Helper.getDistanceBetweenPositions(unit.getPosition(), boulder.getPosition());
 			if (newDistance < distance) {
 				distance = newDistance;
 				nearestBoulder = boulder;
@@ -580,7 +687,7 @@ public class World {
 		double distance = Double.POSITIVE_INFINITY;
 		Log nearestLog = null;
 		for (Log log : this.getLogs()) {
-			double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), log.getPosition());
+			double newDistance = Helper.getDistanceBetweenPositions(unit.getPosition(), log.getPosition());
 			if (newDistance < distance) {
 				distance = newDistance;
 				nearestLog = log;
@@ -602,7 +709,7 @@ public class World {
 		double distance = Double.POSITIVE_INFINITY;
 		double[] nearestWorkshop = null;
 		for (double[] workshop : this.getWorkshops()) {
-			double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), workshop);
+			double newDistance = Helper.getDistanceBetweenPositions(unit.getPosition(), workshop);
 			if (newDistance < distance) {
 				distance = newDistance;
 				nearestWorkshop = workshop;
@@ -625,7 +732,7 @@ public class World {
 		Unit nearestEnemy = null;
 		for (Unit enemy : this.getUnits()) {
 			if (enemy.getFaction() != unit.getFaction()) {
-				double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), enemy.getPosition());
+				double newDistance = Helper.getDistanceBetweenPositions(unit.getPosition(), enemy.getPosition());
 				if (newDistance < distance) {
 					distance = newDistance;
 					nearestEnemy = enemy;
@@ -634,21 +741,22 @@ public class World {
 		}
 		return nearestEnemy;
 	}
-	
+
 	/**
 	 * Return the position of the friend that is closest to the given unit in
 	 * distance.
 	 * 
 	 * @param unit
 	 *            The observed unit.
-	 * @return result == unit nearest to the given unit who's from the same faction
+	 * @return result == unit nearest to the given unit who's from the same
+	 *         faction
 	 */
 	public Unit getNearestFriend(Unit unit) {
 		double distance = Double.POSITIVE_INFINITY;
 		Unit nearestFriend = null;
 		for (Unit friend : this.getUnits()) {
 			if (friend.getFaction() == unit.getFaction() && unit != friend) {
-				double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), friend.getPosition());
+				double newDistance = Helper.getDistanceBetweenPositions(unit.getPosition(), friend.getPosition());
 				if (newDistance < distance) {
 					distance = newDistance;
 					nearestFriend = friend;
@@ -657,7 +765,7 @@ public class World {
 		}
 		return nearestFriend;
 	}
-	
+
 	/**
 	 * Return the position of the unit that is closest to the given unit in
 	 * distance.
@@ -671,7 +779,7 @@ public class World {
 		Unit nearestUnit = null;
 		for (Unit other : this.getUnits()) {
 			if (unit != other) {
-				double newDistance = unit.getDistanceBetweenPositions(unit.getPosition(), other.getPosition());
+				double newDistance = Helper.getDistanceBetweenPositions(unit.getPosition(), other.getPosition());
 				if (newDistance < distance) {
 					distance = newDistance;
 					nearestUnit = other;

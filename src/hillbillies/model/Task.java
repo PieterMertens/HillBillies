@@ -34,14 +34,14 @@ public class Task {
 	 * @effect The priority of this new Task is set to the given priority. |
 	 *         this.setPriority(priority)
 	 */
-	public Task(String name, int priority, List<Statement> activities, int[] selectedPosition) throws IllegalArgumentException {
+	public Task(String name, int priority, Statement activities, int[] selectedPosition) throws IllegalArgumentException {
 		if (!canHaveAsName(name))
 			throw new IllegalArgumentException();
 		this.name = name;
 		this.setPriority(priority);
-		if(!canHaveAsActivities(activities))
+		if(!canHaveAsActivity(activities))
 			throw new IllegalArgumentException();
-		this.activities = activities;
+		this.activity = activities;
 		if (! canHaveAsSelectedPosition(selectedPosition))
 			throw new IllegalArgumentException();
 		this.selectedPosition = selectedPosition;
@@ -127,53 +127,54 @@ public class Task {
 	/**
 	 * TO BE ADDED TO CLASS HEADING
 	 * 
-	 * @invar Each Task can have its activities as activities. |
-	 *        canHaveAsActivities(this.getActivities())
+	 * @invar Each Task can have its activity as activity. |
+	 *        canHaveAsActivity(this.getActivity())
 	 */
 
 	/**
-	 * Initialize this new Task with given activities.
+	 * Initialize this new Task with given activity.
 	 * 
-	 * @param activities
-	 *            The activities for this new Task.
-	 * @post The activities of this new Task is equal to the given activities. |
-	 *       new.getActivities() == activities
+	 * @param activity
+	 *            The activity for this new Task.
+	 * @post The activity of this new Task is equal to the given activity. |
+	 *       new.getActivity() == activity
 	 * @throws IllegalArgumentException
-	 *             This new Task cannot have the given activities as its
-	 *             activities. | ! canHaveAsActivities(this.getActivities())
+	 *             This new Task cannot have the given activity as its
+	 *             activity. | ! canHaveAsActivity(this.getActivity())
 	 */
-//	public Task(List<Statement> activities) throws IllegalArgumentException {
-//		if (!canHaveAsActivities(activities))
+//	public Task(List<Statement> activity) throws IllegalArgumentException {
+//		if (!canHaveAsActivity(activity))
 //			throw new IllegalArgumentException();
-//		this.activities = activities;
+//		this.activity = activity;
 //	}
 
 	/**
-	 * Return the activities of this Task.
+	 * Return the activity of this Task.
 	 */
 	@Basic
 	@Raw
 	@Immutable
-	public List<Statement> getActivities() {
-		return this.activities;
+	public Statement getActivity() {
+		return this.activity;
 	}
 
 	/**
-	 * Check whether this Task can have the given activities as its activities.
+	 * Check whether this Task can have the given activity as its activity.
 	 * 
-	 * @param activities
-	 *            The activities to check.
+	 * @param activity
+	 *            The activity to check.
 	 * @return | result ==
 	 */
 	@Raw
-	public boolean canHaveAsActivities(List<Statement> activities) {
-		return (activities.size()>0);
+	public boolean canHaveAsActivity(Statement activities) {
+		//TODO  chechen
+		return true;
 	}
 
 	/**
-	 * Variable registering the activities of this Task.
+	 * Variable registering the activity of this Task.
 	 */
-	private final List<Statement> activities;
+	private final Statement activity;
 	
 	/** TO BE ADDED TO CLASS HEADING
 	 * @invar  Each task can have its selected position as selected position.

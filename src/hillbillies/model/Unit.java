@@ -44,7 +44,7 @@ import hillbillies.helper.Helper;
  *
  */
 public class Unit {
-
+	// TODO checken of interrupties werken
 	/**
 	 * Initialize this new unit with given name, position, weight, strength,
 	 * agility and toughness and whether or not default behavior is enabled.
@@ -119,7 +119,7 @@ public class Unit {
 		this.setStaminapoints(200 * weight * toughness / 10000);
 		System.out.println("staminap: " + this.getStaminapoints());
 		if (enableDefaultBehavior) {
-			startDefaultBehavior();
+			defaultRandomBehaviour();
 		}
 	}
 
@@ -783,10 +783,11 @@ public class Unit {
 	 */
 	@Raw
 	public void setOrientation(float orientation) {
-		if (isValidOrientation(orientation))
+		if (isValidOrientation(orientation)) {
 			this.orientation = orientation;
-		else
+		} else {
 			this.orientation = (float) (Math.PI / 2);
+		}
 	}
 
 	/**
@@ -813,7 +814,7 @@ public class Unit {
 	 *         180.2.
 	 */
 	private static boolean isValidTimeNotResting(double timenotresting) {
-		if (timenotresting >= 0 && timenotresting <= 180.2) {
+		if (timenotresting >= 0 && timenotresting <= 180.4) {
 			return true;
 		}
 		return false;
@@ -885,10 +886,10 @@ public class Unit {
 					}
 					if (this.getDefaultBehavior() && !this.getIsAttacking() && !this.getIsMoving()
 							&& !this.getIsResting() && !this.getIsWorking()) {
-						startDefaultBehavior();
-					}
+								startDefaultBehavior(dt);
+			}
 					if (this.getIsAttacking()) {
-						doAttack(dt, this.defender);
+						doAttack(dt, this.getDefender());
 					}
 					if (this.getIsWorking()) {
 						doWork(dt);
@@ -921,7 +922,7 @@ public class Unit {
 											work();
 										}
 										if (this.getWantToAttack()) {
-											attack(this, this.defender);
+											attack(this, this.getDefender());
 										}
 									} else {
 
@@ -1008,7 +1009,9 @@ public class Unit {
 	public double getCurrentSpeed() {
 		double currentSpeed;
 		double baseSpeed = 1.5 * (this.getStrength() + this.getAgility()) / (200 * this.getWeight() / 100);
-
+		if (!this.getIsMoving()) {
+			return 0;
+		}
 		if (this.getIsFalling())
 			return 3;
 		if (this.getIsSprinting())
@@ -1490,8 +1493,9 @@ public class Unit {
 			return true;
 		if (this.getWorld().withinBoundaries((int) target[0], (int) target[1], (int) target[2])
 				&& this.getWorld().isPassable(target[0], target[1], target[2])) {
-			return true;
-
+			if (this.getIsFalling() || this.getWorld().hasImpassableNeighbour(target[0], target[1], target[2])) {
+				return true;
+			}
 		}
 		return false;
 
@@ -1526,8 +1530,8 @@ public class Unit {
 	 */
 	private boolean moveToAdjacentTargetReached() throws IllegalArgumentException {
 
-		if (getDistanceBetweenPositions(adjacentStart, adjacentTarget) <= getDistanceBetweenPositions(adjacentStart,
-				this.getPosition())) {
+		if (Helper.getDistanceBetweenPositions(adjacentStart, adjacentTarget) <= Helper
+				.getDistanceBetweenPositions(adjacentStart, this.getPosition())) {
 
 			// System.out.println("moveToAdjacentTargetReached ");
 			this.setPosition(adjacentTarget);
@@ -1576,7 +1580,7 @@ public class Unit {
 		isMovingTo = true;
 
 		if (!isValidTarget(Helper.getCenterOfPosition(targetPosition))) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("This is not a valid target. ");
 		} else {
 			target[0] = targetPosition[0] + 0.5d;
 			target[1] = targetPosition[1] + 0.5d;
@@ -1596,7 +1600,7 @@ public class Unit {
 	// TODO waarom IllegalArgumentException?
 	private boolean moveToTargetReached() throws IllegalArgumentException {
 
-		if (getDistanceBetweenPositions(this.getPosition(), target) < 1) {
+		if (Helper.getDistanceBetweenPositions(this.getPosition(), this.target) < 1) {
 			return true;
 		}
 		return false;
@@ -1651,9 +1655,9 @@ public class Unit {
 
 			}
 			if (inQ(Q, currentPosition)) {
-				
+
 				this.nextMoveToAdjacentFromQ();
-				
+
 			} else {
 
 				throw new IllegalStateException("The target cannot be reached.");
@@ -1712,14 +1716,17 @@ public class Unit {
 	}
 
 	/**
-	 * Return the  number of steps from given position to the target.
+	 * Return the number of steps from given position to the target.
 	 * 
 	 * @param Q
-	 * 			The list with positions of cubes on paths with the number of steps to the target
+	 *            The list with positions of cubes on paths with the number of
+	 *            steps to the target
 	 * @param position
-	 * 			The position to examine
-	 * @return result == int indicating number of steps to the target if the given position is in Q
-	 * @return result == the biggest possible int if the given position is not in Q
+	 *            The position to examine
+	 * @return result == int indicating number of steps to the target if the
+	 *         given position is in Q
+	 * @return result == the biggest possible int if the given position is not
+	 *         in Q
 	 */
 	private int getNumberQ(List<Object[]> Q, int[] position) {
 
@@ -1759,7 +1766,8 @@ public class Unit {
 	 * 
 	 * @param position
 	 *            The position to find the neighbors of
-	 * @return a list of the positions of the cubes neighboring the given position
+	 * @return a list of the positions of the cubes neighboring the given
+	 *         position
 	 */
 	private List<int[]> getNeighbouringCubes(int[] position) {
 
@@ -1801,25 +1809,67 @@ public class Unit {
 	 *            Z coordinate of the target location
 	 */
 	public void workAt(int x, int y, int z) {
-		this.workPosition[0] = x;
-		this.workPosition[1] = y;
-		this.workPosition[2] = z;
-		if (!Helper.getIsSamePosition(Helper.doubleArrayToIntArray(this.getPosition()), workPosition)) {
-			for (int[] pos : this.getNeighbouringCubes(workPosition)) {
+		this.setWorkPosition(x, y, z);
+		double distance = Double.POSITIVE_INFINITY;
+		if (!Helper.getIsSamePosition(Helper.doubleArrayToIntArray(this.getPosition()), this.getWorkPosition())) {
+			int[] nearestPos = null;
+			for (int[] pos : this.getNeighbouringCubes(this.getWorkPosition())) {
 				if (this.isValidTarget(Helper.intArrayToDoubleArray(pos))) {
-					this.setWantToWork(true);
-					this.moveTo(pos);
+					double newDistance = Helper.getDistanceBetweenPositions(this.getPosition(),
+							Helper.getCenterOfPosition(pos));
+					if (newDistance == 0) {
+						distance = newDistance;
+						nearestPos = pos;
+						break;
+					}
+					if (newDistance < distance) {
+						distance = newDistance;
+						nearestPos = pos;
+					}
 				}
 			}
-		} else {
-			work();
+			if (distance != 0) {
+				this.setWantToWork(true);
+				this.moveTo(nearestPos);
+			}
 		}
+		if (distance == Double.POSITIVE_INFINITY || distance == 0) {
+			work();
+		} 
+		
+	}
+
+	/**
+	 * Return the work position of this unit.
+	 */
+	@Basic
+	@Raw
+	private int[] getWorkPosition() {
+		return this.workPosition;
+	}
+
+	/**
+	 * Set the work position of this unit to the given work position.
+	 * 
+	 * @param workPosition
+	 *            The new work position for this unit.
+	 * @post The work position of this new unit is equal to the given work
+	 *       position. | new.getWorkPosition() == workPosition
+	 */
+	@Raw
+	private void setWorkPosition(int x, int y, int z) {
+		System.out.println("workPos: " + this.workPosition[0]);
+		System.out.println("x: " + x);
+		this.workPosition[0] = x;
+		System.out.println("workPos: " + this.workPosition[0]);
+		this.workPosition[1] = y;
+		this.workPosition[2] = z;
 	}
 
 	/**
 	 * Variable registering the position where the unit works.
 	 */
-	private int[] workPosition = { 0, 0, 0 };
+	private int[] workPosition;
 
 	/**
 	 * Try to work at the work position when the work time is 0.
@@ -1831,14 +1881,17 @@ public class Unit {
 
 		float time = getWorkTime() - (float) dt;
 
-		int x = this.workPosition[0];
-		int y = this.workPosition[1];
-		int z = this.workPosition[2];
+		int[] workPosition = this.getWorkPosition();
+		int x = workPosition[0];
+		int y = workPosition[1];
+		int z = workPosition[2];
 
-		if (Helper.getIsSamePosition(workPosition, Helper.doubleArrayToIntArray(this.getPosition()))) {
-
-			double dx = x - this.getPosition()[0];
-			double dy = y - this.getPosition()[1];
+		if (!Helper.getIsSamePosition(workPosition, Helper.doubleArrayToIntArray(this.getPosition()))) {
+			// System.out.println("x: " + x + " y: " + y + " z: " + z);
+			// System.out.println("Cube Type workpos: " +
+			// this.getWorld().getCubeType(x, y, z));
+			double dx = x +0.5 - this.getPosition()[0];
+			double dy = y +0.5 - this.getPosition()[1];
 			this.setOrientation((float) Math.atan2(dy, dx));
 		}
 
@@ -1846,8 +1899,7 @@ public class Unit {
 
 			int experience = 10;
 
-			if ((this.getCarryingBoulder() || this.getCarryingLog())
-					&& this.getWorld().isPassable(this.workPosition[0], this.workPosition[1], this.workPosition[2])) {
+			if ((this.getCarryingBoulder() || this.getCarryingLog()) && this.getWorld().isPassable(x, y, z)) {
 				this.drop();
 
 			} else if (this.getWorld().getCubeType(x, y, z) == World.WORKSHOP && itemsAvailable(workPosition)) {
@@ -1903,7 +1955,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public Boulder getPickedUpBoulder() {
+	private Boulder getPickedUpBoulder() {
 		return this.pickedUpBoulder;
 	}
 
@@ -1915,7 +1967,7 @@ public class Unit {
 	 *            The pickedUpBoulder to check.
 	 * @return | result ==
 	 */
-	public static boolean isValidPickedUpBoulder(Boulder pickedUpBoulder) {
+	private static boolean isValidPickedUpBoulder(Boulder pickedUpBoulder) {
 		// TODO isValid
 		return true;
 	}
@@ -1932,7 +1984,7 @@ public class Unit {
 	 *             unit. | ! isValidPickedUpBoulder(getPickedUpBoulder())
 	 */
 	@Raw
-	public void setPickedUpBoulder(Boulder pickedUpBoulder) throws IllegalArgumentException {
+	private void setPickedUpBoulder(Boulder pickedUpBoulder) throws IllegalArgumentException {
 		if (!isValidPickedUpBoulder(pickedUpBoulder))
 			throw new IllegalArgumentException();
 		this.pickedUpBoulder = pickedUpBoulder;
@@ -1948,7 +2000,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public Log getPickedUpLog() {
+	private Log getPickedUpLog() {
 		return this.pickedUpLog;
 	}
 
@@ -1959,7 +2011,7 @@ public class Unit {
 	 *            The pickedUpLog to check.
 	 * @return | result ==
 	 */
-	public static boolean isValidPickedUpLog(Log pickedUpLog) {
+	private static boolean isValidPickedUpLog(Log pickedUpLog) {
 		// TODO isValid
 		return true;
 	}
@@ -1976,7 +2028,7 @@ public class Unit {
 	 *             isValidPickedUpLog(getPickedUpLog())
 	 */
 	@Raw
-	public void setPickedUpLog(Log pickedUpLog) throws IllegalArgumentException {
+	private void setPickedUpLog(Log pickedUpLog) throws IllegalArgumentException {
 		if (!isValidPickedUpLog(pickedUpLog))
 			throw new IllegalArgumentException();
 		this.pickedUpLog = pickedUpLog;
@@ -1992,7 +2044,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public float getWorkTime() {
+	private float getWorkTime() {
 		return this.workTime;
 	}
 
@@ -2003,7 +2055,7 @@ public class Unit {
 	 *            time The work time to check.
 	 * @return | result == true if the given workTime <= 500 / (float) strength)
 	 */
-	public static boolean isValidWorkTime(float workTime, int strength) {
+	private static boolean isValidWorkTime(float workTime, int strength) {
 		if (workTime <= 500 / (float) strength) {
 			return true;
 		}
@@ -2022,7 +2074,7 @@ public class Unit {
 	 *             ! isValidWorktime(getWorktime())
 	 */
 	@Raw
-	public void setWorkTime(float workTime) throws IllegalArgumentException {
+	private void setWorkTime(float workTime) throws IllegalArgumentException {
 		if (!isValidWorkTime(workTime, this.getStrength()))
 			throw new IllegalArgumentException();
 		this.workTime = workTime;
@@ -2055,14 +2107,14 @@ public class Unit {
 	private void drop() {
 		if (this.getCarryingBoulder()) {
 			this.setCarryingBoulder(false);
-			this.getPickedUpBoulder().setPosition(Helper.getCenterOfPosition(this.workPosition));
+			this.getPickedUpBoulder().setPosition(Helper.getCenterOfPosition(this.getWorkPosition()));
 			this.getPickedUpBoulder().setIsCarriedBy(null);
 			this.setTotalWeight(this.getTotalWeight() - this.getPickedUpBoulder().getWeight());
 			this.setPickedUpBoulder(null);
 		}
 		if (this.getCarryingLog()) {
 			this.setCarryingLog(false);
-			this.getPickedUpLog().setPosition(Helper.getCenterOfPosition(this.workPosition));
+			this.getPickedUpLog().setPosition(Helper.getCenterOfPosition(this.getWorkPosition()));
 			this.getPickedUpLog().setIsCarriedBy(null);
 			this.setTotalWeight(this.getTotalWeight() - this.getPickedUpLog().getWeight());
 			this.setPickedUpLog(null);
@@ -2080,7 +2132,7 @@ public class Unit {
 	 *            Difference between two Z coordinates
 	 * @return The square root of the sum of dx, dy and dz squared
 	 */
-	public double getDistance(int dx, int dy, int dz) {// TODO nr helper
+	private double getDistance(int dx, int dy, int dz) {// TODO nr helper
 
 		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
 
@@ -2097,8 +2149,8 @@ public class Unit {
 	 *            Difference between two Z coordinates
 	 * @return The square root of the sum of dx, dy and dz squared
 	 */
-	public double getDistance(double dx, double dy, double dz) {// TODO nr
-																// helper
+	private double getDistance(double dx, double dy, double dz) {// TODO nr
+																	// helper
 
 		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
 
@@ -2110,30 +2162,11 @@ public class Unit {
 	private double distance;
 
 	/**
-	 * Return the distance between two given positions.
-	 * 
-	 * @param position1
-	 *            The first position
-	 * @param position2
-	 *            The second position
-	 * @return The square root of the sum of the difference between the two x, y
-	 *         and z coordinates squared
-	 */
-	public double getDistanceBetweenPositions(double[] position1, double[] position2) {// TODO
-																						// nr
-																						// helper
-
-		return Math.sqrt(Math.pow(position2[0] - position1[0], 2) + Math.pow(position2[1] - position1[1], 2)
-				+ Math.pow(position2[2] - position1[2], 2));
-
-	}
-
-	/**
 	 * Return the velocity of the unit.
 	 * 
 	 * @return velocity of the unit
 	 */
-	public double[] getVelocity() {
+	private double[] getVelocity() {
 
 		double[] velocity = new double[3];
 
@@ -2148,8 +2181,41 @@ public class Unit {
 	/**
 	 * Start default behavior and select random activity for the unit to do.
 	 */
-	public void startDefaultBehavior() {
-		this.setDefaultBehavior(true);
+	
+		public void startDefaultBehavior(double dt) {
+			System.out.println("------start default behaviour dt=" + dt);
+			
+			//System.out.println("----gettask "+getTask()+" scheduler hasnext: "+getFaction().getScheduler().getAllTasksIterator().hasNext()+" Scheduler"+getFaction().getScheduler());
+
+			this.setDefaultBehavior(true);
+
+			if (getTask() == null && getFaction().getScheduler().getAllTasksIterator().hasNext()) {
+				System.out.println("--start default behaviour dt=" + dt);
+				getFaction().getScheduler().scheduleUnexecutedHighestPriorityTaskForUnit(this);
+			}
+			if (getTask() != null && !getTask().getActivity().isExecuted()) {
+				System.out.println("--execute task");
+				executeTask(dt);
+			} else {
+				System.out.println("-start random default behaviour ");
+				defaultRandomBehaviour();
+			}
+
+		}
+
+		public void executeTask(double dt) {
+
+			// TODO taak uitvoeren
+
+			if (getTask().getActivity().isExecuted()) {
+				getFaction().getScheduler().removeTask(getTask());
+			} else {
+				getTask().getActivity().execute();
+
+			}
+		}
+
+		public void defaultRandomBehaviour() {
 		int rand = Helper.randInt(0, 3);
 		if (rand == 0) {
 			int[] randomPosition = Helper.getRandomPosition(this.getWorld().getNbCubesX(),
@@ -2181,8 +2247,10 @@ public class Unit {
 	 */
 	public Unit getRandomEnemy() {
 		Unit enemy = this;
+		System.out.println("enemyfaction: "+ (enemy.getFaction() == this.getFaction()));
 		while (enemy.getFaction() == this.getFaction()) {
 			enemy = this.getRandomUnit();
+			System.out.println("enemyfaction: "+enemy.getFaction());
 		}
 		return enemy;
 	}
@@ -2205,7 +2273,7 @@ public class Unit {
 	 * 
 	 * @return A random unit of the unit's world that's not the unit
 	 */
-	private Unit getRandomUnit() {
+	public Unit getRandomUnit() {
 		if (this.getWorld().getUnits().size() > 1) {
 			int rand = Helper.randInt(0, this.getWorld().getUnits().size() - 1);
 			int i = 0;
@@ -2218,10 +2286,9 @@ public class Unit {
 				}
 				i = +1;
 			}
-		} 
+		}
 		return null;
 	}
-
 
 	/**
 	 * Enable or disable the default behavior of this unit.
@@ -2249,7 +2316,7 @@ public class Unit {
 	 * Variable registering whether the default behavior of this unit is
 	 * enabled.
 	 */
-	public boolean defaultBehaviorEnabled = false;
+	private boolean defaultBehaviorEnabled = false;
 
 	/**
 	 * Set the defender of the attack and check if he is close enough to attack.
@@ -2283,7 +2350,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public boolean getWantToAttack() {
+	private boolean getWantToAttack() {
 		return this.wantToAttack;
 	}
 
@@ -2295,7 +2362,7 @@ public class Unit {
 	 *            The wanttoattack to check.
 	 * @return | result == true if wanttoattack is true or false
 	 */
-	public static boolean isValidWantToAttack(boolean wanttoattack) {
+	private static boolean isValidWantToAttack(boolean wanttoattack) {
 		if (wanttoattack == true || wanttoattack == false) {
 			return true;
 		}
@@ -2314,7 +2381,7 @@ public class Unit {
 	 *             unit. | ! isValidWantToAttack(getWantToAttack())
 	 */
 	@Raw
-	public void setWantToAttack(boolean wanttoattack) throws IllegalArgumentException {
+	private void setWantToAttack(boolean wanttoattack) throws IllegalArgumentException {
 		if (!isValidWantToAttack(wanttoattack))
 			throw new IllegalArgumentException();
 		this.wantToAttack = wanttoattack;
@@ -2330,7 +2397,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public Unit getDefender() {
+	private Unit getDefender() {
 		return this.defender;
 	}
 
@@ -2342,7 +2409,7 @@ public class Unit {
 	 * @return | result == true if the attacker and defender belong to different
 	 *         factions
 	 */
-	public static boolean isValidDefender(Unit attacker, Unit defender) {
+	private static boolean isValidDefender(Unit attacker, Unit defender) {
 		if (attacker.getFaction() != defender.getFaction()) {
 			return true;
 		}
@@ -2361,7 +2428,7 @@ public class Unit {
 	 *             !isValidDefender(getDefender())
 	 */
 	@Raw
-	public void setDefender(Unit defender) throws IllegalArgumentException {
+	private void setDefender(Unit defender) throws IllegalArgumentException {
 		if (!isValidDefender(this, defender))
 			throw new IllegalArgumentException();
 		this.defender = defender;
@@ -2417,7 +2484,7 @@ public class Unit {
 	 * 
 	 * @param attacker
 	 */
-	public void defend(Unit attacker) {
+	private void defend(Unit attacker) {
 		System.out.println("defend");
 		Random random = new Random();
 		double dodgeProb = random.nextDouble();
@@ -2438,7 +2505,7 @@ public class Unit {
 	/**
 	 * The unit moves to a random valid adjacent cube on the same z-level
 	 */
-	public void dodge() {// TODO dit kan eventueel nog aangepast worden als
+	private void dodge() {// TODO dit kan eventueel nog aangepast worden als
 							// blijkt dat ge naar achter moet gaan ipv random
 							// beschikbare plek
 		System.out.println("dodge");
@@ -2502,7 +2569,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public float getAttackTime() {
+	private float getAttackTime() {
 		return this.attackTime;
 	}
 
@@ -2513,7 +2580,7 @@ public class Unit {
 	 *            time The attack time to check.
 	 * @return | result == true if attackTime <= 1
 	 */
-	public static boolean isValidAttackTime(float attackTime) {
+	private static boolean isValidAttackTime(float attackTime) {
 		if (attackTime <= 1f) {
 			return true;
 		}
@@ -2532,7 +2599,7 @@ public class Unit {
 	 *             unit. | ! isValidAttackTime(getAttackTime())
 	 */
 	@Raw
-	public void setAttackTime(float attackTime) throws IllegalArgumentException {
+	private void setAttackTime(float attackTime) throws IllegalArgumentException {
 		if (!isValidAttackTime(attackTime))
 			throw new IllegalArgumentException();
 		this.attackTime = attackTime;
@@ -2548,7 +2615,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public float getRestTime() {
+	private float getRestTime() {
 		return this.restTime;
 	}
 
@@ -2561,7 +2628,7 @@ public class Unit {
 	 *            The toughness of the unit.
 	 * @return | result == true if restTime <= 40 / toughness
 	 */
-	public static boolean isValidRestTime(float restTime, int toughness) {
+	private static boolean isValidRestTime(float restTime, int toughness) {
 		if (restTime <= (40 / (float) toughness)) {
 			return true;
 		}
@@ -2580,7 +2647,7 @@ public class Unit {
 	 *             ! isValidRestTime(getRestTime(),getToughness)
 	 */
 	@Raw
-	public void setRestTime(float restTime) throws IllegalArgumentException {
+	private void setRestTime(float restTime) throws IllegalArgumentException {
 		if (!isValidRestTime(restTime, this.getToughness()))
 			throw new IllegalArgumentException();
 		this.restTime = restTime;
@@ -2607,7 +2674,7 @@ public class Unit {
 	 *            The experience to check.
 	 * @return | result == true if given experience is positive.
 	 */
-	public static boolean isValidExperience(int experience) {
+	private static boolean isValidExperience(int experience) {
 		if (experience >= 0) {
 			return true;
 		}
@@ -2720,7 +2787,7 @@ public class Unit {
 	 *            The world to check.
 	 * @return | result == true if the world isn't terminated
 	 */
-	public static boolean isValidWorld(World world) {
+	private static boolean isValidWorld(World world) {
 		if (!world.getIsTerminated())
 			return true;
 		return false;
@@ -2765,7 +2832,7 @@ public class Unit {
 	 *            The faction to check.
 	 * @return | result ==
 	 */
-	public static boolean isValidFaction(Faction faction) {
+	private static boolean isValidFaction(Faction faction) {
 		// TODO fixen
 		return true;
 	}
@@ -2810,7 +2877,7 @@ public class Unit {
 	 *            The carryingBoulder to check.
 	 * @return | result == true if carryingBoulder is either true or false
 	 */
-	public static boolean isValidCarryingBoulder(boolean carryingBoulder) {
+	private static boolean isValidCarryingBoulder(boolean carryingBoulder) {
 		if (carryingBoulder == true || carryingBoulder == false) {
 			return true;
 		}
@@ -2856,7 +2923,7 @@ public class Unit {
 	 *            The carryingLog to check.
 	 * @return | result == true if carryingLog is either true or false
 	 */
-	public static boolean isValidCarryingLog(boolean carryingLog) {
+	private static boolean isValidCarryingLog(boolean carryingLog) {
 		if (carryingLog == true || carryingLog == false) {
 			return true;
 		}
@@ -2891,7 +2958,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public boolean getIsFollowing() {
+	private boolean getIsFollowing() {
 		return this.isFollowing;
 	}
 
@@ -2904,7 +2971,7 @@ public class Unit {
 	 *       | new.getIsFollowing() == isFollowing
 	 */
 	@Raw
-	public void setIsFollowing(boolean isFollowing) {
+	private void setIsFollowing(boolean isFollowing) {
 		this.isFollowing = isFollowing;
 	}
 
@@ -2918,7 +2985,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public Unit getLeader() {
+	private Unit getLeader() {
 		return this.leader;
 	}
 
@@ -2929,7 +2996,7 @@ public class Unit {
 	 *            The leader to check.
 	 * @return | result ==
 	 */
-	public static boolean isValidLeader(Unit leader) {
+	private static boolean isValidLeader(Unit leader) {
 		return true;
 	}
 
@@ -2945,7 +3012,7 @@ public class Unit {
 	 *             isValidLeader(getLeader())
 	 */
 	@Raw
-	public void setLeader(Unit leader) throws IllegalArgumentException {
+	private void setLeader(Unit leader) throws IllegalArgumentException {
 		if (!isValidLeader(leader))
 			throw new IllegalArgumentException();
 		this.leader = leader;
@@ -2980,4 +3047,47 @@ public class Unit {
 		}
 
 	}
+
+	/**
+	 * Return the task of this unit.
+	 */
+	@Basic
+	@Raw
+	public Task getTask() {
+		return this.task;
+	}
+
+	/**
+	 * Check whether the given task is a valid task for any unit.
+	 * 
+	 * @param task
+	 *            The task to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidTask(Task task) {
+		return true;
+	}
+
+	/**
+	 * Set the task of this unit to the given task.
+	 * 
+	 * @param task
+	 *            The new task for this unit.
+	 * @post The task of this new unit is equal to the given task. |
+	 *       new.getTask() == task
+	 * @throws IllegalArgumentException
+	 *             The given task is not a valid task for any unit. | !
+	 *             isValidTask(getTask())
+	 */
+	@Raw
+	public void setTask(Task task) throws IllegalArgumentException {
+		if (!isValidTask(task))
+			throw new IllegalArgumentException();
+		this.task = task;
+	}
+
+	/**
+	 * Variable registering the task of this unit.
+	 */
+	private Task task = null;
 }

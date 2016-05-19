@@ -295,6 +295,7 @@ public class UnitTest {
 		unit.followUnit(leader);
 		leader.terminate();
 		advanceTimeFor(world, 50, 0.1);
+		
 		Assert.assertTrue(unit.getPosition()[0] - 1.5 < 1);
 		Assert.assertTrue(unit.getPosition()[1] - 1.5 < 1);
 		Assert.assertTrue(unit.getPosition()[2] - 0.5 < 1);

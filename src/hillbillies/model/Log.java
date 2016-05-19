@@ -27,22 +27,22 @@ public class Log extends RawMaterial {
 	 * 
 	 */
 	public void terminate() {
-		super.terminate();
 		this.getWorld().removeLog(this);
-		this.setWorld(null);
 		this.stopCarrying();
+		super.terminate();
 
 	}
 
 	/**
-	 * Set the isCarriedBy of this log to the given isCarriedBy.
+	 * Set the carrier of this log to the given carrier.
 	 * 
 	 * @param isCarriedBy
-	 *            The new isCarriedBy for this log.
-	 * @post The isCarriedBy of this new log is equal to the given isCarriedBy.
+	 *            The new carrier for this log.
+	 * @post The carrier of this new log is equal to the given carrier.
 	 *       | new.getIsCarriedBy() == isCarriedBy
+	 * @post The log gets removed from its world.
 	 * @throws IllegalArgumentException
-	 *             The given isCarriedBy is not a valid isCarriedBy for any log.
+	 *             The given carrier is not a valid carrier for any log.
 	 *             | ! isValidIsCarriedBy(getIsCarriedBy())
 	 */
 	public void setIsCarriedBy(Unit isCarriedBy) {
@@ -51,7 +51,9 @@ public class Log extends RawMaterial {
 			this.getIsCarriedBy().setCarryingLog(true);
 			this.getWorld().removeLog(this);
 		} else {
-			this.getWorld().addLog(this);
+			if (!this.getIsTerminated()) {
+				this.getWorld().addLog(this);
+			}
 		}
 	}
 

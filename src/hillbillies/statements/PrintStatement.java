@@ -19,6 +19,7 @@ public class PrintStatement extends Statement {
 	@Override
 	public void execute() {
 		System.out.println(getValue().evaluate());
+		setIsExecuted();
 
 	}
 }

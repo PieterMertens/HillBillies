@@ -16,7 +16,7 @@ public class EnemyExpression extends UnitExpression {
 	public Unit evaluate() {
 		// TODO Auto-generated method stub
 
-		return getUnit().getWorld().getNearestEnemy();
+		return getUnit().getWorld().getNearestEnemy(getUnit());
 
 	}
 

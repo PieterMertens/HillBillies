@@ -23,16 +23,22 @@ public class WhileStatement extends Statement {
 
 	public Statement getBody() {
 		return this.body;
-	}	
+	}
 
 	@Override
 	public void execute() {
 		
-		if(getCondition().evaluate()&&!isExecuted()){
-			//TODO juist maken
-			getBody().execute();
+		System.out.println("execute while");
+
+		if (getCondition().evaluate() && !isExecuted()) {
 			
-			
+
+			if (getBody().isExecuted()) {
+				setIsExecuted();
+			} else {
+				getBody().execute();
+			}
+
 		}
 
 	}

@@ -14,7 +14,7 @@ public class AnyExpression extends UnitExpression {
 
 	@Override
 	public Unit evaluate() {
-		return getUnit().getWorld().getNearestUnit();
+		return getUnit().getWorld().getNearestUnit(getUnit());
 	}
 
 }

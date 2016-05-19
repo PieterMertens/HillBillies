@@ -28,10 +28,9 @@ public class Boulder extends RawMaterial {
 	 * 
 	 */
 	public void terminate() {
-		super.terminate();
 		this.getWorld().removeBoulder(this);
-		this.setWorld(null);
 		this.stopCarrying();
+		super.terminate();
 
 	}
 
@@ -42,6 +41,7 @@ public class Boulder extends RawMaterial {
 	 *            The new isCarriedBy for this boulder.
 	 * @post The isCarriedBy of this new boulder is equal to the given
 	 *       isCarriedBy. | new.getIsCarriedBy() == isCarriedBy
+	 * @effect The boulder gets removed from its world
 	 * @throws IllegalArgumentException
 	 *             The given isCarriedBy is not a valid isCarriedBy for any
 	 *             boulder. | ! isValidIsCarriedBy(getIsCarriedBy())
@@ -52,7 +52,9 @@ public class Boulder extends RawMaterial {
 			this.getIsCarriedBy().setCarryingBoulder(true);
 			this.getWorld().removeBoulder(this);
 		} else {
-			this.getWorld().addBoulder(this);
+			if (!this.getIsTerminated()) {
+				this.getWorld().addBoulder(this);
+			}
 		}
 	}
 

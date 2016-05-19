@@ -19,7 +19,13 @@ public class FollowStatement extends Statement {
 	public void execute() {
 
 		if (isAssignedToUnit()) {
-			getUnit().followUnit(getUnitToFollow().evaluate());
+			if (getStarted() && !getUnit().getIsFollowing()) {
+				setIsExecuted();
+				setStarted(false);				
+			}else{
+				getUnit().followUnit(getUnitToFollow().evaluate());
+				setStarted(true);
+			}
 		} else {
 			throw new NoSuchElementException("No unit found.");
 		}
@@ -29,7 +35,5 @@ public class FollowStatement extends Statement {
 	public UnitExpression getUnitToFollow() {
 		return unitToFollow;
 	}
-
-	
 
 }

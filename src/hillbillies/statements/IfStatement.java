@@ -31,14 +31,23 @@ public class IfStatement extends Statement {
 	public Statement getElseBody() {
 		return this.elseBody;
 	}
+	
+	public boolean hasElseBody(){
+		return (getElseBody()!=null);
+	}
 
 	@Override
 	public void execute() {
 
-		if (getCondition().evaluate()) {
-			getIfBody().execute();
+		if (getIfBody().isExecuted() || (hasElseBody() && getElseBody().isExecuted())) {
+			setIsExecuted();
 		} else {
-			getElseBody().execute();
+
+			if (getCondition().evaluate()) {
+				getIfBody().execute();
+			} else {
+				getElseBody().execute();
+			}
 		}
 
 	}

@@ -23,7 +23,6 @@ public abstract class Statement {
 	}
 
 	private SourceLocation sourceLocation;
-	private Unit unit;
 	private Task task;
 	
 	public void setTask(Task task){
@@ -51,6 +50,16 @@ public abstract class Statement {
 
 	public void setIsExecuted() {
 		this.isExecuted = true;
+	}
+	
+	private boolean started;
+	
+	public void setStarted(boolean started){
+		this.started = started;
+	}
+	
+	public boolean getStarted(){
+		return this.started;
 	}
 
 }

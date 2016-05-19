@@ -18,6 +18,7 @@ public class Faction {
 	public Faction(World world) throws IllegalArgumentException {
 		world.addFaction(this);
 		this.setWorld(world);
+		setScheduler(new Scheduler(this));		
 	}
 
 	/**
