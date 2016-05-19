@@ -71,7 +71,7 @@ public abstract class Statement {
 		return this.parentStatement;
 	}
 
-	public void setParentStatemen(Statement parent) {
+	public void setParentStatement(Statement parent) {
 		this.parentStatement = parent;
 	}
 

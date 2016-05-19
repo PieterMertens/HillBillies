@@ -15,7 +15,7 @@ public class WhileStatement extends Statement {
 		super(sourceLocation);
 		this.condition = condition;
 		this.body = body;
-		body.setParentStatemen(this);
+		body.setParentStatement(this);
 		condition.setStatement(this);
 	}
 
@@ -29,18 +29,21 @@ public class WhileStatement extends Statement {
 
 	@Override
 	public void execute() {
-		
+
 		System.out.println("execute while");
 
-		if (getCondition().evaluate() && !isExecuted()) {
-			
+		if (!isExecuted()) {
+			if (getCondition().evaluate()) {
 
-			if (getBody().isExecuted()) {
-				setIsExecuted();
+				if (getBody().isExecuted()) {
+					setIsExecuted();
+				} else {
+					getBody().setParentStatement(this);
+					getBody().execute();
+				}
 			} else {
-				getBody().execute();
+				setIsExecuted();
 			}
-
 		}
 
 	}

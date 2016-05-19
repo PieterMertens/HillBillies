@@ -18,7 +18,7 @@ import hillbillies.statements.Statement;
 import hillbillies.statements.WhileStatement;
 import hillbillies.statements.WorkStatement;
 
-public class TaskFactory implements ITaskFactory<Expression, Statement, Task> {
+public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task> {
 
 	@Override
 	public List<Task> createTasks(String name, int priority, Statement activity, List<int[]> selectedCubes) {
@@ -45,19 +45,19 @@ public class TaskFactory implements ITaskFactory<Expression, Statement, Task> {
 	}
 
 	@Override
-	public Statement createAssignment(String variableName, Expression value, SourceLocation sourceLocation) {
+	public Statement createAssignment(String variableName, Expression<?> value, SourceLocation sourceLocation) {
 
 		return new AssignStatement(variableName, value, sourceLocation);
 	}
 
 	@Override
-	public Statement createWhile(Expression condition, Statement body, SourceLocation sourceLocation) {
+	public Statement createWhile(Expression<?> condition, Statement body, SourceLocation sourceLocation) {
 
 		return new WhileStatement((BooleanExpression) condition, body, sourceLocation);
 	}
 
 	@Override
-	public Statement createIf(Expression condition, Statement ifBody, Statement elseBody,
+	public Statement createIf(Expression<?> condition, Statement ifBody, Statement elseBody,
 			SourceLocation sourceLocation) {
 
 		return new IfStatement((BooleanExpression) condition, ifBody, elseBody, sourceLocation);

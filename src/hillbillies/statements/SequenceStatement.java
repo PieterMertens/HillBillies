@@ -12,7 +12,7 @@ public class SequenceStatement extends Statement {
 		this.statements = statements;
 
 		for (Statement statement : statements) {
-			statement.setParentStatemen(this);
+			statement.setParentStatement(this);
 		}
 
 	}

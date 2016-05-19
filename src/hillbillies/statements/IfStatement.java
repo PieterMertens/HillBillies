@@ -17,9 +17,11 @@ public class IfStatement extends Statement {
 		this.ifBody = ifBody;
 		this.elseBody = elseBody;
 		condition.setStatement(this);
-		ifBody.setParentStatemen(this);
+		if (hasIfBody()) {
+			ifBody.setParentStatement(this);
+		}
 		if (hasElseBody()) {
-			elseBody.setParentStatemen(this);
+			elseBody.setParentStatement(this);
 		}
 	}
 
@@ -36,6 +38,10 @@ public class IfStatement extends Statement {
 		return this.elseBody;
 	}
 
+	public boolean hasIfBody() {
+		return (getIfBody() != null);
+	}
+
 	public boolean hasElseBody() {
 		return (getElseBody() != null);
 	}
@@ -43,14 +49,19 @@ public class IfStatement extends Statement {
 	@Override
 	public void execute() {
 
-		if (getIfBody().isExecuted() || (hasElseBody() && getElseBody().isExecuted())) {
+		if ((hasIfBody() && getIfBody().isExecuted()) || (hasElseBody() && getElseBody().isExecuted())) {
 			setIsExecuted();
 		} else {
-
 			if (getCondition().evaluate()) {
-				getIfBody().execute();
+				if (hasIfBody()) {
+					getIfBody().setParentStatement(this);
+					getIfBody().execute();
+				}
 			} else {
-				getElseBody().execute();
+				if (hasElseBody()) {
+					getElseBody().setParentStatement(this);
+					getElseBody().execute();
+				}
 			}
 		}
 
