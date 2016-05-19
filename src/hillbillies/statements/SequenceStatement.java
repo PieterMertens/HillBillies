@@ -1,10 +1,6 @@
 package hillbillies.statements;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
-
-import hillbillies.model.Task;
 import hillbillies.part3.programs.SourceLocation;
 
 public class SequenceStatement extends Statement {
@@ -14,6 +10,10 @@ public class SequenceStatement extends Statement {
 	public SequenceStatement(List<Statement> statements, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.statements = statements;
+
+		for (Statement statement : statements) {
+			statement.setParentStatemen(this);
+		}
 
 	}
 

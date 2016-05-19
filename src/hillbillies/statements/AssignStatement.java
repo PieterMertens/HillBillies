@@ -13,7 +13,7 @@ public class AssignStatement extends Statement{
 		super(sourceLocation);
 		this.variableName = variableName;
 		this.value = value;
-
+		value.setStatement(this);
 	}
 	
 	public String getVariableName(){

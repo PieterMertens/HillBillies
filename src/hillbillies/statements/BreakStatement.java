@@ -13,6 +13,8 @@ public class BreakStatement extends Statement {
 
 		if {
 			
+			//kijken of parentstatement instanceof WhileStement
+			
 			//loopstatement.setIsExecuted()
 		}
 

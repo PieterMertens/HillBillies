@@ -1,7 +1,6 @@
 package hillbillies.model;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -34,14 +33,14 @@ public class Task {
 	 * @effect The priority of this new Task is set to the given priority. |
 	 *         this.setPriority(priority)
 	 */
-	public Task(String name, int priority, Statement activities, int[] selectedPosition) throws IllegalArgumentException {
+	public Task(String name, int priority, Statement activity, int[] selectedPosition) throws IllegalArgumentException {
 		if (!canHaveAsName(name))
 			throw new IllegalArgumentException();
 		this.name = name;
 		this.setPriority(priority);
-		if(!canHaveAsActivity(activities))
+		if(!canHaveAsActivity(activity))
 			throw new IllegalArgumentException();
-		this.activity = activities;
+		this.activity = activity;
 		if (! canHaveAsSelectedPosition(selectedPosition))
 			throw new IllegalArgumentException();
 		this.selectedPosition = selectedPosition;
@@ -166,7 +165,7 @@ public class Task {
 	 * @return | result ==
 	 */
 	@Raw
-	public boolean canHaveAsActivity(Statement activities) {
+	public boolean canHaveAsActivity(Statement activity) {
 		//TODO  chechen
 		return true;
 	}

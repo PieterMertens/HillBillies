@@ -54,7 +54,7 @@ public abstract class RawMaterial {
 	 *            The world to check.
 	 * @return | result ==
 	 */
-	public static boolean isValidWorld(World world) {
+	private static boolean isValidWorld(World world) {
 		if (world == null || !world.getIsTerminated())
 			return true;
 		return false;
@@ -72,7 +72,7 @@ public abstract class RawMaterial {
 	 *             ! isValidWorld(getWorld())
 	 */
 	@Raw
-	public void setWorld(World world) throws IllegalArgumentException {
+	private void setWorld(World world) throws IllegalArgumentException {
 		if (!isValidWorld(world))
 			throw new IllegalArgumentException();
 		this.world = world;
@@ -167,7 +167,7 @@ public abstract class RawMaterial {
 	 *             material. | ! isValidIsPresent(getIsPresent())
 	 */
 	@Raw
-	public void setIsTerminated(boolean terminated) {
+	private void setIsTerminated(boolean terminated) {
 		this.terminated = terminated;
 
 	}
@@ -205,7 +205,7 @@ public abstract class RawMaterial {
 	 * @return | result == true if the unit isn't terminated or if no-one is
 	 *         carrying it
 	 */
-	public static boolean isValidIsCarriedBy(Unit isCarriedBy) {
+	private static boolean isValidIsCarriedBy(Unit isCarriedBy) {
 		if (isCarriedBy == null || !isCarriedBy.isTerminated())
 			return true;
 		return false;
@@ -240,7 +240,7 @@ public abstract class RawMaterial {
 	 */
 	@Basic
 	@Raw
-	public boolean getIsAvailable() {
+	private boolean getIsAvailable() {
 		return this.isAvailable;
 	}
 
@@ -256,7 +256,7 @@ public abstract class RawMaterial {
 	 *             raw material. | ! isValidIsAvailible(getIsAvailible())
 	 */
 	@Raw
-	public void setIsAvailable(boolean isAvailable) throws IllegalArgumentException {
+	private void setIsAvailable(boolean isAvailable) throws IllegalArgumentException {
 		this.isAvailable = isAvailable;
 	}
 
@@ -270,7 +270,7 @@ public abstract class RawMaterial {
 	 */
 	@Basic
 	@Raw
-	public boolean getIsFalling() {
+	private boolean getIsFalling() {
 		return this.isFalling;
 	}
 
@@ -286,7 +286,7 @@ public abstract class RawMaterial {
 	 *             unit. | ! isValidIsFalling(getIsFalling())
 	 */
 	@Raw
-	public void setIsFalling(boolean isFalling) {
+	private void setIsFalling(boolean isFalling) {
 		this.isFalling = isFalling;
 	}
 
@@ -296,18 +296,59 @@ public abstract class RawMaterial {
 	private boolean isFalling;
 
 	/**
-	 * 
+	 * Return the z target of this raw material.
 	 */
-	private double ztarget;
+	@Basic
+	@Raw
+	public double getZTarget() {
+		return this.zTarget;
+	}
+
+	/**
+	 * Check whether the given z target is a valid z target for any raw
+	 * material.
+	 * 
+	 * @param z
+	 *            target The z target to check.
+	 * @return | result == true if the z target is between the z boundary
+	 */
+	public static boolean isValidZTarget(double zTarget,World world) {
+		if(zTarget >= 0 && zTarget <= world.getNbCubesZ()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Set the z target of this raw material to the given z target.
+	 * 
+	 * @param zTarget
+	 *            The new z target for this raw material.
+	 * @post The z target of this new raw material is equal to the given z
+	 *       target. | new.getZTarget() == zTarget
+	 * @throws IllegalArgumentException
+	 *             The given z target is not a valid z target for any raw
+	 *             material. | ! isValidZTarget(getZTarget())
+	 */
+	@Raw
+	public void setZTarget(double zTarget) throws IllegalArgumentException {
+		if (!isValidZTarget(zTarget,this.getWorld()))
+			throw new IllegalArgumentException();
+		this.zTarget = zTarget;
+	}
+
+	/**
+	 * Variable registering the z target of this raw material.
+	 */
+	private double zTarget;
 
 	public void advanceTime(double dt) {
-		// System.out.println(this.getPosition()[2]);
 		if (this.getIsFalling()) {
 			double z;
-			if (this.getPosition()[2] - this.ztarget > 0) {
+			if (this.getPosition()[2] - this.getZTarget() > 0) {
 				z = this.getPosition()[2] + dt * fallingSpeed;
 			} else {
-				z = this.ztarget;
+				z = this.getZTarget();
 				this.setIsFalling(false);
 			}
 			double[] position = { this.getPosition()[0], this.getPosition()[1], z };
@@ -319,7 +360,7 @@ public abstract class RawMaterial {
 				// isTerm
 				// hetzelfde?
 
-				this.ztarget = this.getPosition()[2] - 1;
+				this.setZTarget(this.getPosition()[2] - 1);
 				this.setIsFalling(true);
 
 			}
@@ -327,21 +368,11 @@ public abstract class RawMaterial {
 		}
 	}
 
-	// /**
-	// * Return whether the terrain type is passable at the current position.
-	// */
-	// public boolean atPassable() {
-	// return this.getWorld().isPassable((int) this.getPosition()[0], (int)
-	// this.getPosition()[1],
-	// (int) this.getPosition()[2]);
-	// }
-
 	/**
 	 * Return whether there is an impassable terrain type below the current
 	 * position.
 	 */
-	public boolean blockBelow() {
-		// if(this.getPosition()[2] - (int) this.getPosition()[2] == 0.5)
+	private boolean blockBelow() {
 		return (this.getPosition()[2] == 0.5 || this.getWorld().hasImpassableBelow((int) this.getPosition()[0],
 				(int) this.getPosition()[1], (int) this.getPosition()[2]));
 	}
@@ -349,6 +380,6 @@ public abstract class RawMaterial {
 	/**
 	 * Variable holding the fallingSpeed of raw materials.
 	 */
-	public static final int fallingSpeed = -3;
+	private static final int fallingSpeed = -3;
 
 }

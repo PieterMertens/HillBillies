@@ -17,7 +17,7 @@ public class AttackStatement extends Statement {
 	public AttackStatement(Expression<Unit> unitToAttack, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.unitToAttack = unitToAttack;
-
+		unitToAttack.setStatement(this);
 	}
 
 	public Expression<Unit> getUnitToAttack() {

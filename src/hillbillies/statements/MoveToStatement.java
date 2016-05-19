@@ -9,9 +9,13 @@ public class MoveToStatement extends Statement {
 
 	private PositionExpression position;
 
-	public MoveToStatement(PositionExpression position, SourceLocation sourceLocation) {
+	public MoveToStatement(PositionExpression pos, SourceLocation sourceLocation) {
 		super(sourceLocation);
-		this.position = position;
+		this.position = pos;
+		
+		System.out.println("MoveToStatement(PositionExpression position, SourceLocation sourceLocation) - position="+pos);
+		
+		getPosition().setStatement(this);
 	}
 
 	public PositionExpression getPosition() {

@@ -13,6 +13,7 @@ public class WorkStatement extends Statement {
 	public WorkStatement(PositionExpression position, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.position = position;
+		position.setStatement(this);
 	}
 
 	public PositionExpression getPosition() {

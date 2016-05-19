@@ -92,7 +92,7 @@ public class Unit {
 	 * @post The staminapoints are set. |new.getHitpoints() == 200 * weight *
 	 *       toughness / 10000
 	 * @post If the given default behavior boolean is true, default behavior is
-	 *       started | if (enableDefaultBehavior) then startDefaultBehavior()
+	 *       started | if (enableDefaultBehavior) then defaultRandomBehavior()
 	 */
 	public Unit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
 			boolean enableDefaultBehavior) {
@@ -118,9 +118,7 @@ public class Unit {
 		this.setHitpoints(200 * weight * toughness / 10000);
 		this.setStaminapoints(200 * weight * toughness / 10000);
 		System.out.println("staminap: " + this.getStaminapoints());
-		if (enableDefaultBehavior) {
-			defaultRandomBehaviour();
-		}
+		this.setDefaultBehavior(enableDefaultBehavior);
 	}
 
 	/**
@@ -886,8 +884,8 @@ public class Unit {
 					}
 					if (this.getDefaultBehavior() && !this.getIsAttacking() && !this.getIsMoving()
 							&& !this.getIsResting() && !this.getIsWorking()) {
-								startDefaultBehavior(dt);
-			}
+						startDefaultBehavior(dt);
+					}
 					if (this.getIsAttacking()) {
 						doAttack(dt, this.getDefender());
 					}
@@ -896,6 +894,7 @@ public class Unit {
 					}
 					if (this.getIsMoving()) {
 						if (this.getIsSprinting()) {
+							System.out.println("advancetime stmaina: "+this.getStaminapoints());
 							staminadrain(dt);
 							if (this.getStaminapoints() <= 0) {
 								this.setIsSprinting(false);
@@ -1428,6 +1427,10 @@ public class Unit {
 	 */
 	public void moveToAdjacent(int dx, int dy, int dz) throws IllegalArgumentException {
 
+		if(dx==0&&dy==0&&dz==0){
+			throw new IllegalArgumentException("Already on that position.");
+		}
+		
 		// System.out.println("start movetoadj");
 
 		adjacentStart = this.getPosition().clone();
@@ -1598,7 +1601,7 @@ public class Unit {
 	 * @throws IllegalArgumentException
 	 */
 	// TODO waarom IllegalArgumentException?
-	private boolean moveToTargetReached() throws IllegalArgumentException {
+	public boolean moveToTargetReached() throws IllegalArgumentException {
 
 		if (Helper.getDistanceBetweenPositions(this.getPosition(), this.target) < 1) {
 			return true;
@@ -1835,8 +1838,8 @@ public class Unit {
 		}
 		if (distance == Double.POSITIVE_INFINITY || distance == 0) {
 			work();
-		} 
-		
+		}
+
 	}
 
 	/**
@@ -1858,8 +1861,6 @@ public class Unit {
 	 */
 	@Raw
 	private void setWorkPosition(int x, int y, int z) {
-		System.out.println("workPos: " + this.workPosition[0]);
-		System.out.println("x: " + x);
 		this.workPosition[0] = x;
 		System.out.println("workPos: " + this.workPosition[0]);
 		this.workPosition[1] = y;
@@ -1890,8 +1891,8 @@ public class Unit {
 			// System.out.println("x: " + x + " y: " + y + " z: " + z);
 			// System.out.println("Cube Type workpos: " +
 			// this.getWorld().getCubeType(x, y, z));
-			double dx = x +0.5 - this.getPosition()[0];
-			double dy = y +0.5 - this.getPosition()[1];
+			double dx = x + 0.5 - this.getPosition()[0];
+			double dy = y + 0.5 - this.getPosition()[1];
 			this.setOrientation((float) Math.atan2(dy, dx));
 		}
 
@@ -2181,41 +2182,43 @@ public class Unit {
 	/**
 	 * Start default behavior and select random activity for the unit to do.
 	 */
-	
-		public void startDefaultBehavior(double dt) {
-			System.out.println("------start default behaviour dt=" + dt);
-			
-			//System.out.println("----gettask "+getTask()+" scheduler hasnext: "+getFaction().getScheduler().getAllTasksIterator().hasNext()+" Scheduler"+getFaction().getScheduler());
 
-			this.setDefaultBehavior(true);
+	public void startDefaultBehavior(double dt) {
+		System.out.println("------start default behaviour dt=" + dt);
 
-			if (getTask() == null && getFaction().getScheduler().getAllTasksIterator().hasNext()) {
-				System.out.println("--start default behaviour dt=" + dt);
-				getFaction().getScheduler().scheduleUnexecutedHighestPriorityTaskForUnit(this);
-			}
-			if (getTask() != null && !getTask().getActivity().isExecuted()) {
-				System.out.println("--execute task");
-				executeTask(dt);
-			} else {
-				System.out.println("-start random default behaviour ");
-				defaultRandomBehaviour();
-			}
+		// System.out.println("----gettask "+getTask()+" scheduler hasnext:
+		// "+getFaction().getScheduler().getAllTasksIterator().hasNext()+"
+		// Scheduler"+getFaction().getScheduler());
 
+		this.setDefaultBehavior(true);
+
+		if (getTask() == null && getFaction().getScheduler().getAllTasksIterator().hasNext()) {
+			System.out.println("--start default behaviour dt=" + dt);
+			getFaction().getScheduler().scheduleUnexecutedHighestPriorityTaskForUnit(this);
+		}
+		if (getTask() != null && !getTask().getActivity().isExecuted()) {
+			System.out.println("--execute task");
+			executeTask(dt);
+		} else {
+			System.out.println("-start random default behaviour ");
+			defaultRandomBehaviour();
 		}
 
-		public void executeTask(double dt) {
+	}
 
-			// TODO taak uitvoeren
+	public void executeTask(double dt) {
 
-			if (getTask().getActivity().isExecuted()) {
-				getFaction().getScheduler().removeTask(getTask());
-			} else {
-				getTask().getActivity().execute();
+		// TODO taak uitvoeren
 
-			}
+		if (getTask().getActivity().isExecuted()) {
+			getFaction().getScheduler().removeTask(getTask());
+		} else {
+			getTask().getActivity().execute();
+
 		}
+	}
 
-		public void defaultRandomBehaviour() {
+	public void defaultRandomBehaviour() {
 		int rand = Helper.randInt(0, 3);
 		if (rand == 0) {
 			int[] randomPosition = Helper.getRandomPosition(this.getWorld().getNbCubesX(),
@@ -2247,10 +2250,10 @@ public class Unit {
 	 */
 	public Unit getRandomEnemy() {
 		Unit enemy = this;
-		System.out.println("enemyfaction: "+ (enemy.getFaction() == this.getFaction()));
+		System.out.println("enemyfaction: " + (enemy.getFaction() == this.getFaction()));
 		while (enemy.getFaction() == this.getFaction()) {
 			enemy = this.getRandomUnit();
-			System.out.println("enemyfaction: "+enemy.getFaction());
+			System.out.println("enemyfaction: " + enemy.getFaction());
 		}
 		return enemy;
 	}
@@ -2958,7 +2961,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	private boolean getIsFollowing() {
+	public boolean getIsFollowing() {
 		return this.isFollowing;
 	}
 

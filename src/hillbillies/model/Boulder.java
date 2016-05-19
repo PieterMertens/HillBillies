@@ -66,7 +66,7 @@ public class Boulder extends RawMaterial {
 	 * @post The boulder is no longer carried by the unit. |
 	 *       this.getIsCarriedBy().getCarryingBoulder() == false
 	 */
-	public void stopCarrying() {
+	private void stopCarrying() {
 		if (this.getIsCarriedBy() != null) {
 			this.getIsCarriedBy().setCarryingBoulder(false);
 			this.setIsCarriedBy(null);

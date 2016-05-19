@@ -16,7 +16,11 @@ public class IfStatement extends Statement {
 		this.condition = condition;
 		this.ifBody = ifBody;
 		this.elseBody = elseBody;
-		// TODO Auto-generated constructor stub
+		condition.setStatement(this);
+		ifBody.setParentStatemen(this);
+		if (hasElseBody()) {
+			elseBody.setParentStatemen(this);
+		}
 	}
 
 	public BooleanExpression getCondition() {
@@ -31,9 +35,9 @@ public class IfStatement extends Statement {
 	public Statement getElseBody() {
 		return this.elseBody;
 	}
-	
-	public boolean hasElseBody(){
-		return (getElseBody()!=null);
+
+	public boolean hasElseBody() {
+		return (getElseBody() != null);
 	}
 
 	@Override

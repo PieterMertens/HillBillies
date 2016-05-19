@@ -15,6 +15,8 @@ public class WhileStatement extends Statement {
 		super(sourceLocation);
 		this.condition = condition;
 		this.body = body;
+		body.setParentStatemen(this);
+		condition.setStatement(this);
 	}
 
 	public BooleanExpression getCondition() {

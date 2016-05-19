@@ -13,6 +13,7 @@ public class FollowStatement extends Statement {
 	public FollowStatement(UnitExpression unitToFollow, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.unitToFollow = unitToFollow;
+		unitToFollow.setStatement(this);
 	}
 
 	@Override

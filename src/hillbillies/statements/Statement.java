@@ -24,15 +24,18 @@ public abstract class Statement {
 
 	private SourceLocation sourceLocation;
 	private Task task;
-	
-	public void setTask(Task task){
+
+	public void setTask(Task task) {
 		this.task = task;
 	}
-	
-	public Task getTask(){
-		return this.task;
-	}
 
+	public Task getTask() {
+		if (hasParentStatement()) {
+			return getParentStatement().getTask();
+		} else {
+			return this.task;
+		}
+	}
 
 	public Unit getUnit() {
 		return getTask().getAssignedUnit();
@@ -51,15 +54,29 @@ public abstract class Statement {
 	public void setIsExecuted() {
 		this.isExecuted = true;
 	}
-	
+
 	private boolean started;
-	
-	public void setStarted(boolean started){
+
+	public void setStarted(boolean started) {
 		this.started = started;
 	}
-	
-	public boolean getStarted(){
+
+	public boolean getStarted() {
 		return this.started;
+	}
+
+	private Statement parentStatement;
+
+	public Statement getParentStatement() {
+		return this.parentStatement;
+	}
+
+	public void setParentStatemen(Statement parent) {
+		this.parentStatement = parent;
+	}
+
+	public boolean hasParentStatement() {
+		return (getParentStatement() != null);
 	}
 
 }

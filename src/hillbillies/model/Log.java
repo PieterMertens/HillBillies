@@ -23,6 +23,8 @@ public class Log extends RawMaterial {
 	}
 
 	/**
+	 * Terminate the log.
+	 * 
 	 * @post The log gets terminated.
 	 * 
 	 */
@@ -65,7 +67,7 @@ public class Log extends RawMaterial {
 	 * @post The log is no longer carried by the unit. |
 	 *       this.getIsCarriedBy().getCarryingLog() == false
 	 */
-	public void stopCarrying() {
+	private void stopCarrying() {
 		if (this.getIsCarriedBy() != null) {
 			this.getIsCarriedBy().setCarryingLog(false);
 			this.setIsCarriedBy(null);
