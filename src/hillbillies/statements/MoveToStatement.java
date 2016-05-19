@@ -13,9 +13,9 @@ public class MoveToStatement extends Statement {
 		super(sourceLocation);
 		this.position = pos;
 		
-		System.out.println("MoveToStatement(PositionExpression position, SourceLocation sourceLocation) - position="+pos);
+		//System.out.println("MoveToStatement(PositionExpression position, SourceLocation sourceLocation) - position="+pos);
 		
-		getPosition().setStatement(this);
+		//getPosition().setStatement(this);
 	}
 
 	public PositionExpression getPosition() {
