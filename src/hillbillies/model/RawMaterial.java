@@ -354,11 +354,7 @@ public abstract class RawMaterial {
 			double[] position = { this.getPosition()[0], this.getPosition()[1], z };
 			this.setPosition(position);
 		} else {
-			if (this.getIsAvailable() && !this.getIsTerminated() && !this.getIsFalling() && !this.blockBelow()) {// TODO
-				// isAvail
-				// &
-				// isTerm
-				// hetzelfde?
+			if (this.getIsAvailable() && !this.getIsTerminated() && !this.getIsFalling() && !this.blockBelow()) {
 
 				this.setZTarget(this.getPosition()[2] - 1);
 				this.setIsFalling(true);

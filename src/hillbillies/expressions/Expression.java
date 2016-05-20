@@ -51,7 +51,7 @@ public abstract class Expression<T> {
 		}
 	}
 
-	public boolean isVariable(String variableName) throws NoSuchElementException{
+	public boolean isVariable(String variableName) throws NoSuchElementException {
 		Map<String, Expression<?>> map = getVariableMap();
 		if (map.isEmpty()) {
 			return false;
@@ -60,59 +60,64 @@ public abstract class Expression<T> {
 		}
 		return false;
 	}
-	
-	public void setStatement(Statement statement){
-//		System.out.println("setStatement for this="+this+" to statement="+statement);
-		this.statement = statement; 
+
+	public void setStatement(Statement statement) {
+		// System.out.println("setStatement for this="+this+" to
+		// statement="+statement);
+		this.statement = statement;
 	}
-	
-	public Statement getStatement(){
+
+	public Statement getStatement() {
 		return this.statement;
 	}
-	
-	public Unit getUnit(){
+
+	public Unit getUnit() {
 		System.out.println("getunit from first parent:    stamtent");
 		System.out.println(getStatement());
-		System.out.println("getfirstparent"+getStatement().getFirstParentStatement());
+		System.out.println("getfirstparent" + getStatement().getFirstParentStatement());
 		return getStatement().getUnit();
 	}
-	
-	public Task getTask(){
+
+	public Task getTask() {
 		return getStatement().getTask();
 	}
-	
-	
-	
-	public World getWorld(){
+
+	public World getWorld() {
 		return getUnit().getWorld();
 	}
-	
-//	//)------------------------
-//	private Expression<?> parentExpression;
-//
-//	public Expression<?> getParentExpression() {
-//		return this.parentExpression;
-//	}
-//
-//	public void setParentExpression(Expression<?> parent) {
-//		this.parentExpression = parent;
-//	}
-//
-//	public boolean hasParentStatement() {
-//		return (getParentExpression() != null);
-//	}
-//
-//	public Expression<?> getFirstParentExpression() {
-//		Expression<?> current = this;
-//		Expression<?> parent = this;
-//		System.out.println("-voor while first parent:"+current);
-//		while (parent != null) {
-//			System.out.println("-in while first parent:"+current);
-//			current = parent;
-//			parent = parent.getParentExpression();
-//		}
-//		System.out.println("-na while first parent:"+current);
-//		return current;
-//	}
+
+	public boolean isWellFormed() {
+
+		if (this instanceof BinaryExpression) {
+			if (!((BinaryExpression) this).getLeft(getStatement()).isWellFormed()
+					|| !((BinaryExpression) this).getRight(getStatement()).isWellFormed()
+					|| ((BinaryExpression) this).getLeft(getStatement()).getClass() != ((BinaryExpression) this)
+							.getRight(getStatement()).getClass())
+				return false;
+		}
+		if (this instanceof CubeExpression) {
+			if (!(((CubeExpression) this).getPositionExpression((getStatement())).isWellFormed()))
+				return false;
+		}
+		if (this instanceof NextToPositionExpression) {
+			if (!((NextToPositionExpression) this).getPositionExpression(getStatement()).isWellFormed())
+				return false;
+		}
+		if (this instanceof PositionOfExpression) {
+			if (!((PositionOfExpression) this).getUnitForPositionOf(getStatement()).isWellFormed())
+				return false;
+		}
+		if (this instanceof UnaryExpression) {
+			if (!((UnaryExpression) this).getExpression(getStatement()).isWellFormed())
+				return false;
+		}
+		if (this instanceof UnitExaminationExpression) {
+			if (!((UnitExaminationExpression) this).getUnitToExamineExpression(getStatement()).isWellFormed())
+				return false;
+		}
+
+		return true;
+
+	}
 
 }

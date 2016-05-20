@@ -18,7 +18,7 @@ public class Faction {
 	public Faction(World world) throws IllegalArgumentException {
 		world.addFaction(this);
 		this.setWorld(world);
-		setScheduler(new Scheduler(this));		
+		setScheduler(new Scheduler(this));
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class Faction {
 	 * @return | result ==
 	 */
 	public static boolean isValidWorld(World world) {
-		//TODO fixen
+		// TODO fixen
 		return true;
 	}
 
@@ -85,86 +85,70 @@ public class Faction {
 	}
 
 	/**
-	 * Returns a set of the units if this faction.
+	 * Return a set of the units if this faction.
 	 */
 	public Set<Unit> getUnitsOfFaction() {
 		return this.unitsOfFaction;
 	}
 
 	/**
-	 * Removes unit from this faction.
+	 * Remove the given unit from the faction's set of units.
+	 * 
+	 * @param unit
+	 *            The unit to remove.
+	 * @throws IllegalArgumentException
+	 *             The given unit is not in the set. |
+	 *             !getUnitsOfFaction().contains(unit)
 	 */
-	public void removeUnit(Unit unit) {
-		this.unitsOfFaction.remove(unit);
+	public void removeUnit(Unit unit) throws IllegalArgumentException {
+		if (!getUnitsOfFaction().contains(unit)) {
+			throw new IllegalArgumentException("The unit is not in the set.");
+		}
+		this.getUnitsOfFaction().remove(unit);
+	
 	}
 
-	/** TO BE ADDED TO CLASS HEADING
-	 * @invar  The scheduler of each Faction must be a valid scheduler for any
-	 *         Faction.
-	 *       | isValidScheduler(getScheduler())
+	/**
+	 * Return the scheduler of this Faction.
 	 */
+	@Basic
+	@Raw
+	public Scheduler getScheduler() {
+		return this.scheduler;
+	}
 
+	/**
+	 * Check whether the given scheduler is a valid scheduler for any Faction.
+	 * 
+	 * @param scheduler
+	 *            The scheduler to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidScheduler(Scheduler scheduler) {
+		return scheduler != null;
+	}
 
-/**
- * Initialize this new Faction with given scheduler.
- *
- * @param  scheduler
- *         The scheduler for this new Faction.
- * @effect The scheduler of this new Faction is set to
- *         the given scheduler.
- *       | this.setScheduler(scheduler)
- */
-public Faction(Scheduler scheduler)
-		throws IllegalArgumentException {
-	this.setScheduler(scheduler);
-}
+	/**
+	 * Set the scheduler of this Faction to the given scheduler.
+	 * 
+	 * @param scheduler
+	 *            The new scheduler for this Faction.
+	 * @post The scheduler of this new Faction is equal to the given scheduler.
+	 *       | new.getScheduler() == scheduler
+	 * @throws IllegalArgumentException
+	 *             The given scheduler is not a valid scheduler for any Faction.
+	 *             | ! isValidScheduler(getScheduler())
+	 */
+	@Raw
+	public void setScheduler(Scheduler scheduler) throws IllegalArgumentException {
+		if (!isValidScheduler(scheduler))
+			throw new IllegalArgumentException();
+		this.scheduler = scheduler;
+	}
 
+	/**
+	 * Variable registering the scheduler of this Faction.
+	 */
+	private Scheduler scheduler;
 
-/**
- * Return the scheduler of this Faction.
- */
-@Basic @Raw
-public Scheduler getScheduler() {
-	return this.scheduler;
-}
-
-/**
- * Check whether the given scheduler is a valid scheduler for
- * any Faction.
- *  
- * @param  scheduler
- *         The scheduler to check.
- * @return 
- *       | result == 
-*/
-public static boolean isValidScheduler(Scheduler scheduler) {
-	return scheduler != null;
-}
-
-/**
- * Set the scheduler of this Faction to the given scheduler.
- * 
- * @param  scheduler
- *         The new scheduler for this Faction.
- * @post   The scheduler of this new Faction is equal to
- *         the given scheduler.
- *       | new.getScheduler() == scheduler
- * @throws IllegalArgumentException
- *         The given scheduler is not a valid scheduler for any
- *         Faction.
- *       | ! isValidScheduler(getScheduler())
- */
-@Raw
-public void setScheduler(Scheduler scheduler) 
-		throws IllegalArgumentException {
-	if (! isValidScheduler(scheduler))
-		throw new IllegalArgumentException();
-	this.scheduler = scheduler;
-}
-
-/**
- * Variable registering the scheduler of this Faction.
- */
-private Scheduler scheduler;
-	
 }

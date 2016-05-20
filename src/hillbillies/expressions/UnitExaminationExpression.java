@@ -15,7 +15,10 @@ public abstract class UnitExaminationExpression extends BooleanExpression {
 	
 	}
 	
-	
+	public UnitExpression getUnitToExamineExpression(Statement statement) {
+		this.unitToExamine.setStatement(statement);
+		return this.unitToExamine;
+	}
 
 	public Unit getUnitToExamine(Statement statement) {
 		this.unitToExamine.setStatement(statement);

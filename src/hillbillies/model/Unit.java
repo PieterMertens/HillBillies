@@ -29,22 +29,18 @@ import hillbillies.helper.Helper;
  *        | isValidOrientation(getOrientation())
  * @invar The isMoving of each unit must be either true or false for any unit. |
  *        isValidIsMoving(getIsMoving())
- * @invar The timenotresting of each unit must be a valid timenotresting for any
- *        unit. | isValidTimeNotResting(getTimeNotResting())
  * @invar The wantToAttack of each unit must be either true or false for any
  *        unit. | isValidWantToAttack(getWantToAttack())
- * @invar The defender of each unit must be a valid defender for any unit. |
- *        isValidDefender(getDefender())
  * @invar The pickedUpBoulder of each unit must be a valid pickedUpBoulder for
  *        any unit. | isValidPickedUpBoulder(getPickedUpBoulder())
  * @invar The pickedUpLog of each unit must be a valid pickedUpLog for any unit.
  *        | isValidPickedUpLog(getPickedUpLog())
  * 
  * @author Pieter and Matthias
+ * @version 3.0
  *
  */
 public class Unit {
-	// TODO checken of interrupties werken
 	/**
 	 * Initialize this new unit with given name, position, weight, strength,
 	 * agility and toughness and whether or not default behavior is enabled.
@@ -185,14 +181,9 @@ public class Unit {
 	 */
 	@Raw
 	public void setPosition(double[] position) throws IllegalArgumentException {
-		// System.out.println("set pos:" + position[0]+" "+position[1]+"
-		// "+position[2]);
 		if (!isValidPosition(position, this.getWorld()))
 			throw new IllegalArgumentException();
 		else {
-			// for (int i = 0; i < position.length; ++i) {
-			// position[i] += .5;
-			// }
 			this.position = position;
 		}
 	}
@@ -587,14 +578,12 @@ public class Unit {
 	 * @post The hitpoints of this unit is equal to the given hitpoints. |
 	 *       new.getHitpoints() == hitpoints
 	 */
-	@Raw // TODO private
+	@Raw 
 	public void setHitpoints(int hitpoints) {
-		// System.out.println(hitpoints);
 		assert isValidHitpoints(hitpoints, this.getWeight(), this.getToughness());
 		if (hitpoints <= 0) {
 			this.hitpoints = 0;
-			terminate(); // weet niet of ge dit in een setter moogt bijzetten
-			// TODO documentatie voor if-statement toevoegen
+			terminate(); 
 		} else {
 			this.hitpoints = hitpoints;
 		}
@@ -641,7 +630,6 @@ public class Unit {
 	 */
 	@Raw
 	public void setStaminapoints(int staminapoints) {
-		// System.out.println("staminaset: " + staminapoints);
 		assert isValidStaminapoints(staminapoints, this.getWeight(), this.getToughness());
 		this.staminapoints = staminapoints;
 	}
@@ -658,20 +646,6 @@ public class Unit {
 	 *            The period of time
 	 */
 	private void staminadrain(double dt) {
-		// System.out.println("dt: " + dt);
-		// if (dt >= 0.1) {
-		// System.out.println("staminadr: "+this.getStaminapoints());
-		// this.setStaminapoints(this.getStaminapoints() - 1);
-		// dt += -0.1;
-		// }
-		// float time = (float) (getStaminaTime() - dt);
-		//
-		// if (time <= 0) {
-		// this.setStaminapoints(this.getStaminapoints() - 1);
-		// setStaminaTime(0.1f);
-		// } else {
-		// setStaminaTime(time);
-		// }
 
 		float time = (float) (getStaminaTime() + dt);
 		while (time > 0.1f) {
@@ -848,16 +822,18 @@ public class Unit {
 	 * staminapoints until he is fully recovered. - If it has been 3 minutes or
 	 * longer since the unit last rested and he isn't falling, he starts
 	 * resting. - If defaultbehavior is enabled for the unit and he isn't doing
-	 * anything, he gets assigned a new task. - If the unit is attacking another
-	 * unit, he will do this for 1 second. - If the unit is working, he will do
-	 * this for 500/strength seconds. - If the unit is moving, his position is
-	 * updated. - If the unit is sprinting and his staminapoints reach 0, the
-	 * unit will stop sprinting. - If the unit is sprinting his staminapoints
-	 * will drain 1 every 0.1 seconds. - If the unit reaches the next cube and
-	 * he wanted to work or attack there, he will do so. - If the unit reaches
-	 * the next cube but it is not his destination, he will move to the next
-	 * cube. - The unit gains 1 experience point per cube he moves. - The unit
-	 * loses 1 hitpoint per z-level he falls.
+	 * anything, he gets assigned a new task. - If defaultbehavior is enabled
+	 * for the unit and he is doing a random activity when there is a new task,
+	 * he gets assigned the new task.- If the unit is attacking another unit, he
+	 * will do this for 1 second. - If the unit is working, he will do this for
+	 * 500/strength seconds. - If the unit is moving, his position is updated. -
+	 * If the unit is sprinting and his staminapoints reach 0, the unit will
+	 * stop sprinting. - If the unit is sprinting his staminapoints will drain 1
+	 * every 0.1 seconds. - If the unit reaches the next cube and he wanted to
+	 * work or attack there, he will do so. - If the unit reaches the next cube
+	 * but it is not his destination, he will move to the next cube. - The unit
+	 * gains 1 experience point per cube he moves. - The unit loses 1 hitpoint
+	 * per z-level he falls.
 	 * 
 	 * @param dt
 	 *            The time the game advances in seconds.
@@ -882,9 +858,13 @@ public class Unit {
 					if (this.getTimeNotResting() >= 180 && !this.getIsFalling()) {
 						rest();
 					}
+					if (this.getDefaultBehavior() && this.getTask() == null
+							&& this.getFaction().getScheduler().getAllTasksIterator().hasNext()) {
+						startDefaultBehavior();
+					}
 					if (this.getDefaultBehavior() && !this.getIsAttacking() && !this.getIsMoving()
 							&& !this.getIsResting() && !this.getIsWorking()) {
-						startDefaultBehavior(dt);
+						startDefaultBehavior();
 					}
 					if (this.getIsAttacking()) {
 						doAttack(dt, this.getDefender());
@@ -894,7 +874,6 @@ public class Unit {
 					}
 					if (this.getIsMoving()) {
 						if (this.getIsSprinting()) {
-							System.out.println("advancetime stmaina: " + this.getStaminapoints());
 							staminadrain(dt);
 							if (this.getStaminapoints() <= 0) {
 								this.setIsSprinting(false);
@@ -902,9 +881,6 @@ public class Unit {
 						}
 						this.updatePosition(dt);
 						if (this.moveToAdjacentTargetReached()) {
-
-							System.out.println(
-									"unit" + this + " x: " + this.getPosition()[0] + " y: " + this.getPosition()[1]);
 							this.setIsMoving(false);
 							if (this.getIsFalling()) {
 								this.setHitpoints(this.getHitpoints() - 10);
@@ -913,10 +889,7 @@ public class Unit {
 								this.setExperience(this.getExperience() + 1);
 								if (isMovingTo) {
 									if (this.moveToTargetReached()) {
-										isMovingTo = false;// TODO setter maken
-										// System.out.println("----------------
-										// moveto
-										// beeindigd ----------------------");
+										isMovingTo = false;
 										if (this.getWantToWork()) {
 											work();
 										}
@@ -1130,7 +1103,6 @@ public class Unit {
 			this.setIsWorking(false);
 			this.setIsAttacking(false);
 			this.setStaminaTime(0.1f);
-			// this.setIsMoving(true);
 		}
 	}
 
@@ -1396,18 +1368,17 @@ public class Unit {
 	 * Variable registering the velocity of the unit
 	 */
 	private double[] velocity = new double[3];
-	// keeps the position from where the last movetoadjacent started.
+	
 	/**
 	 * Variable registering the start position of moveToAdjacent
 	 */
-	private static double[] adjacentStart = new double[3];// TODO moet deze
-															// statiic zijn?
-	// keeps the postion of the targeted position from the last movetoadjacent.
+	private static double[] adjacentStart = new double[3];
+	
 	/**
 	 * Variable registering the targeted position of moveToAdjacent
 	 */
 	private double[] adjacentTarget = new double[3];
-	// keeps the postion of the targeted position from the last moveto.
+	
 	/**
 	 * Variable registering the targeted position of moveTo
 	 */
@@ -1431,13 +1402,9 @@ public class Unit {
 			throw new IllegalArgumentException("Already on that position.");
 		}
 
-		// System.out.println("start movetoadj");
-
 		adjacentStart = this.getPosition().clone();
-		// System.out.println("adjacentStart:" + adjacentStart[0] + " " +
-		// adjacentStart[1] + " " + adjacentStart[2]);
 
-		double[] newPosition = new double[3];// TODO functie gebruiken
+		double[] newPosition = new double[3];
 		for (int k = 0; k < adjacentStart.length; k++) {
 			newPosition[k] = Math.floor(adjacentStart[k]) + 0.5d;
 		}
@@ -1445,8 +1412,6 @@ public class Unit {
 		newPosition[0] += dx;
 		newPosition[1] += dy;
 		newPosition[2] += dz;
-		// System.out.println("x: " + newPosition[0] + "y: " + newPosition[1] +
-		// "z: " + newPosition[2]);
 
 		if (!isValidTarget(newPosition))
 			throw new IllegalArgumentException();
@@ -1454,20 +1419,13 @@ public class Unit {
 
 			adjacentTarget = newPosition;
 
-			// System.out.println("new AdjTarget: " + adjacentTarget[0] + " " +
-			// adjacentTarget[1] + " " + adjacentTarget[2]);
-
 			this.setIsMoving(true);
 
 			adjacentDelta[0] = dx;
 			adjacentDelta[1] = dy;
 			adjacentDelta[2] = dz;
 
-			distance = getDistance(dx, dy, dz);// in principe overbodig mr beter
-												// in variabel -> minder
-												// rekenwerk...
-			// System.out.println("velocity=" + velocity[0] + " " + velocity[1]
-			// + " dist: " + distance);
+			distance = getDistance(dx, dy, dz);
 
 		}
 
@@ -1482,16 +1440,8 @@ public class Unit {
 	 * @return result == true if the target is a passable block within the
 	 *         world's boundaries
 	 */
-	private boolean isValidTarget(double[] target) {// TODO lijkt hard op
-													// isvalidPods
-		// System.out.println("isValidTarget currentpos "+ this.getPosition()[0]
-		// + " "+this.getPosition()[1] +" "+ this.getPosition()[2]);
-		// System.out.println("isValidTarget "+ target[0] + " "+target[1] +" "+
-		// target[2]);
-		// System.out.println(this.getWorld());
-		// System.out.println("isValidTarget withinbound
-		// "+this.getWorld().withinBoundaries((int)target[0], (int) target[1],
-		// (int) target[2]));
+	private boolean isValidTarget(double[] target) {
+		
 		if (this.getWorld() == null)
 			return true;
 		if (this.getWorld().withinBoundaries((int) target[0], (int) target[1], (int) target[2])
@@ -1501,25 +1451,6 @@ public class Unit {
 			}
 		}
 		return false;
-
-		// Double lowerlimit = 0.5d;// variabelen in class declaren?
-		// Double upperlimit = 49.5d;
-		// boolean differentPos = false;
-
-		// if (target.length == 3) {
-
-		// for (int k = 0; k < target.length; k++) {
-		// if (target[k] > upperlimit || target[k] < lowerlimit)
-		// return false;
-		// if (target[k] != adjacentStart[k]) {
-		// differentPos = true;
-		// }
-		// }
-		// }
-		// if (differentPos)
-		// return true;
-
-		// return false;
 
 	}
 
@@ -1536,7 +1467,6 @@ public class Unit {
 		if (Helper.getDistanceBetweenPositions(adjacentStart, adjacentTarget) <= Helper
 				.getDistanceBetweenPositions(adjacentStart, this.getPosition())) {
 
-			// System.out.println("moveToAdjacentTargetReached ");
 			this.setPosition(adjacentTarget);
 			return true;
 
@@ -1554,32 +1484,8 @@ public class Unit {
 	 * @throws IllegalArgumentException
 	 *             thrown if the target is invalid
 	 */
-	public void moveTo(int[] targetPosition) throws IllegalArgumentException { // FIXME
-																				// 2
-																				// keer
-																				// moveto
-																				// achter
-																				// elkaar
-																				// fout
+	public void moveTo(int[] targetPosition) throws IllegalArgumentException {
 
-		// System.out.println("---------------- moveto begonnen
-		// ----------------------");
-
-		// isMovingTo = true;// TODO getter en setter
-		//
-		// if (!isValidTarget(Helper.getCenterOfPosition(targetPosition))) {
-		// throw new IllegalArgumentException();
-		// } else {
-		//
-		// target[0] = targetPosition[0] + 0.5d;// TODO forlus
-		// target[1] = targetPosition[1] + 0.5d;
-		// target[2] = targetPosition[2] + 0.5d;
-		// System.out.println("new target: " + target[0] + " " + target[1] +
-		// " " + target[2]);
-		// moveToAdjacent(getMoveToDirectionX(), getMoveToDirectionY(),
-		// getMoveToDirectionZ());
-
-		// }
 		isMovingTo = true;
 
 		if (!isValidTarget(Helper.getCenterOfPosition(targetPosition))) {
@@ -1598,10 +1504,9 @@ public class Unit {
 	 * 
 	 * @return result == true if the position between the unit and the target <
 	 *         1
-	 * @throws IllegalArgumentException
+	 * 
 	 */
-	// TODO waarom IllegalArgumentException?
-	public boolean moveToTargetReached() throws IllegalArgumentException {
+	public boolean moveToTargetReached() {
 
 		if (Helper.getDistanceBetweenPositions(this.getPosition(), this.target) < 1) {
 			return true;
@@ -1621,26 +1526,8 @@ public class Unit {
 	 */
 	private void findPath() throws IllegalStateException {
 
-		// System.out.println("------ findPath start ------");
-
 		int[] moveToTarget = Helper.doubleArrayToIntArray(this.target);
-		int[] currentPosition = Helper.doubleArrayToIntArray(this.getPosition()); // TODO
-																					// dit
-																					// als
-																					// argumenten
-																					// meegeven
-																					// ipv
-																					// hier
-																					// zetten
-																					// zodat
-																					// findpath
-																					// ook
-																					// voor
-																					// boulders
-																					// enz
-																					// gebruikt
-																					// kan
-																					// worden
+		int[] currentPosition = Helper.doubleArrayToIntArray(this.getPosition());
 
 		Q = new ArrayList<>();
 
@@ -1668,7 +1555,6 @@ public class Unit {
 		}
 	}
 
-	// TODO docu
 	/**
 	 * Move to the adjacent cube that has the shortest path to the target.
 	 */
@@ -1684,24 +1570,26 @@ public class Unit {
 				if (currentN < nextN) {
 					nextN = currentN;
 					nextPosition = neigbouringCube;
-
 				}
-
 			}
 			if (nextPosition != null) {
-				// System.out.println("-- moveToAdjacent");
 				moveToAdjacent(nextPosition[0] - currentPosition[0], nextPosition[1] - currentPosition[1],
 						nextPosition[2] - currentPosition[2]);
 			}
-
 		}
 	}
 
-	// TODO docu
+	/**
+	 * Make a list of steps to the given position
+	 * 
+	 * @param position
+	 * 			The given position
+	 * @param n
+	 * 			The number of steps to the position
+	 * @param Q
+	 * 			The given list
+	 */
 	private void search(int[] position, int n, List<Object[]> Q) {
-
-		// System.out.println("-- search(" + position[0] + " " + position[1] + "
-		// " + position[2] + " , " + n + ")");
 
 		List<int[]> possibilities = getNeighbouringCubes(position);
 		World world = this.getWorld();
@@ -1780,8 +1668,7 @@ public class Unit {
 				for (int k = -1; k <= 1; k++) {
 
 					if (!(i == 0 && j == 0 && k == 0)
-							&& this.getWorld().withinBoundaries(position[0] + i, position[1] + j, position[2] + k)) {// TODO
-																														// isvalidpositions
+							&& this.getWorld().withinBoundaries(position[0] + i, position[1] + j, position[2] + k)) {
 						int[] newNeighbour = { position[0] + i, position[1] + j, position[2] + k };
 						neighbouringCubes.add(newNeighbour);
 					}
@@ -1865,13 +1752,45 @@ public class Unit {
 	 *            The new work position for this unit.
 	 * @post The work position of this new unit is equal to the given work
 	 *       position. | new.getWorkPosition() == workPosition
+	 * @throws IllegalArgumentException
+	 * 			The work position is not valid for any unit
 	 */
 	@Raw
-	private void setWorkPosition(int x, int y, int z) {
+	private void setWorkPosition(int x, int y, int z) throws IllegalArgumentException {
+		if (!isValidWorkPosition(x, y, z, this.getWorld())) {
+			throw new IllegalArgumentException();}
 		this.workPosition[0] = x;
-		System.out.println("workPos: " + this.workPosition[0]);
 		this.workPosition[1] = y;
 		this.workPosition[2] = z;
+	}
+
+	/**
+	 * Check whether the given work position is a valid work position for anny
+	 * unit.
+	 * 
+	 * @param x
+	 *            The X coordinate to check
+	 * @param y
+	 *            The Y coordinate to check
+	 * @param z
+	 *            The Z coordinate to check
+	 * @param world
+	 *            The world to check
+	 * @return result == true if the given position is between the world borders
+	 *         if there is a world assigned to the unit. Otherwise, result =
+	 *         true if the 3 coordinates are bigger than 0.
+	 */
+	private static boolean isValidWorkPosition(int x, int y, int z, World world) {
+
+		if (x < 0 || y < 0 || z < 0) {
+			return false;
+		}
+		if (world != null) {
+			if (x > world.getNbCubesX() || y > world.getNbCubesY() || z > world.getNbCubesZ()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -1895,9 +1814,6 @@ public class Unit {
 		int z = workPosition[2];
 
 		if (!Helper.getIsSamePosition(workPosition, Helper.doubleArrayToIntArray(this.getPosition()))) {
-			// System.out.println("x: " + x + " y: " + y + " z: " + z);
-			// System.out.println("Cube Type workpos: " +
-			// this.getWorld().getCubeType(x, y, z));
 			double dx = x + 0.5 - this.getPosition()[0];
 			double dy = y + 0.5 - this.getPosition()[1];
 			this.setOrientation((float) Math.atan2(dy, dx));
@@ -1973,10 +1889,9 @@ public class Unit {
 	 * 
 	 * @param pickedUpBoulder
 	 *            The pickedUpBoulder to check.
-	 * @return | result ==
+	 * @return | result == true
 	 */
 	private static boolean isValidPickedUpBoulder(Boulder pickedUpBoulder) {
-		// TODO isValid
 		return true;
 	}
 
@@ -2017,10 +1932,9 @@ public class Unit {
 	 * 
 	 * @param pickedUpLog
 	 *            The pickedUpLog to check.
-	 * @return | result ==
+	 * @return | result == true
 	 */
 	private static boolean isValidPickedUpLog(Log pickedUpLog) {
-		// TODO isValid
 		return true;
 	}
 
@@ -2140,7 +2054,7 @@ public class Unit {
 	 *            Difference between two Z coordinates
 	 * @return The square root of the sum of dx, dy and dz squared
 	 */
-	private double getDistance(int dx, int dy, int dz) {// TODO nr helper
+	private double getDistance(int dx, int dy, int dz) {
 
 		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
 
@@ -2157,8 +2071,7 @@ public class Unit {
 	 *            Difference between two Z coordinates
 	 * @return The square root of the sum of dx, dy and dz squared
 	 */
-	private double getDistance(double dx, double dy, double dz) {// TODO nr
-																	// helper
+	private double getDistance(double dx, double dy, double dz) {
 
 		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
 
@@ -2190,40 +2103,26 @@ public class Unit {
 	 * Start default behavior and select random activity for the unit to do.
 	 */
 
-	public void startDefaultBehavior(double dt) {
-		System.out.println("------start default behaviour dt=" + dt);
-
-		// System.out.println("----gettask "+getTask()+" scheduler hasnext:
-		// "+getFaction().getScheduler().getAllTasksIterator().hasNext()+"
-		// Scheduler"+getFaction().getScheduler());
+	public void startDefaultBehavior() {
 
 		this.setDefaultBehavior(true);
 
-		System.out.println("-- this.gettask()=" + this.getTask());
-
 		if (getTask() == null && getFaction().getScheduler().getAllTasksIterator().hasNext()) {
-			System.out.println("--start default behaviour dt=" + dt);
 			getFaction().getScheduler().scheduleUnexecutedHighestPriorityTaskForUnit(this);
 		}
 		if (getTask() != null && !getTask().getActivity().isExecuted()) {
-			System.out.println("--execute task");
-			executeTask(dt);
+			executeTask();
 		} else {
-			System.out.println("-start random default behaviour ");
 			defaultRandomBehaviour();
 		}
 
 	}
 
-	public void executeTask(double dt) {
-
-		// TODO taak uitvoeren
+	public void executeTask() {
 
 		if (getTask().getActivity().isExecuted()) {
 			getFaction().getScheduler().removeTask(getTask());
 		} else {
-			System.out.println("---------executeTask-----------");
-			System.out.println("-- activity" + getTask().getActivity());
 			getTask().getActivity().setTask(getTask());
 			getTask().getActivity().execute();
 
@@ -2246,8 +2145,8 @@ public class Unit {
 			this.workAt((int) this.getPosition()[0], (int) this.getPosition()[1], (int) this.getPosition()[2]);
 
 		} else if (rand == 2) {
-			// TODO
-			// attack(this, this.getRandomEnemy());
+			
+			attack(this, this.getRandomEnemy());
 
 		} else {
 			this.rest();
@@ -2262,26 +2161,14 @@ public class Unit {
 	 */
 	public Unit getRandomEnemy() {
 		Unit enemy = this;
-		// System.out.println("enemyfaction: " + (enemy.getFaction() ==
-		// this.getFaction()));
 		while (enemy.getFaction() == this.getFaction()) {
+
 			enemy = this.getRandomUnit();
-			// System.out.println("enemyfaction: " + enemy.getFaction());
+			if (enemy == null) {
+				enemy = this;
+			}
 		}
 		return enemy;
-	}
-
-	/**
-	 * Return a random unit of the same faction as the unit that's not the unit
-	 * 
-	 * @return A random unit of the same faction as the unit that's not the unit
-	 */
-	public Unit getRandomFriend() {
-		Unit friend = null;
-		while (friend.getFaction() != this.getFaction()) {
-			friend = this.getRandomUnit();
-		}
-		return friend;
 	}
 
 	/**
@@ -2300,7 +2187,7 @@ public class Unit {
 					}
 					return unit;
 				}
-				i = +1;
+				i++;
 			}
 		}
 		return null;
@@ -2501,7 +2388,6 @@ public class Unit {
 	 * @param attacker
 	 */
 	private void defend(Unit attacker) {
-		System.out.println("defend");
 		Random random = new Random();
 		double dodgeProb = random.nextDouble();
 		double blockProb = random.nextDouble();
@@ -2514,17 +2400,13 @@ public class Unit {
 		} else {
 			this.setExperience(this.getExperience() + 20);
 		}
-		// attack(this, attacker);
 
 	}
 
 	/**
 	 * The unit moves to a random valid adjacent cube on the same z-level
 	 */
-	private void dodge() {// TODO dit kan eventueel nog aangepast worden als
-							// blijkt dat ge naar achter moet gaan ipv random
-							// beschikbare plek
-		System.out.println("dodge");
+	private void dodge() {
 		Random random = new Random();
 		int xdirection = random.nextInt(3) - 1;
 		int ydirection = random.nextInt(3) - 1;
@@ -2545,9 +2427,7 @@ public class Unit {
 	 *       (int) (attacker.getStrength() / 10
 	 */
 	public void takeDamage(Unit attacker) {
-		System.out.println("take damage");
 		this.setHitpoints(this.getHitpoints() - (int) (attacker.getStrength() / 10));
-		System.out.println("hitpoints: " + this.getHitpoints());
 	}
 
 	/**
@@ -2752,7 +2632,6 @@ public class Unit {
 	 *       faction.
 	 */
 	public void terminate() {
-		System.out.println("terminate");
 		this.drop();
 		if (this.getWorld() != null) {
 			this.getWorld().removeUnit(this);
@@ -2846,10 +2725,9 @@ public class Unit {
 	 * 
 	 * @param faction
 	 *            The faction to check.
-	 * @return | result ==
+	 * @return | result == true
 	 */
 	private static boolean isValidFaction(Faction faction) {
-		// TODO fixen
 		return true;
 	}
 
@@ -3044,7 +2922,6 @@ public class Unit {
 		this.setLeader(unit);
 		boolean arrived = false;
 		if (Helper.getIsSamePosition(this.getPosition(), unit.getPosition()) || unit.isTerminated()) {
-			System.out.println("Follow terminate");
 			this.setIsFollowing(false);
 			this.setIsMoving(false);
 			arrived = true;

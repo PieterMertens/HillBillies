@@ -13,6 +13,9 @@ import hillbillies.util.ConnectedToBorder;
 /**
  * @invar The terrain of each World must be a valid terrain for any World. |
  *        isValidTerrain(getTerrain())
+ *        
+ * @author Pieter and Matthias
+ * @version 2.0
  */
 public class World {
 
@@ -57,7 +60,7 @@ public class World {
 	 * 
 	 * @param terrain
 	 *            The terrain to check.
-	 * @return | result ==
+	 * @return | result == true
 	 */
 	private static boolean isValidTerrain(int[][][] terrain) {
 		return true;// TODO vereisten checken

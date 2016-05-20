@@ -6,49 +6,69 @@ import java.util.Set;
 import be.kuleuven.cs.som.annotate.*;
 import hillbillies.statements.Statement;
 
+/**
+ * @invar Each Task can have its name as name. | canHaveAsName(this.getName())
+ * @invar Each Task can have its activity as activity. |
+ *        canHaveAsActivity(this.getActivity())
+ * @invar Each task can have its selected position as selected position. |
+ *        canHaveAsSelectedPosition(this.getSelectedPosition())
+ * 
+ * @author Pieter and Matthias
+ * @version 1.0
+ *
+ */
 public class Task {
 
 	/**
-	 * TO BE ADDED TO CLASS HEADING
-	 * 
-	 * @invar Each Task can have its name as name. |
-	 *        canHaveAsName(this.getName())
-	 */
-
-	/**
-	 * Initialize this new Task with given name.
+	 * Initialize this new task with given name, priority, activity and selected
+	 * position.
 	 * 
 	 * @param name
-	 *            The name for this new Task.
-	 * @post The name of this new Task is equal to the given name. |
-	 *       new.getName() == name
-	 * @throws IllegalArgumentException
-	 *             This new Task cannot have the given name as its name. | !
-	 *             canHaveAsName(this.getName())
-	 * 
-	 *             Initialize this new Task with given priority.
-	 *
+	 *            The name for this new task.
 	 * @param priority
-	 *            The priority for this new Task.
+	 *            The priority for this new task.
+	 * @param activity
+	 *            The activity for this new task.
+	 * @param selectedPosition
+	 *            The position for this new task.
+	 * @post The name of this new task is equal to the given name. |
+	 *       new.getName() == name
+	 * @post The activity of this new task is equal to the given activity. |
+	 *       new.getActivity() == activity
+	 * @post The selected position of this new task is equal to the given
+	 *       selected position. | new.getSelectedPosition() == selectedPosition
 	 * @effect The priority of this new Task is set to the given priority. |
 	 *         this.setPriority(priority)
+	 * @throws IllegalArgumentException
+	 *             This new task cannot have the given name as its name. | !
+	 *             canHaveAsName(this.getName())
+	 * @throws IllegalArgumentException
+	 *             This new task cannot have the given activity as its activity.
+	 *             | ! canHaveAsActivity(this.getActivity())
+	 * @throws IllegalArgumentException
+	 *             This new task cannot have the given selected position as its
+	 *             selected position. | !
+	 *             canHaveAsSelectedPosition(this.getSelectedPosition())
 	 */
 	public Task(String name, int priority, Statement activity, int[] selectedPosition) throws IllegalArgumentException {
 		if (!canHaveAsName(name))
 			throw new IllegalArgumentException();
 		this.name = name;
+
 		this.setPriority(priority);
-		if(!canHaveAsActivity(activity))
+
+		if (!canHaveAsActivity(activity))
 			throw new IllegalArgumentException();
 		this.activity = activity;
 		getActivity().setTask(this);
-		if (! canHaveAsSelectedPosition(selectedPosition))
+
+		if (!canHaveAsSelectedPosition(selectedPosition))
 			throw new IllegalArgumentException();
 		this.selectedPosition = selectedPosition;
 	}
 
 	/**
-	 * Return the name of this Task.
+	 * Return the name of this task.
 	 */
 	@Basic
 	@Raw
@@ -62,24 +82,18 @@ public class Task {
 	 * 
 	 * @param name
 	 *            The name to check.
-	 * @return | result ==
+	 * @return True if the given name is not null. | result == true if (name !=
+	 *         null)
 	 */
 	@Raw
-	public boolean canHaveAsName(String name) {
+	private boolean canHaveAsName(String name) {
 		return (name != null);
 	}
 
 	/**
-	 * Variable registering the name of this Task.
+	 * Variable registering the name of this task.
 	 */
 	private final String name;
-
-	/**
-	 * TO BE ADDED TO CLASS HEADING
-	 * 
-	 * @invar The priority of each Task must be a valid priority for any Task. |
-	 *        isValidPriority(getPriority())
-	 */
 
 	/**
 	 * Return the priority of this Task.
@@ -91,65 +105,25 @@ public class Task {
 	}
 
 	/**
-	 * Check whether the given priority is a valid priority for any Task.
+	 * Set the priority of this task to the given priority.
 	 * 
 	 * @param priority
-	 *            The priority to check.
-	 * @return | result ==
-	 */
-	public static boolean isValidPriority(int priority) {
-		return true;
-	}
-
-	/**
-	 * Set the priority of this Task to the given priority.
-	 * 
-	 * @param priority
-	 *            The new priority for this Task.
-	 * @post The priority of this new Task is equal to the given priority. |
+	 *            The new priority for this task.
+	 * @post The priority of this new task is equal to the given priority. |
 	 *       new.getPriority() == priority
-	 * @throws IllegalArgumentException
-	 *             The given priority is not a valid priority for any Task. | !
-	 *             isValidPriority(getPriority())
 	 */
 	@Raw
-	public void setPriority(int priority) throws IllegalArgumentException {
-		if (!isValidPriority(priority))
-			throw new IllegalArgumentException();
+	public void setPriority(int priority) {
 		this.priority = priority;
 	}
 
 	/**
-	 * Variable registering the priority of this Task.
+	 * Variable registering the priority of this task.
 	 */
 	private int priority;
 
 	/**
-	 * TO BE ADDED TO CLASS HEADING
-	 * 
-	 * @invar Each Task can have its activity as activity. |
-	 *        canHaveAsActivity(this.getActivity())
-	 */
-
-	/**
-	 * Initialize this new Task with given activity.
-	 * 
-	 * @param activity
-	 *            The activity for this new Task.
-	 * @post The activity of this new Task is equal to the given activity. |
-	 *       new.getActivity() == activity
-	 * @throws IllegalArgumentException
-	 *             This new Task cannot have the given activity as its
-	 *             activity. | ! canHaveAsActivity(this.getActivity())
-	 */
-//	public Task(List<Statement> activity) throws IllegalArgumentException {
-//		if (!canHaveAsActivity(activity))
-//			throw new IllegalArgumentException();
-//		this.activity = activity;
-//	}
-
-	/**
-	 * Return the activity of this Task.
+	 * Return the activity of this task.
 	 */
 	@Basic
 	@Raw
@@ -159,80 +133,60 @@ public class Task {
 	}
 
 	/**
-	 * Check whether this Task can have the given activity as its activity.
+	 * Check whether this task can have the given activity as its activity.
 	 * 
 	 * @param activity
 	 *            The activity to check.
-	 * @return | result ==
+	 * @return | result == true if the activity is not null.
 	 */
 	@Raw
-	public boolean canHaveAsActivity(Statement activity) {
-		//TODO  chechen
-		return true;
+	private boolean canHaveAsActivity(Statement activity) {
+		if (activity != null) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
-	 * Variable registering the activity of this Task.
+	 * Variable registering the activity of this task.
 	 */
 	private final Statement activity;
-	
-	/** TO BE ADDED TO CLASS HEADING
-	 * @invar  Each task can have its selected position as selected position.
-	 *       | canHaveAsSelectedPosition(this.getSelectedPosition())
-	 */
-
-/**
- * Initialize this new task with given selected position.
- * 
- * @param  selectedPosition
- *         The selected position for this new task.
- * @post   The selected position of this new task is equal to the given
- *         selected position.
- *       | new.getSelectedPosition() == selectedPosition
- * @throws IllegalArgumentException
- *         This new task cannot have the given selected position as its selected position.
- *       | ! canHaveAsSelectedPosition(this.getSelectedPosition())
- */
-//public Task(int[] selectedPosition) throws IllegalArgumentException {
-	
-//}
-
-/**
- * Return the selected position of this task.
- */
-@Basic @Raw @Immutable
-public int[] getSelectedPosition() {
-	return this.selectedPosition;
-}
-
-/**
- * Check whether this task can have the given selected position as its selected position.
- *  
- * @param  selectedPosition
- *         The selected position to check.
- * @return 
- *       | result == 
-*/
-@Raw
-public boolean canHaveAsSelectedPosition(int[] selectedPosition) {
-	//TODO checken of vali pos
-	return true;
-}
-
-/**
- * Variable registering the selected position of this task.
- */
-private final int[] selectedPosition;
 
 	/**
-	 * TO BE ADDED TO CLASS HEADING
+	 * Return the selected position of this task.
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	public int[] getSelectedPosition() {
+		return this.selectedPosition;
+	}
+
+	/**
+	 * Check whether this task can have the given selected position as its
+	 * selected position.
 	 * 
-	 * @invar The assigned unit of each Task must be a valid assigned unit for
-	 *        any Task. | isValidAssignedUnit(getAssignedUnit())
+	 * @param selectedPosition
+	 *            The selected position to check.
+	 * @return | result == true if the array contains 3 elements that are all
+	 *         bigger than or equal to zero.
 	 */
+	@Raw
+	private boolean canHaveAsSelectedPosition(int[] selectedPosition) {
+		if (selectedPosition.length == 3 && selectedPosition[0] >= 0 && selectedPosition[1] >= 0
+				&& selectedPosition[2] >= 0) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
-	 * Return the assigned unit of this Task.
+	 * Variable registering the selected position of this task.
+	 */
+	private final int[] selectedPosition;
+
+	/**
+	 * Return the assigned unit of this task.
 	 */
 	@Basic
 	@Raw
@@ -242,26 +196,30 @@ private final int[] selectedPosition;
 
 	/**
 	 * Check whether the given assigned unit is a valid assigned unit for any
-	 * Task.
+	 * task.
 	 * 
-	 * @param assigned
-	 *            unit The assigned unit to check.
-	 * @return | result ==
+	 * @param assignedUnit
+	 *            The unit to check.
+	 * @return True if the unit has no task assigned. | result == true if
+	 *         assignedUnit.getTask() == null
 	 */
 	public static boolean isValidAssignedUnit(Unit assignedUnit) {
-		return true;
+		if (assignedUnit.getTask() == null) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
-	 * Set the assigned unit of this Task to the given assigned unit.
+	 * Set the assigned unit of this task to the given assigned unit.
 	 * 
 	 * @param assignedUnit
-	 *            The new assigned unit for this Task.
-	 * @post The assigned unit of this new Task is equal to the given assigned
-	 *       unit. | new.getAssignedUnit() == AssignedUnit
+	 *            The new assigned unit for this task.
+	 * @post The assigned unit of this new task is equal to the given unit. |
+	 *       new.getAssignedUnit() == AssignedUnit
 	 * @throws IllegalArgumentException
-	 *             The given assigned unit is not a valid assigned unit for any
-	 *             Task. | ! isValidAssignedUnit(getAssignedUnit())
+	 *             The given unit is not a valid assigned unit for any task. | !
+	 *             isValidAssignedUnit(getAssignedUnit())
 	 */
 	@Raw
 	public void setAssignedUnit(Unit assignedUnit) throws IllegalArgumentException {
@@ -271,20 +229,16 @@ private final int[] selectedPosition;
 	}
 
 	/**
-	 * Variable registering the assigned unit of this Task.
+	 * Variable registering the assigned unit of this task.
 	 */
 	private Unit assignedUnit = null;
 
+	/**
+	 * Return whether task has a unit assigned to it.
+	 */
 	public boolean isBeingExecuted() {
 		return getAssignedUnit() != null;
 	}
-
-	/**
-	 * TO BE ADDED TO CLASS HEADING
-	 * 
-	 * @invar The schedulerSet of each task must be a valid schedulerSet for any
-	 *        task. | isValidSchedulerSet(getSchedulerSet())
-	 */
 
 	/**
 	 * Return the schedulerSet of this task.
@@ -296,53 +250,52 @@ private final int[] selectedPosition;
 	}
 
 	/**
-	 * Check whether the given schedulerSet is a valid schedulerSet for any
-	 * task.
-	 * 
-	 * @param schedulerSet
-	 *            The schedulerSet to check.
-	 * @return | result ==
-	 */
-	public static boolean isValidSchedulerSet(Set<Scheduler> schedulerSet) {
-		return (schedulerSet != null);
-	}
-
-	/**
-	 * Set the schedulerSet of this task to the given schedulerSet.
-	 * 
-	 * @param schedulerSet
-	 *            The new schedulerSet for this task.
-	 * @post The schedulerSet of this new task is equal to the given
-	 *       schedulerSet. | new.getSchedulerSet() == schedulerSet
-	 * @throws IllegalArgumentException
-	 *             The given schedulerSet is not a valid schedulerSet for any
-	 *             task. | ! isValidSchedulerSet(getSchedulerSet())
-	 */
-	@Raw
-	public void setSchedulerSet(Set<Scheduler> schedulerSet) throws IllegalArgumentException {
-		if (!isValidSchedulerSet(schedulerSet))
-			throw new IllegalArgumentException();
-		this.schedulerSet = schedulerSet;
-	}
-
-	/**
-	 * Variable registering the schedulerSet of this task.
+	 * Variable registering the scheduler set of this task.
 	 */
 	private Set<Scheduler> schedulerSet = new HashSet<>();
 
+	/**
+	 * Add the given scheduler to the task's scheduler set.
+	 * 
+	 * @param scheduler
+	 *            The scheduler to add.
+	 * @effect The scheduler is added to the task's scheduler set.
+	 * @throws IllegalArgumentException
+	 *             The given scheduler is already in the scheduler set.
+	 */
 	public void addScheduler(Scheduler scheduler) {
 		if (!getSchedulerSet().contains(scheduler)) {
 			getSchedulerSet().add(scheduler);
-		} else {
-			throw new IllegalArgumentException("The scheduler is already in the schedulerset");
-		}
+		} 
 	}
 
-	public void removeScheduler(Scheduler scheduler) {
+	/**
+	 * Remove the given scheduler from the task's scheduler set.
+	 * 
+	 * @param scheduler
+	 *            The scheduler to remove.
+	 * @throws IllegalArgumentException
+	 *             The given scheduler is not in the scheduler set. |
+	 *             !getSchedulerSet().contains(scheduler)
+	 */
+	public void removeScheduler(Scheduler scheduler) throws IllegalArgumentException {
+		if (!getSchedulerSet().contains(scheduler)) {
+			throw new IllegalArgumentException("The scheduler is not in the scheduler set.");
+		}
 		getSchedulerSet().remove(scheduler);
 	}
-	
-	public boolean isExecuted(){
+
+	/**
+	 * Return whether the task's activity is executed.
+	 * 
+	 * @return result == getActivity().isExecuted()
+	 */
+	public boolean isExecuted() {
 		return getActivity().isExecuted();
+	}
+
+	public boolean isWellFormed() {
+		return (getActivity().getExpression() != null) ? (getActivity().isWellFormed())
+				: (getActivity().isWellFormed() && getActivity().getExpression().isWellFormed());
 	}
 }
