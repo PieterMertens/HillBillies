@@ -31,17 +31,18 @@ public abstract class Statement {
 	}
 
 	public Task getTask() {
-		System.out.println("-----getTask: ----------");
+//		System.out.println("-----getTask: ----------");
 //		if (hasParentStatement()) {
 //			System.out.println("-getTask: getFirstparentstatement="+getFirstParentStatement()+" gettask="+getFirstParentStatement().getTask());
 //			return getFirstParentStatement().getTask();
 //		} else {
-			System.out.println("-getTask: this.task"+this.task);
-			return this.task;
+//			System.out.println("-getTask: this.task"+this.task);
+			return getFirstParentStatement().task;
 //		}
 	}
 
 	public Unit getUnit() {
+		System.out.println("task in statement: "+getTask());
 		return getTask().getAssignedUnit();
 	}
 
@@ -56,7 +57,12 @@ public abstract class Statement {
 	}
 
 	public void setIsExecuted() {
+		System.out.println("--- SetIsExecuted this="+this);
 		this.isExecuted = true;
+		if(getTask().isExecuted()){
+			System.out.println("--- SetIsExecuted removetask="+getTask());
+			getUnit().getFaction().getScheduler().removeTask(getTask());
+		}
 	}
 
 	private boolean started;

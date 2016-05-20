@@ -13,7 +13,7 @@ public class ThisExpression extends UnitExpression {
 	@Override
 	public Unit evaluate() {
 		// TODO Auto-generated method stub
-		System.out.println("thisexpression this= "+this+" getStatement()="+getStatement());
+		//System.out.println("thisexpression this= "+this+" getStatement()="+getStatement());
 		return getUnit();
 	}
 

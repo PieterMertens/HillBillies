@@ -12,10 +12,13 @@ public class MoveToStatement extends Statement {
 	public MoveToStatement(PositionExpression pos, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.position = pos;
-		
-		//System.out.println("MoveToStatement(PositionExpression position, SourceLocation sourceLocation) - position="+pos);
-		
-		//getPosition().setStatement(this);
+		pos.setStatement(this);
+		System.out.println("--MOvtostatement pos=" + pos + " getPos=" + getPosition());
+
+		// System.out.println("MoveToStatement(PositionExpression position,
+		// SourceLocation sourceLocation) - position="+pos);
+
+		// getPosition().setStatement(this);
 	}
 
 	public PositionExpression getPosition() {
@@ -24,6 +27,11 @@ public class MoveToStatement extends Statement {
 
 	@Override
 	public void execute() {
+
+		System.out.println("getstatement: " + getFirstParentStatement());
+		System.out.println("getstatementunit: " + getTask().getAssignedUnit());
+		System.out.println("---moveto statement getunit=" + getUnit());
+		System.out.println("---moveto statement getposition=" + getPosition());
 		if (isAssignedToUnit()) {
 			if (getUnit().moveToTargetReached()) {
 				setIsExecuted();

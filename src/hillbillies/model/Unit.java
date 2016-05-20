@@ -1813,34 +1813,39 @@ public class Unit {
 	 */
 	public void workAt(int x, int y, int z) {
 		this.setWorkPosition(x, y, z);
-		double distance = Double.POSITIVE_INFINITY;
+
 		if (!Helper.getIsSamePosition(Helper.doubleArrayToIntArray(this.getPosition()), this.getWorkPosition())) {
-			int[] nearestPos = null;
-			for (int[] pos : this.getNeighbouringCubes(this.getWorkPosition())) {
-				if (this.isValidTarget(Helper.intArrayToDoubleArray(pos))) {
-					double newDistance = Helper.getDistanceBetweenPositions(this.getPosition(),
-							Helper.getCenterOfPosition(pos));
-					if (newDistance == 0) {
-						distance = newDistance;
-						nearestPos = pos;
-						break;
-					}
-					if (newDistance < distance) {
-						distance = newDistance;
-						nearestPos = pos;
-					}
-				}
-			}
-			if (distance != 0) {
-				this.setWantToWork(true);
-				this.moveTo(nearestPos);
-			}
-		}
-		if (distance == Double.POSITIVE_INFINITY || distance == 0) {
+			this.setWantToWork(true);
+			this.moveTo(this.getNearestNeighbour(x, y, z));
+
+		} else {
 			work();
 		}
 
 	}
+
+	
+	public int[] getNearestNeighbour(int x, int y, int z) {
+		int[] nearestPos = null;
+		double distance = Double.POSITIVE_INFINITY;
+		for (int[] pos : this.getNeighbouringCubes(new int[] { x, y, z })) {
+			if (this.isValidTarget(Helper.intArrayToDoubleArray(pos))) {
+				double newDistance = Helper.getDistanceBetweenPositions(this.getPosition(),
+						Helper.getCenterOfPosition(pos));
+				if (newDistance == 0) {
+					distance = newDistance;
+					nearestPos = pos;
+					break;
+				}
+				if (newDistance < distance) {
+					distance = newDistance;
+					nearestPos = pos;
+				}
+			}
+		}
+		return nearestPos;
+	}
+
 
 	/**
 	 * Return the work position of this unit.
@@ -2191,6 +2196,8 @@ public class Unit {
 		// Scheduler"+getFaction().getScheduler());
 
 		this.setDefaultBehavior(true);
+		
+		System.out.println("-- this.gettask()="+this.getTask());
 
 		if (getTask() == null && getFaction().getScheduler().getAllTasksIterator().hasNext()) {
 			System.out.println("--start default behaviour dt=" + dt);
@@ -2253,10 +2260,10 @@ public class Unit {
 	 */
 	public Unit getRandomEnemy() {
 		Unit enemy = this;
-		System.out.println("enemyfaction: " + (enemy.getFaction() == this.getFaction()));
+//		System.out.println("enemyfaction: " + (enemy.getFaction() == this.getFaction()));
 		while (enemy.getFaction() == this.getFaction()) {
 			enemy = this.getRandomUnit();
-			System.out.println("enemyfaction: " + enemy.getFaction());
+//			System.out.println("enemyfaction: " + enemy.getFaction());
 		}
 		return enemy;
 	}

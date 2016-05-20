@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import hillbillies.model.Task;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
 import hillbillies.part3.programs.SourceLocation;
@@ -61,7 +62,7 @@ public abstract class Expression<T> {
 	}
 	
 	public void setStatement(Statement statement){
-		System.out.println("setStatement for this="+this+" to statement="+statement);
+//		System.out.println("setStatement for this="+this+" to statement="+statement);
 		this.statement = statement; 
 	}
 	
@@ -73,8 +74,14 @@ public abstract class Expression<T> {
 		System.out.println("getunit from first parent:    stamtent");
 		System.out.println(getStatement());
 		System.out.println("getfirstparent"+getStatement().getFirstParentStatement());
-		return getStatement().getFirstParentStatement().getUnit();
+		return getStatement().getUnit();
 	}
+	
+	public Task getTask(){
+		return getStatement().getTask();
+	}
+	
+	
 	
 	public World getWorld(){
 		return getUnit().getWorld();

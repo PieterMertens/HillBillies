@@ -38,8 +38,7 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 			tasks.add(task);
 		}
 
-		
-		System.out.println(tasks.size()+" taken aangemaakt");
+		System.out.println(tasks.size() + " taken aangemaakt");
 		return tasks;
 
 	}
@@ -69,7 +68,7 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 	}
 
 	@Override
-	public Statement createPrint(Expression value, SourceLocation sourceLocation) {
+	public Statement createPrint(Expression<?> value, SourceLocation sourceLocation) {
 		return new PrintStatement(value, sourceLocation);
 	}
 
@@ -79,142 +78,148 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 	}
 
 	@Override
-	public Statement createMoveTo(Expression position, SourceLocation sourceLocation) {
-		//System.out.println("New MoveToStatement");
-		System.out.println("position "+((PositionExpression)position));
+	public Statement createMoveTo(Expression<?> position, SourceLocation sourceLocation) {
+		// System.out.println("New MoveToStatement");
+		System.out.println("position " + ((PositionExpression) position));
 		return new MoveToStatement((PositionExpression) position, sourceLocation);
 	}
 
 	@Override
-	public Statement createWork(Expression position, SourceLocation sourceLocation) {
-		//System.out.println("New WorkStatement");
+	public Statement createWork(Expression<?> position, SourceLocation sourceLocation) {
+		// System.out.println("New WorkStatement");
 		return new WorkStatement((PositionExpression) position, sourceLocation);
 	}
 
 	@Override
-	public Statement createFollow(Expression unit, SourceLocation sourceLocation) {
+	public Statement createFollow(Expression<?> unit, SourceLocation sourceLocation) {
 		return new FollowStatement((UnitExpression) unit, sourceLocation);
 	}
 
 	@Override
-	public Statement createAttack(Expression unit, SourceLocation sourceLocation) {
+	public Statement createAttack(Expression<?> unit, SourceLocation sourceLocation) {
 		return new AttackStatement((UnitExpression) unit, sourceLocation);
 	}
 
 	@Override
-	public Expression createReadVariable(String variableName, SourceLocation sourceLocation) {
+	public Expression<?> createReadVariable(String variableName, SourceLocation sourceLocation) {
 		return new ReadExpression(variableName, sourceLocation);
 	}
 
 	@Override
-	public Expression createIsSolid(Expression position, SourceLocation sourceLocation) {
+	public Expression<?> createIsSolid(Expression<?> position, SourceLocation sourceLocation) {
 		return new IsSolidExpression((PositionExpression) position, sourceLocation);
 	}
 
 	@Override
-	public Expression createIsPassable(Expression position, SourceLocation sourceLocation) {
+	public Expression<?> createIsPassable(Expression<?> position, SourceLocation sourceLocation) {
 		return new IsPassebleExpression((PositionExpression) position, sourceLocation);
 	}
 
 	@Override
-	public Expression createIsFriend(Expression unit, SourceLocation sourceLocation) {
+	public Expression<?> createIsFriend(Expression<?> unit, SourceLocation sourceLocation) {
 		return new IsFriendExpression((UnitExpression) unit, sourceLocation);
 	}
 
 	@Override
-	public Expression createIsEnemy(Expression unit, SourceLocation sourceLocation) {
+	public Expression<?> createIsEnemy(Expression<?> unit, SourceLocation sourceLocation) {
 		return new IsEnemyExpression((UnitExpression) unit, sourceLocation);
 	}
 
 	@Override
-	public Expression createIsAlive(Expression unit, SourceLocation sourceLocation) {
+	public Expression<?> createIsAlive(Expression<?> unit, SourceLocation sourceLocation) {
 		return new IsAliveExpression((UnitExpression) unit, sourceLocation);
 	}
 
 	@Override
-	public Expression createCarriesItem(Expression unit, SourceLocation sourceLocation) {
+	public Expression<?> createCarriesItem(Expression<?> unit, SourceLocation sourceLocation) {
 		return new CarriesItemExpression((UnitExpression) unit, sourceLocation);
 	}
 
 	@Override
-	public Expression<Boolean> createNot(Expression expression, SourceLocation sourceLocation) {
+	public Expression<Boolean> createNot(Expression<?> expression, SourceLocation sourceLocation) {
 		return new NotExpression((BooleanExpression) expression, sourceLocation);
 	}
 
 	@Override
-	public Expression createAnd(Expression left, Expression right, SourceLocation sourceLocation) {
+	public Expression<?> createAnd(Expression<?> left, Expression<?> right, SourceLocation sourceLocation) {
 
 		return new AndExpression((BooleanExpression) left, (BooleanExpression) right, sourceLocation);
 	}
 
 	@Override
-	public Expression createOr(Expression left, Expression right, SourceLocation sourceLocation) {
+	public Expression<?> createOr(Expression<?> left, Expression<?> right, SourceLocation sourceLocation) {
 		return new OrExpression((BooleanExpression) left, (BooleanExpression) right, sourceLocation);
 	}
 
 	@Override
-	public Expression createHerePosition(SourceLocation sourceLocation) {
+	public Expression<?> createHerePosition(SourceLocation sourceLocation) {
 		return new HerePositionExpression(sourceLocation);
 	}
 
 	@Override
-	public Expression createLogPosition(SourceLocation sourceLocation) {
+	public Expression<?> createLogPosition(SourceLocation sourceLocation) {
 		return new LogPositionExpression(sourceLocation);
 	}
 
 	@Override
-	public Expression createBoulderPosition(SourceLocation sourceLocation) {
+	public Expression<?> createBoulderPosition(SourceLocation sourceLocation) {
 		return new BoulderPositionExpression(sourceLocation);
 	}
 
 	@Override
-	public Expression createWorkshopPosition(SourceLocation sourceLocation) {
+	public Expression<?> createWorkshopPosition(SourceLocation sourceLocation) {
 		return new WorkshopPositionExpression(sourceLocation);
 	}
 
 	@Override
-	public Expression createSelectedPosition(SourceLocation sourceLocation) {
+	public Expression<?> createSelectedPosition(SourceLocation sourceLocation) {
 		return new SelectedPositionExpression(sourceLocation);
 	}
 
 	@Override
-	public Expression createNextToPosition(Expression position, SourceLocation sourceLocation) {
-		return null;
+	public Expression<?> createNextToPosition(Expression<?> position, SourceLocation sourceLocation) {
+		return new NextToPositionExpression((PositionExpression)position,sourceLocation);
 	}
 
 	@Override
-	public Expression createLiteralPosition(int x, int y, int z, SourceLocation sourceLocation) {
+	public Expression<?> createLiteralPosition(int x, int y, int z, SourceLocation sourceLocation) {
 		return new LiteralPositionExpression(x, y, z, sourceLocation);
 	}
 
 	@Override
-	public Expression createThis(SourceLocation sourceLocation) {
+	public Expression<?> createThis(SourceLocation sourceLocation) {
 		return new ThisExpression(sourceLocation);
 	}
 
 	@Override
-	public Expression createFriend(SourceLocation sourceLocation) {
+	public Expression<?> createFriend(SourceLocation sourceLocation) {
 		return new FriendExpression(sourceLocation);
 	}
 
 	@Override
-	public Expression createEnemy(SourceLocation sourceLocation) {
+	public Expression<?> createEnemy(SourceLocation sourceLocation) {
 		return new EnemyExpression(sourceLocation);
 	}
 
 	@Override
-	public Expression createAny(SourceLocation sourceLocation) {
+	public Expression<?> createAny(SourceLocation sourceLocation) {
 		return new AnyExpression(sourceLocation);
 	}
 
 	@Override
-	public Expression createTrue(SourceLocation sourceLocation) {
+	public Expression<?> createTrue(SourceLocation sourceLocation) {
 		return new TrueExpression(sourceLocation);
 	}
 
 	@Override
-	public Expression createFalse(SourceLocation sourceLocation) {
+	public Expression<?> createFalse(SourceLocation sourceLocation) {
 		return new FalseExpression(sourceLocation);
+	}
+
+	@Override
+	public Expression<?> createPositionOf(Expression<?> unit, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return new PositionOfExpression((UnitExpression) unit, sourceLocation);
 	}
 
 }

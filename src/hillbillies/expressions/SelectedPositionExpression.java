@@ -12,7 +12,11 @@ public class SelectedPositionExpression extends PositionExpression{
 	@Override
 	public int[] evaluate() {
 		// TODO Auto-generated method stub
-		return getStatement().getTask().getSelectedPosition();
+		System.out.println("--SelectedPosexp: getst	t+getS()+" +getStatement());
+
+		System.out.println("--SelectedPosexp: getTasl="+getTask()+" get selecetedpos="+getTask().getSelectedPosition()[0]);
+
+		return getTask().getSelectedPosition();
 	}
 
 }

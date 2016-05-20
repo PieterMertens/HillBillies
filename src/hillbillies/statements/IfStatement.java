@@ -17,7 +17,7 @@ public class IfStatement extends Statement {
 		this.ifBody = ifBody;
 		this.elseBody = elseBody;
 		condition.setStatement(this);
-		System.out.println("ifst getstatment: condition"+condition+" stamtent"+condition.getStatement());
+//		System.out.println("ifst getstatment: condition"+condition+" stamtent"+condition.getStatement());
 		if (hasIfBody()) {
 			getIfBody().setParentStatement(this);
 			//System.out.println("kind="+getIfBody()+" kind zn ouder="+getIfBody().getParentStatement()+" parent firstparent"+this.getFirstParentStatement());
@@ -47,6 +47,7 @@ public class IfStatement extends Statement {
 	}
 
 	public boolean hasElseBody() {
+		System.out.println("hasElsebody elsebody="+getElseBody());
 		return (getElseBody() != null);
 	}
 
@@ -60,13 +61,18 @@ public class IfStatement extends Statement {
 	//		System.out.println("if unit"+getCondition().getStatement().getUnit());
 //			get
 			if (getCondition().evaluate()) {
+				System.out.println("execute ifstatement 1ste IF no else");
 				if (hasIfBody()) {
 			
 					getIfBody().execute();
 				}
 			} else {
+				System.out.println("execute ifstatement 1ste else no else");
 				if (hasElseBody()) {
 					getElseBody().execute();
+				}else{
+					System.out.println("execute ifstatement 2de else no else");
+					setIsExecuted();
 				}
 			}
 		}

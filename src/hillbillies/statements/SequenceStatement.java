@@ -10,12 +10,13 @@ public class SequenceStatement extends Statement {
 	public SequenceStatement(List<Statement> statements, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.statements = statements;
-		System.out.println("------------sequencestatement---------");
+//		System.out.println("------------sequencestatement---------");
 		for (Statement statement : statements) {
+			System.out.println("statement in seq: "+statement);
 			statement.setParentStatement(this);
-			System.out.println("kind="+statement+" kind zn ouder="+statement.getParentStatement()+ "kind eerset ouder"+statement.getFirstParentStatement());
+//			System.out.println("kind="+statement+" kind zn ouder="+statement.getParentStatement()+ "kind eerset ouder"+statement.getFirstParentStatement());
 		}
-		System.out.println("------------/sequencestatement---------");
+//		System.out.println("------------/sequencestatement---------");
 		
 	}
 
@@ -41,10 +42,11 @@ public class SequenceStatement extends Statement {
 
 	@Override
 	public void execute() {
-		System.out.println("execute sequencest");
+//		System.out.println("execute sequencest");
 		if (allStatementsExecuted()) {
 			setIsExecuted();
 		} else {
+			//getNextUnexecutedStatement().setParentStatement(this);
 			getNextUnexecutedStatement().execute();
 		}
 

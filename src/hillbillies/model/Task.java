@@ -341,4 +341,8 @@ private final int[] selectedPosition;
 	public void removeScheduler(Scheduler scheduler) {
 		getSchedulerSet().remove(scheduler);
 	}
+	
+	public boolean isExecuted(){
+		return getActivity().isExecuted();
+	}
 }
