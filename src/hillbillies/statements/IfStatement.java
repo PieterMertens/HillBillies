@@ -17,12 +17,16 @@ public class IfStatement extends Statement {
 		this.ifBody = ifBody;
 		this.elseBody = elseBody;
 		condition.setStatement(this);
+		System.out.println("ifst getstatment: condition"+condition+" stamtent"+condition.getStatement());
 		if (hasIfBody()) {
-			ifBody.setParentStatement(this);
+			getIfBody().setParentStatement(this);
+			//System.out.println("kind="+getIfBody()+" kind zn ouder="+getIfBody().getParentStatement()+" parent firstparent"+this.getFirstParentStatement());
 		}
 		if (hasElseBody()) {
-			elseBody.setParentStatement(this);
+			getElseBody().setParentStatement(this);
 		}
+		
+		
 	}
 
 	public BooleanExpression getCondition() {
@@ -52,14 +56,16 @@ public class IfStatement extends Statement {
 		if ((hasIfBody() && getIfBody().isExecuted()) || (hasElseBody() && getElseBody().isExecuted())) {
 			setIsExecuted();
 		} else {
+			getCondition().setStatement(this);
+	//		System.out.println("if unit"+getCondition().getStatement().getUnit());
+//			get
 			if (getCondition().evaluate()) {
 				if (hasIfBody()) {
-					getIfBody().setParentStatement(this);
+			
 					getIfBody().execute();
 				}
 			} else {
 				if (hasElseBody()) {
-					getElseBody().setParentStatement(this);
 					getElseBody().execute();
 				}
 			}

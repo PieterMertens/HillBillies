@@ -1,6 +1,7 @@
 package hillbillies.expressions;
 
 import hillbillies.part3.programs.SourceLocation;
+import hillbillies.statements.Statement;
 
 public abstract class BinaryExpression extends BooleanExpression {
 
@@ -11,15 +12,18 @@ public abstract class BinaryExpression extends BooleanExpression {
 		super(sourceLocation);
 		this.left = left;
 		this.right = right;
+		// left.setStatement(this.getStatement());
+		// right.setStatement(this.getStatement());
 	}
-	
-	public BooleanExpression getLeft(){
+
+	public BooleanExpression getLeft(Statement statement) {
+		this.left.setStatement(statement);
 		return this.left;
 	}
 
-	
-	public BooleanExpression getRight(){
+	public BooleanExpression getRight(Statement statement) {
+		this.right.setStatement(statement);
 		return this.right;
-		
+
 	}
 }

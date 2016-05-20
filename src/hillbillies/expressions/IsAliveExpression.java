@@ -11,7 +11,7 @@ public class IsAliveExpression extends UnitExaminationExpression {
 	@Override
 	public Boolean evaluate() {
 		// TODO Auto-generated method stub
-		return !getUnitToExamine().isTerminated();
+		return !getUnitToExamine(this.getStatement()).isTerminated();
 	}
 
 }

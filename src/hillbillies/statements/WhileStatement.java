@@ -38,7 +38,6 @@ public class WhileStatement extends Statement {
 				if (getBody().isExecuted()) {
 					setIsExecuted();
 				} else {
-					getBody().setParentStatement(this);
 					getBody().execute();
 				}
 			} else {

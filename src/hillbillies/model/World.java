@@ -329,11 +329,8 @@ public class World {
 			throw new IllegalArgumentException("Max amount of units reached.");
 		}
 		Unit unit = createUnit(enableDefaultBehavior);
-		unit.setFaction(this.getSmallestFaction());
-		this.units.add(unit);
-		unit.getFaction().addUnit(unit);
-		unit.setWorld(this);
-
+		this.addUnit(unit);
+		
 		return unit;
 	}
 
@@ -399,6 +396,8 @@ public class World {
 		if (units.size() >= 100) {
 			throw new IllegalArgumentException("The maximum number of units in this world is reached.");
 		} else {
+			unit.setFaction(this.getSmallestFaction());
+			unit.getFaction().addUnit(unit);
 			this.units.add(unit);
 			unit.setWorld(this);
 		}

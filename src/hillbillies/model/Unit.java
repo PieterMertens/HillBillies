@@ -1870,7 +1870,7 @@ public class Unit {
 	/**
 	 * Variable registering the position where the unit works.
 	 */
-	private int[] workPosition;
+	private int[] workPosition = {0,0,0};
 
 	/**
 	 * Try to work at the work position when the work time is 0.
@@ -2213,6 +2213,9 @@ public class Unit {
 		if (getTask().getActivity().isExecuted()) {
 			getFaction().getScheduler().removeTask(getTask());
 		} else {
+			System.out.println("---------executeTask-----------");
+			System.out.println("-- activity"+getTask().getActivity());
+
 			getTask().getActivity().execute();
 
 		}
@@ -2234,8 +2237,8 @@ public class Unit {
 			this.workAt((int) this.getPosition()[0], (int) this.getPosition()[1], (int) this.getPosition()[2]);
 
 		} else if (rand == 2) {
-
-			attack(this, this.getRandomEnemy());
+//TODO
+			//attack(this, this.getRandomEnemy());
 
 		} else {
 			this.rest();
@@ -2353,7 +2356,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	private boolean getWantToAttack() {
+	public boolean getWantToAttack() {
 		return this.wantToAttack;
 	}
 

@@ -9,8 +9,7 @@ import hillbillies.part3.programs.SourceLocation;
 
 public class AttackStatement extends Statement {
 
-	// TODO voor attack and follow superclass maken met targetUnit fso
-
+	
 	private Expression<Unit> unitToAttack;
 	
 

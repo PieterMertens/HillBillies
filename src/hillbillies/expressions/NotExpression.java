@@ -12,7 +12,7 @@ public class NotExpression extends UnaryExpression {
 
 	@Override
 	public Boolean evaluate() {
-		return (!this.getExpression().evaluate());
+		return (!this.getExpression(this.getStatement()).evaluate());
 	}
 
 }

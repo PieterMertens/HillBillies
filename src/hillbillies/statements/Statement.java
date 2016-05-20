@@ -10,6 +10,7 @@ public abstract class Statement {
 
 	public Statement(SourceLocation sourceLocation) {
 		this.setSourceLocation(sourceLocation);
+		//System.out.println("nieuw statement:"+this);
 
 	}
 
@@ -30,11 +31,14 @@ public abstract class Statement {
 	}
 
 	public Task getTask() {
-		if (hasParentStatement()) {
-			return getParentStatement().getTask();
-		} else {
+		System.out.println("-----getTask: ----------");
+//		if (hasParentStatement()) {
+//			System.out.println("-getTask: getFirstparentstatement="+getFirstParentStatement()+" gettask="+getFirstParentStatement().getTask());
+//			return getFirstParentStatement().getTask();
+//		} else {
+			System.out.println("-getTask: this.task"+this.task);
 			return this.task;
-		}
+//		}
 	}
 
 	public Unit getUnit() {
@@ -73,10 +77,23 @@ public abstract class Statement {
 
 	public void setParentStatement(Statement parent) {
 		this.parentStatement = parent;
+		//System.out.println("nieuw parent "+parent+"van ouder "+getFirstParent());
 	}
 
 	public boolean hasParentStatement() {
 		return (getParentStatement() != null);
 	}
 
+	public Statement getFirstParentStatement() {
+		Statement current = this;
+		Statement parent = this;
+		//System.out.println("-voor while first parent:"+current);
+		while (parent != null) {
+			//System.out.println("-in while first parent:"+current);
+			current = parent;
+			parent = parent.getParentStatement();
+		}
+		//System.out.println("-na while first parent:"+current);
+		return current;
+	}
 }

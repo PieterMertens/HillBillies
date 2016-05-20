@@ -1,6 +1,7 @@
 package hillbillies.expressions;
 
 import hillbillies.part3.programs.SourceLocation;
+import hillbillies.statements.Statement;
 
 public abstract class UnaryExpression extends BooleanExpression {
 
@@ -9,9 +10,11 @@ public abstract class UnaryExpression extends BooleanExpression {
 	public UnaryExpression(BooleanExpression expression, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.expression= expression;
+	
 	}
 
-	public BooleanExpression getExpression() {
+	public BooleanExpression getExpression(Statement statement) {
+		this.expression.setStatement(statement);
 		return expression;
 	}
 

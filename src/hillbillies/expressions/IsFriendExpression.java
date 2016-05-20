@@ -11,7 +11,7 @@ public class IsFriendExpression extends UnitExaminationExpression {
 	@Override
 	public Boolean evaluate() {
 		// TODO Auto-generated method stub
-		return (getUnit().getFaction() == getUnitToExamine().getFaction() && getUnit() != getUnitToExamine());
+		return (getUnit().getFaction() == getUnitToExamine(this.getStatement()).getFaction() && getUnit() != getUnitToExamine(this.getStatement()));
 	}
 
 }

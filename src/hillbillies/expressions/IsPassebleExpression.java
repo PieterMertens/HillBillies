@@ -11,7 +11,7 @@ public class IsPassebleExpression extends CubeExpression {
 	@Override
 	public Boolean evaluate() {
 		// TODO Auto-generated method stub
-		return getWorld().isPassable(getPosition()[0], getPosition()[1], getPosition()[2]);
+		return getWorld().isPassable(getPosition(this.getStatement())[0], getPosition(this.getStatement())[1], getPosition(this.getStatement())[2]);
 	}
 
 }

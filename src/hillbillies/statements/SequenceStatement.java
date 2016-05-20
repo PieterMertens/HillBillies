@@ -10,11 +10,13 @@ public class SequenceStatement extends Statement {
 	public SequenceStatement(List<Statement> statements, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.statements = statements;
-
+		System.out.println("------------sequencestatement---------");
 		for (Statement statement : statements) {
 			statement.setParentStatement(this);
+			System.out.println("kind="+statement+" kind zn ouder="+statement.getParentStatement()+ "kind eerset ouder"+statement.getFirstParentStatement());
 		}
-
+		System.out.println("------------/sequencestatement---------");
+		
 	}
 
 	public List<Statement> getStatements() {

@@ -41,6 +41,7 @@ public class Task {
 		if(!canHaveAsActivity(activity))
 			throw new IllegalArgumentException();
 		this.activity = activity;
+		getActivity().setTask(this);
 		if (! canHaveAsSelectedPosition(selectedPosition))
 			throw new IllegalArgumentException();
 		this.selectedPosition = selectedPosition;
@@ -248,7 +249,7 @@ private final int[] selectedPosition;
 	 * @return | result ==
 	 */
 	public static boolean isValidAssignedUnit(Unit assignedUnit) {
-		return false;
+		return true;
 	}
 
 	/**

@@ -12,7 +12,7 @@ public class IsEnemyExpression extends UnitExaminationExpression {
 	@Override
 	public Boolean evaluate() {
 		// TODO Auto-generated method stub
-		return (getUnit().getFaction() != getUnitToExamine().getFaction());
+		return (getUnit().getFaction() != getUnitToExamine(this.getStatement()).getFaction());
 	}
 
 }

@@ -29,11 +29,11 @@ public abstract class Expression<T> {
 
 	public abstract T evaluate();
 
-	Map<String, Expression<?>> expressionsWithVariableName = new HashMap<>();
+	private static Map<String, Expression<?>> expressionsWithVariableName = new HashMap<>();
 	private Statement statement;
 
 	public Map<String, Expression<?>> getVariableMap() {
-		return this.expressionsWithVariableName;
+		return Expression.expressionsWithVariableName;
 	}
 
 	public void addVariable(String variableName, Expression<?> value) {
@@ -61,7 +61,8 @@ public abstract class Expression<T> {
 	}
 	
 	public void setStatement(Statement statement){
-		this.statement = statement;
+		System.out.println("setStatement for this="+this+" to statement="+statement);
+		this.statement = statement; 
 	}
 	
 	public Statement getStatement(){
@@ -69,11 +70,42 @@ public abstract class Expression<T> {
 	}
 	
 	public Unit getUnit(){
-		return getStatement().getUnit();
+		System.out.println("getunit from first parent:    stamtent");
+		System.out.println(getStatement());
+		System.out.println("getfirstparent"+getStatement().getFirstParentStatement());
+		return getStatement().getFirstParentStatement().getUnit();
 	}
 	
 	public World getWorld(){
 		return getUnit().getWorld();
 	}
+	
+//	//)------------------------
+//	private Expression<?> parentExpression;
+//
+//	public Expression<?> getParentExpression() {
+//		return this.parentExpression;
+//	}
+//
+//	public void setParentExpression(Expression<?> parent) {
+//		this.parentExpression = parent;
+//	}
+//
+//	public boolean hasParentStatement() {
+//		return (getParentExpression() != null);
+//	}
+//
+//	public Expression<?> getFirstParentExpression() {
+//		Expression<?> current = this;
+//		Expression<?> parent = this;
+//		System.out.println("-voor while first parent:"+current);
+//		while (parent != null) {
+//			System.out.println("-in while first parent:"+current);
+//			current = parent;
+//			parent = parent.getParentExpression();
+//		}
+//		System.out.println("-na while first parent:"+current);
+//		return current;
+//	}
 
 }

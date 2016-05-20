@@ -12,7 +12,9 @@ public class CarriesItemExpression extends UnitExaminationExpression {
 	@Override
 	public Boolean evaluate() {
 		// TODO Auto-generated method stub
-		return (getUnitToExamine().getCarryingBoulder() || getUnitToExamine().getCarryingLog());
+		System.out.println("this= "+this+" getStatement()="+getStatement());
+		System.out.println("carriesItemevalu: " +getUnitToExamine(this.getStatement()));
+		return (getUnitToExamine(this.getStatement()).getCarryingBoulder() || getUnitToExamine(this.getStatement()).getCarryingLog());
 	}
 
 }

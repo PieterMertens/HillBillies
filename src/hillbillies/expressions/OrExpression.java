@@ -11,7 +11,7 @@ public class OrExpression extends BinaryExpression{
 
 	@Override
 	public Boolean evaluate() {
-		return (this.getLeft().evaluate()||this.getRight().evaluate());
+		return (this.getLeft(this.getStatement()).evaluate()||this.getRight(this.getStatement()).evaluate());
 	}
 
 }
