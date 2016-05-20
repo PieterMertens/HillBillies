@@ -65,7 +65,7 @@ public abstract class Statement {
 		}
 	}
 
-	private boolean started;
+	private boolean started = false;
 
 	public void setStarted(boolean started) {
 		this.started = started;

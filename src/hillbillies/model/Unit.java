@@ -894,7 +894,7 @@ public class Unit {
 					}
 					if (this.getIsMoving()) {
 						if (this.getIsSprinting()) {
-							System.out.println("advancetime stmaina: "+this.getStaminapoints());
+							System.out.println("advancetime stmaina: " + this.getStaminapoints());
 							staminadrain(dt);
 							if (this.getStaminapoints() <= 0) {
 								this.setIsSprinting(false);
@@ -951,7 +951,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	private boolean getWantToWork() {
+	public boolean getWantToWork() {
 		return this.wantToWork;
 	}
 
@@ -1427,10 +1427,10 @@ public class Unit {
 	 */
 	public void moveToAdjacent(int dx, int dy, int dz) throws IllegalArgumentException {
 
-		if(dx==0&&dy==0&&dz==0){
+		if (dx == 0 && dy == 0 && dz == 0) {
 			throw new IllegalArgumentException("Already on that position.");
 		}
-		
+
 		// System.out.println("start movetoadj");
 
 		adjacentStart = this.getPosition().clone();
@@ -1801,8 +1801,8 @@ public class Unit {
 	}
 
 	/**
-	 * Work at the work position if the unit is there or move to a cube next to
-	 * the work position
+	 * Work at the given position if the unit is there or move to the cube next
+	 * to the work position nearest to the unit
 	 * 
 	 * @param x
 	 *            X coordinate of the target location
@@ -1813,10 +1813,14 @@ public class Unit {
 	 */
 	public void workAt(int x, int y, int z) {
 		this.setWorkPosition(x, y, z);
-
 		if (!Helper.getIsSamePosition(Helper.doubleArrayToIntArray(this.getPosition()), this.getWorkPosition())) {
 			this.setWantToWork(true);
-			this.moveTo(this.getNearestNeighbour(x, y, z));
+			int[] nearestPos = this.getNearestNeighbour(x, y, z);
+			if (!Helper.getIsSamePosition(Helper.doubleArrayToIntArray(this.getPosition()), nearestPos)) {
+				this.moveTo(this.getNearestNeighbour(x, y, z));
+			} else {
+				work();
+			}
 
 		} else {
 			work();
@@ -1824,7 +1828,6 @@ public class Unit {
 
 	}
 
-	
 	public int[] getNearestNeighbour(int x, int y, int z) {
 		int[] nearestPos = null;
 		double distance = Double.POSITIVE_INFINITY;
@@ -1845,7 +1848,6 @@ public class Unit {
 		}
 		return nearestPos;
 	}
-
 
 	/**
 	 * Return the work position of this unit.
@@ -1875,7 +1877,7 @@ public class Unit {
 	/**
 	 * Variable registering the position where the unit works.
 	 */
-	private int[] workPosition = {0,0,0};
+	private int[] workPosition = { 0, 0, 0 };
 
 	/**
 	 * Try to work at the work position when the work time is 0.
@@ -2196,8 +2198,8 @@ public class Unit {
 		// Scheduler"+getFaction().getScheduler());
 
 		this.setDefaultBehavior(true);
-		
-		System.out.println("-- this.gettask()="+this.getTask());
+
+		System.out.println("-- this.gettask()=" + this.getTask());
 
 		if (getTask() == null && getFaction().getScheduler().getAllTasksIterator().hasNext()) {
 			System.out.println("--start default behaviour dt=" + dt);
@@ -2221,8 +2223,8 @@ public class Unit {
 			getFaction().getScheduler().removeTask(getTask());
 		} else {
 			System.out.println("---------executeTask-----------");
-			System.out.println("-- activity"+getTask().getActivity());
-
+			System.out.println("-- activity" + getTask().getActivity());
+			getTask().getActivity().setTask(getTask());
 			getTask().getActivity().execute();
 
 		}
@@ -2244,8 +2246,8 @@ public class Unit {
 			this.workAt((int) this.getPosition()[0], (int) this.getPosition()[1], (int) this.getPosition()[2]);
 
 		} else if (rand == 2) {
-//TODO
-			//attack(this, this.getRandomEnemy());
+			// TODO
+			// attack(this, this.getRandomEnemy());
 
 		} else {
 			this.rest();
@@ -2260,10 +2262,11 @@ public class Unit {
 	 */
 	public Unit getRandomEnemy() {
 		Unit enemy = this;
-//		System.out.println("enemyfaction: " + (enemy.getFaction() == this.getFaction()));
+		// System.out.println("enemyfaction: " + (enemy.getFaction() ==
+		// this.getFaction()));
 		while (enemy.getFaction() == this.getFaction()) {
 			enemy = this.getRandomUnit();
-//			System.out.println("enemyfaction: " + enemy.getFaction());
+			// System.out.println("enemyfaction: " + enemy.getFaction());
 		}
 		return enemy;
 	}

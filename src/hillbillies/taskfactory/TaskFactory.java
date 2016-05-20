@@ -27,13 +27,15 @@ public class TaskFactory implements ITaskFactory<Expression<?>, Statement, Task>
 
 		List<Task> tasks = new ArrayList<>();
 
-		if (selectedCubes != null) {
+		if (!selectedCubes.isEmpty()) {
+			System.out.println("!selectedCubes.isEmpty()");
 			for (int[] cube : selectedCubes) {
 				Task task = new Task(name, priority, activity, cube);
 				tasks.add(task);
 			}
 
 		} else {
+			System.out.println("selectedCubes.isEmpty()");
 			Task task = new Task(name, priority, activity, null);
 			tasks.add(task);
 		}

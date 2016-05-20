@@ -24,7 +24,7 @@ public class WorkStatement extends Statement {
 	public void execute() {
 		System.out.println("execute Workst");
 		if (isAssignedToUnit()) {
-			if (getStarted() && !getUnit().getIsWorking()) {
+			if (getStarted() && !getUnit().getIsWorking() && !getUnit().getWantToWork()) {
 				setIsExecuted();
 				setStarted(false);
 			} else {
