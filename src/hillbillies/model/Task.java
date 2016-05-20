@@ -1,5 +1,6 @@
 package hillbillies.model;
 
+import java.awt.IllegalComponentStateException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,13 +39,14 @@ public class Task {
 			throw new IllegalArgumentException();
 		this.name = name;
 		this.setPriority(priority);
-		if(!canHaveAsActivity(activity))
+		if (!canHaveAsActivity(activity))
 			throw new IllegalArgumentException();
 		this.activity = activity;
 		getActivity().setTask(this);
-		if (! canHaveAsSelectedPosition(selectedPosition))
+		if (!canHaveAsSelectedPosition(selectedPosition))
 			throw new IllegalArgumentException();
 		this.selectedPosition = selectedPosition;
+
 	}
 
 	/**
@@ -139,14 +141,14 @@ public class Task {
 	 * @post The activity of this new Task is equal to the given activity. |
 	 *       new.getActivity() == activity
 	 * @throws IllegalArgumentException
-	 *             This new Task cannot have the given activity as its
-	 *             activity. | ! canHaveAsActivity(this.getActivity())
+	 *             This new Task cannot have the given activity as its activity.
+	 *             | ! canHaveAsActivity(this.getActivity())
 	 */
-//	public Task(List<Statement> activity) throws IllegalArgumentException {
-//		if (!canHaveAsActivity(activity))
-//			throw new IllegalArgumentException();
-//		this.activity = activity;
-//	}
+	// public Task(List<Statement> activity) throws IllegalArgumentException {
+	// if (!canHaveAsActivity(activity))
+	// throw new IllegalArgumentException();
+	// this.activity = activity;
+	// }
 
 	/**
 	 * Return the activity of this Task.
@@ -167,7 +169,7 @@ public class Task {
 	 */
 	@Raw
 	public boolean canHaveAsActivity(Statement activity) {
-		//TODO  chechen
+		// TODO chechen
 		return true;
 	}
 
@@ -175,54 +177,58 @@ public class Task {
 	 * Variable registering the activity of this Task.
 	 */
 	private final Statement activity;
-	
-	/** TO BE ADDED TO CLASS HEADING
-	 * @invar  Each task can have its selected position as selected position.
-	 *       | canHaveAsSelectedPosition(this.getSelectedPosition())
+
+	/**
+	 * TO BE ADDED TO CLASS HEADING
+	 * 
+	 * @invar Each task can have its selected position as selected position. |
+	 *        canHaveAsSelectedPosition(this.getSelectedPosition())
 	 */
 
-/**
- * Initialize this new task with given selected position.
- * 
- * @param  selectedPosition
- *         The selected position for this new task.
- * @post   The selected position of this new task is equal to the given
- *         selected position.
- *       | new.getSelectedPosition() == selectedPosition
- * @throws IllegalArgumentException
- *         This new task cannot have the given selected position as its selected position.
- *       | ! canHaveAsSelectedPosition(this.getSelectedPosition())
- */
-//public Task(int[] selectedPosition) throws IllegalArgumentException {
-	
-//}
+	/**
+	 * Initialize this new task with given selected position.
+	 * 
+	 * @param selectedPosition
+	 *            The selected position for this new task.
+	 * @post The selected position of this new task is equal to the given
+	 *       selected position. | new.getSelectedPosition() == selectedPosition
+	 * @throws IllegalArgumentException
+	 *             This new task cannot have the given selected position as its
+	 *             selected position. | !
+	 *             canHaveAsSelectedPosition(this.getSelectedPosition())
+	 */
+	// public Task(int[] selectedPosition) throws IllegalArgumentException {
 
-/**
- * Return the selected position of this task.
- */
-@Basic @Raw @Immutable
-public int[] getSelectedPosition() {
-	return this.selectedPosition;
-}
+	// }
 
-/**
- * Check whether this task can have the given selected position as its selected position.
- *  
- * @param  selectedPosition
- *         The selected position to check.
- * @return 
- *       | result == 
-*/
-@Raw
-public boolean canHaveAsSelectedPosition(int[] selectedPosition) {
-	//TODO checken of vali pos
-	return true;
-}
+	/**
+	 * Return the selected position of this task.
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	public int[] getSelectedPosition() {
+		return this.selectedPosition;
+	}
 
-/**
- * Variable registering the selected position of this task.
- */
-private final int[] selectedPosition;
+	/**
+	 * Check whether this task can have the given selected position as its
+	 * selected position.
+	 * 
+	 * @param selectedPosition
+	 *            The selected position to check.
+	 * @return | result ==
+	 */
+	@Raw
+	public boolean canHaveAsSelectedPosition(int[] selectedPosition) {
+		// TODO checken of vali pos
+		return true;
+	}
+
+	/**
+	 * Variable registering the selected position of this task.
+	 */
+	private final int[] selectedPosition;
 
 	/**
 	 * TO BE ADDED TO CLASS HEADING
@@ -330,7 +336,7 @@ private final int[] selectedPosition;
 	 */
 	private Set<Scheduler> schedulerSet = new HashSet<>();
 
-	public void addScheduler(Scheduler scheduler) {
+	public void addScheduler(Scheduler scheduler) throws IllegalArgumentException {
 		if (!getSchedulerSet().contains(scheduler)) {
 			getSchedulerSet().add(scheduler);
 		} else {
@@ -341,8 +347,13 @@ private final int[] selectedPosition;
 	public void removeScheduler(Scheduler scheduler) {
 		getSchedulerSet().remove(scheduler);
 	}
-	
-	public boolean isExecuted(){
+
+	public boolean isExecuted() {
 		return getActivity().isExecuted();
+	}
+
+	public boolean isWellFormed() {
+		return (getActivity().getExpression() != null) ? (getActivity().isWellFormed())
+				: (getActivity().isWellFormed() && getActivity().getExpression().isWellFormed());
 	}
 }

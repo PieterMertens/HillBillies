@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import hillbillies.expressions.Expression;
 import hillbillies.helper.Helper;
 import hillbillies.model.Boulder;
 import hillbillies.model.Faction;
@@ -13,29 +12,23 @@ import hillbillies.model.Scheduler;
 import hillbillies.model.Task;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part2.facade.IFacade;
 import hillbillies.part2.listener.TerrainChangeListener;
 import hillbillies.part3.programs.ITaskFactory;
-import hillbillies.statements.Statement;
-import hillbillies.taskfactory.TaskFactory;import ogp.framework.util.ModelException;
-
-
+import hillbillies.taskfactory.TaskFactory;
+import ogp.framework.util.ModelException;
 
 public class Facade implements hillbillies.part3.facade.IFacade {
-	
-	//TODO exc wrappen
 
 	@Override
 	public ITaskFactory<?, ?, Task> createTaskFactory() {
-		// TODO Auto-generated method stub
+
 		return new TaskFactory();
 	}
 
 	@Override
 	public boolean isWellFormed(Task task) throws ModelException {
-		// TODO Auto-generated method stub
-		// TODO nakijken
-		return true;
+
+		return task.isWellFormed();
 	}
 
 	@Override
@@ -45,7 +38,12 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 
 	@Override
 	public void schedule(Scheduler scheduler, Task task) throws ModelException {
-		scheduler.addTask(task);
+
+		try {
+			scheduler.addTask(task);
+		} catch (IllegalArgumentException e) {
+			throw new ModelException();
+		}
 
 	}
 
@@ -82,13 +80,13 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 
 	@Override
 	public String getName(Task task) throws ModelException {
-		
+
 		return task.getName();
 	}
 
 	@Override
 	public int getPriority(Task task) throws ModelException {
-		
+
 		return task.getPriority();
 	}
 
@@ -255,24 +253,14 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 			throw new ModelException();
 		}
 
-		// try {
-		// Unit newUnit = new Unit(weight, strength, agility, toughness);
-		// newUnit.setPosition(Helper.intArrayToDoubleArray(initialPosition));//TODO
-		// niewe constr ofz mr nr midden vn blokje
-		// newUnit.setName(name);
-		// newUnit.setOrientation((float) Math.PI/2);
-		//
-		// return newUnit;
-		// } catch (IllegalArgumentException e) {
-		// throw new ModelException();
-		// }
+	
 	}
 
 	@Override
 	public void fight(Unit attacker, Unit defender) throws ModelException {
 
 		attacker.attack(attacker, defender);
-		// defender.defend(attacker, defender);
+		
 
 	}
 
@@ -286,8 +274,7 @@ public class Facade implements hillbillies.part3.facade.IFacade {
 	@Override
 	public int[] getCubeCoordinate(Unit unit) throws ModelException {
 
-		double[] position = unit.getPosition();
-		return Helper.doubleArrayToIntArray(position);
+		return Helper.doubleArrayToIntArray(unit.getPosition());
 	}
 
 	@Override

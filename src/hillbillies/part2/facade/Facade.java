@@ -14,8 +14,7 @@ import ogp.framework.util.ModelException;
 
 public class Facade implements IFacade {
 
-	// TODO exceptions wrappen indien nodig
-
+	
 	@Override
 	public World createWorld(int[][][] terrainTypes, TerrainChangeListener modelListener) throws ModelException {
 		try {
@@ -108,7 +107,6 @@ public class Facade implements IFacade {
 	@Override
 	public void workAt(Unit unit, int x, int y, int z) throws ModelException {
 		
-		//TODO hier funcitee!!!!
 		unit.workAt(x,y,z);
 
 	}

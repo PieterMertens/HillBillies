@@ -12,6 +12,12 @@ public abstract class CubeExpression extends BooleanExpression {
 		this.position = position;
 		
 	}
+	
+	public PositionExpression getPositionExpression(Statement statement){
+		this.position.setStatement(statement);
+		return this.position;
+	}
+	
 
 	public int[] getPosition(Statement statement) {
 		this.position.setStatement(statement);

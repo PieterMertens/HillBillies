@@ -185,14 +185,11 @@ public class Unit {
 	 */
 	@Raw
 	public void setPosition(double[] position) throws IllegalArgumentException {
-		// System.out.println("set pos:" + position[0]+" "+position[1]+"
-		// "+position[2]);
+
 		if (!isValidPosition(position, this.getWorld()))
 			throw new IllegalArgumentException();
 		else {
-			// for (int i = 0; i < position.length; ++i) {
-			// position[i] += .5;
-			// }
+
 			this.position = position;
 		}
 	}
@@ -894,7 +891,8 @@ public class Unit {
 					}
 					if (this.getIsMoving()) {
 						if (this.getIsSprinting()) {
-							System.out.println("advancetime stmaina: " + this.getStaminapoints());
+							// System.out.println("advancetime stmaina: " +
+							// this.getStaminapoints());
 							staminadrain(dt);
 							if (this.getStaminapoints() <= 0) {
 								this.setIsSprinting(false);
@@ -1554,32 +1552,7 @@ public class Unit {
 	 * @throws IllegalArgumentException
 	 *             thrown if the target is invalid
 	 */
-	public void moveTo(int[] targetPosition) throws IllegalArgumentException { // FIXME
-																				// 2
-																				// keer
-																				// moveto
-																				// achter
-																				// elkaar
-																				// fout
-
-		// System.out.println("---------------- moveto begonnen
-		// ----------------------");
-
-		// isMovingTo = true;// TODO getter en setter
-		//
-		// if (!isValidTarget(Helper.getCenterOfPosition(targetPosition))) {
-		// throw new IllegalArgumentException();
-		// } else {
-		//
-		// target[0] = targetPosition[0] + 0.5d;// TODO forlus
-		// target[1] = targetPosition[1] + 0.5d;
-		// target[2] = targetPosition[2] + 0.5d;
-		// System.out.println("new target: " + target[0] + " " + target[1] +
-		// " " + target[2]);
-		// moveToAdjacent(getMoveToDirectionX(), getMoveToDirectionY(),
-		// getMoveToDirectionZ());
-
-		// }
+	public void moveTo(int[] targetPosition) throws IllegalArgumentException {
 		isMovingTo = true;
 
 		if (!isValidTarget(Helper.getCenterOfPosition(targetPosition))) {
@@ -1600,7 +1573,7 @@ public class Unit {
 	 *         1
 	 * @throws IllegalArgumentException
 	 */
-	// TODO waarom IllegalArgumentException?
+
 	public boolean moveToTargetReached() throws IllegalArgumentException {
 
 		if (Helper.getDistanceBetweenPositions(this.getPosition(), this.target) < 1) {
@@ -1621,26 +1594,8 @@ public class Unit {
 	 */
 	private void findPath() throws IllegalStateException {
 
-		// System.out.println("------ findPath start ------");
-
 		int[] moveToTarget = Helper.doubleArrayToIntArray(this.target);
-		int[] currentPosition = Helper.doubleArrayToIntArray(this.getPosition()); // TODO
-																					// dit
-																					// als
-																					// argumenten
-																					// meegeven
-																					// ipv
-																					// hier
-																					// zetten
-																					// zodat
-																					// findpath
-																					// ook
-																					// voor
-																					// boulders
-																					// enz
-																					// gebruikt
-																					// kan
-																					// worden
+		int[] currentPosition = Helper.doubleArrayToIntArray(this.getPosition());
 
 		Q = new ArrayList<>();
 
@@ -1780,9 +1735,7 @@ public class Unit {
 				for (int k = -1; k <= 1; k++) {
 
 					if (!(i == 0 && j == 0 && k == 0)
-							&& this.getWorld().withinBoundaries(position[0] + i, position[1] + j, position[2] + k)) {// TODO
-																														// isvalidpositions
-						int[] newNeighbour = { position[0] + i, position[1] + j, position[2] + k };
+							&& this.getWorld().withinBoundaries(position[0] + i, position[1] + j, position[2] + k)) {int[] newNeighbour = { position[0] + i, position[1] + j, position[2] + k };
 						neighbouringCubes.add(newNeighbour);
 					}
 				}
@@ -2246,8 +2199,11 @@ public class Unit {
 			this.workAt((int) this.getPosition()[0], (int) this.getPosition()[1], (int) this.getPosition()[2]);
 
 		} else if (rand == 2) {
-			// TODO
-			// attack(this, this.getRandomEnemy());
+
+			if (this.getRandomEnemy() == null) {
+				defaultRandomBehaviour();
+			}
+			attack(this, this.getRandomEnemy());
 
 		} else {
 			this.rest();
@@ -2262,26 +2218,14 @@ public class Unit {
 	 */
 	public Unit getRandomEnemy() {
 		Unit enemy = this;
-		// System.out.println("enemyfaction: " + (enemy.getFaction() ==
-		// this.getFaction()));
 		while (enemy.getFaction() == this.getFaction()) {
+
 			enemy = this.getRandomUnit();
-			// System.out.println("enemyfaction: " + enemy.getFaction());
+			if (enemy == null) {
+				enemy = this;
+			}
 		}
 		return enemy;
-	}
-
-	/**
-	 * Return a random unit of the same faction as the unit that's not the unit
-	 * 
-	 * @return A random unit of the same faction as the unit that's not the unit
-	 */
-	public Unit getRandomFriend() {
-		Unit friend = null;
-		while (friend.getFaction() != this.getFaction()) {
-			friend = this.getRandomUnit();
-		}
-		return friend;
 	}
 
 	/**
@@ -2300,7 +2244,7 @@ public class Unit {
 					}
 					return unit;
 				}
-				i = +1;
+				i++;
 			}
 		}
 		return null;

@@ -12,6 +12,11 @@ public class NextToPositionExpression extends PositionExpression {
 		this.position = position;
 	}
 	
+	public PositionExpression getPositionExpression(Statement statement){
+		this.position.setStatement(statement);
+		return position;
+	}
+	
 	public int[] getPosition(Statement statement){
 		this.position.setStatement(statement);
 		return position.evaluate();

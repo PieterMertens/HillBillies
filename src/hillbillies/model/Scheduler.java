@@ -33,7 +33,7 @@ public class Scheduler {
 	 */
 	private List<Task> taskList = new ArrayList<>();
 
-	public void addTask(Task task) {
+	public void addTask(Task task) throws IllegalArgumentException{
 		getTaskList().add(task);
 		task.addScheduler(this);
 		//System.out.println("Taak toegevoegd tasklistsize="+getTaskList().size()+" scheduler="+this);
@@ -211,5 +211,12 @@ public boolean canHaveAsFaction(Faction faction) {
  * Variable registering the faction of this scheduler.
  */
 private final Faction faction;
+
+
+public void decreaseTaskPriority(Task task){
+	
+	task.setPriority(task.getPriority()-1);
+	
+}
 	
 }

@@ -11,16 +11,7 @@ public class BreakStatement extends Statement {
 	@Override
 	public void execute() {
 
-		if {
-			
-			while(){
-				
-				
-			}
-			//kijken of parentstatement instanceof WhileStement
-			
-			//loopstatement.setIsExecuted()
-		}
+		getWhileStatement().setIsExecuted();
 
 	}
 
